@@ -1,6 +1,6 @@
 # Package USpekPy
 > Uncertainty estimation on protection quantities for x-rays using SpekPy and Monte Carlo techniques
-> 
+
 | Last version: 0.0.1 | License: GNU GPL 3.0 | [Source code](https://github.com/lmri-met/uspekpy) | [Issues](https://github.com/lmri-met/uspekpy/issues) | [Documentation](https://github.com/lmri-met/uspekpy/README.md) |
 |--------------------|--------------------|--------------------|--------------------|--------------------|
 
@@ -28,3 +28,5 @@ Contributors:
 [@GitHub](https://github.com/xandratxan/)
 
 ## License
+
+Distributed under the GNU GPL License. See LICENSE.txt for more information.
