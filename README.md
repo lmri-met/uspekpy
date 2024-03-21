@@ -13,10 +13,10 @@
 ![GitHub forks](https://img.shields.io/github/forks/lmri-met/uspekpy)
 
 > Uncertainty estimation on protection quantities for x-rays using SpekPy and Monte Carlo techniques
-> 
-> ![Static Badge](https://img.shields.io/badge/Documentation-blue?link=https%3A%2F%2Fgithub.com%2Flmri-met%2Fuspekpy%2Fblob%2Fmain%2FREADME.md)
-> ![Static Badge](https://img.shields.io/badge/Surce_code-blue?link=https%3A%2F%2Fgithub.com%2Flmri-met%2Fuspekpy)
-> ![Static Badge](https://img.shields.io/badge/Contribute-blue?link=https%3A%2F%2Fgithub.com%2Flmri-met%2Fuspekpy%2Fissues)
+>
+> [![Static Badge](https://img.shields.io/badge/Documentation-blue)](https://github.com/lmri-met/uspekpy/blob/main/README.md)
+> [![Static Badge](https://img.shields.io/badge/Surce_code-blue)](https://github.com/lmri-met/uspekpy)
+> [![Static Badge](https://img.shields.io/badge/Contribute-blue)](https://github.com/lmri-met/uspekpy/issues)
 
 ## Table of Contents
 - [Description](#description)
