@@ -1,1781 +1,309 @@
-# Python code by P. Aviles Lucas with the collaboration of P Santorum Paniagua v. 20/02/2024
-# IMPORT LIBRARIES
-import math
-import os
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
+"""
+USpekPy Application Module
+
+This module defines the main window class for the USpekPy application. It provides functionality to interact with
+various widgets, such as selecting files and folders, and running the application.
+
+Classes:
+    MainWindow: Main window class for the USpekPy application.
+
+Functions:
+    main: Main function to create and run the USpekPy application.
+
+Usage:
+    To run the USpekPy application, execute the script directly.
+
+Example:
+    python uspekpy.py
+"""
 import tkinter as tk
-import openpyxl
-from scipy import interpolate
-from pathlib import Path
-from tkinter import *
 from tkinter import filedialog
-from time import time
-import spekpy as sp
-
-pantalla = Tk()
-pantalla.title("Uncertainties ISO 4037:2019")
-
-titulo = Label(pantalla, text="Uncertainties ISO 4037:2019", font="Helvetica 20 bold").grid(row=0, columnspan=2, padx=5,
-                                                                                            pady=5)
-
-var_mono = tk.StringVar()
-ruta_mono = Entry(pantalla, textvariable=var_mono).grid(row=1, column=1, padx=5, pady=5)
-boton_mono = Button(pantalla, text="Select monoE hK", font="Avantgarde 10 bold",
-                    command=lambda: seleccionar_mono()).grid(row=1, column=0, padx=5, pady=5)
-
-var_mutrrho = tk.StringVar()
-ruta_mutrrho = Entry(pantalla, textvariable=var_mutrrho).grid(row=3, column=1, padx=5, pady=5)
-boton_mutrrho = Button(pantalla, text="Select mutr_rho", font="Avantgarde 10 bold",
-                       command=lambda: seleccionar_mutrrho()).grid(row=3, column=0, padx=5, pady=5)
-
-var_carpeta = tk.StringVar()
-carpeta = Entry(pantalla, textvariable=var_carpeta).grid(row=4, column=1, padx=5, pady=5)
-boton_carpeta = Button(pantalla, text="Select folder to save output", font="Avantgarde 10 bold",
-                       command=lambda: seleccionar_carpeta()).grid(row=4, column=0, padx=5, pady=5)
-
-Label(pantalla, text="Number of simulations:").grid(row=6, column=0, padx=5, pady=5)
-var_n = StringVar()
-Entry(pantalla, textvariable=var_n).grid(row=6, column=1, padx=5, pady=5)
-
-Label(pantalla, text="Uncertainty on mutr/rho:").grid(row=7, column=0, padx=5, pady=5)
-var_umutrr = StringVar()
-Entry(pantalla, textvariable=var_umutrr).grid(row=7, column=1, padx=5, pady=5)
-
-# Label(pantalla, text="ukerma:").grid(row=11, column=0, padx=5, pady=5)
-# var_ukerma = StringVar()
-# Entry(pantalla, textvariable=var_ukerma).grid(row=11, column=1, padx=5, pady=5)
-
-boton_princip = Button(pantalla, text="EXECUTE", font="Avantgarde 20 bold", background="lightblue",
-                       command=lambda: programa_principal()).grid(row=5, columnspan=2, padx=5, pady=5)
-
-
-def pantalla_principal():
-    global pantalla2
-    pantalla2 = Toplevel(pantalla)
-    pantalla2.title("Save Variables")
-    Button(pantalla2, text="Save Variables", command=guardar_variables).grid(row=13, columnspan=2, padx=5, pady=5)
-
-
-lista_mono = []
-lista_espectros = []
-directorio = tk.StringVar()
-directorio2 = tk.StringVar()
-
-
-# PAL:dialog box to enter the monoenergetic coefficients for different angles
-def seleccionar_mono():
-    ruta_mono = filedialog.askopenfilenames()
-    var_mono.set(ruta_mono)
-
-    for x in ruta_mono:
-        lista_mono.append(os.path.basename(x))
-        directorio.set(os.path.dirname(x))
-        # print("Directorio actual:", directorio.get())
-
-
-# PAL:enter txt file for mass energy transfer coefficient
-def seleccionar_mutrrho():
-    ruta_mutrrho = filedialog.askopenfilename()
-    var_mutrrho.set(ruta_mutrrho)
-
-
-# PAL: dialog box for selection of output folder
-def seleccionar_carpeta():
-    ruta_carpeta = filedialog.askdirectory()
-    var_carpeta.set(ruta_carpeta)
-
-
-# Function to search a file and delete it if already existing
-def buscar_eliminar(ruta):
-    if os.path.exists(ruta):
-        # print("funcion buscar eliminar ruta", ruta)
-        os.remove(ruta)
-    else:
-        print("")
-
-
-# Function to go from dataframe to txt and save the file
-# PAL: mean, standard deviation and var coefficient % which is assumed as relative percentage uncertainty
-def guardar_txt(ruta, nombre, calidad, media, angulo, desviacion, v_hpk, energiaMedia, desviacionEnergia,
-                coef_variacionEnergia, kermaMedio, desviacionKerma, coef_variacionKerma):
-    x = pd.DataFrame({"_Name": [nombre], "_quality": [calidad], "_mean_hK_" + angulo: [media],
-                      "______std dev hK______": [desviacion], "_______ur%(hK)_______": [v_hpk],
-                      "_______Mean energy_______": [energiaMedia], "_______std dev Emean_______": [desviacionEnergia],
-                      "_______ur%(Emean)______": [coef_variacionEnergia],
-                      "_______Mean Kair_______": [kermaMedio], "_______std dev Kair_______": [desviacionKerma],
-                      "_______ur%(Kair)_______": [coef_variacionKerma]})
-    x.to_csv(ruta, header=not (os.path.isfile(ruta) and os.stat(ruta).st_size != 0), index=False, mode="a", sep=",")
-
-
-def guardar_variables():
-    global nini, umutrr
-    nini = int(var_n.get())
-    umutrr = float(var_umutrr.get())
-    pantalla2.destroy()
-
-
-def calcular_energia_media(fluencias, energias):
-    # Sum of the energies times the fluence divided by the sum of the fluence
-    sumatorio_producto = sum(fluencia * energia for fluencia, energia in zip(fluencias, energias))
-    sumatorio_fluencias = sum(fluencias)
-
-    # To avoid dividing by zero
-    if sumatorio_fluencias == 0:
-        return 0
-
-    energia_media = sumatorio_producto / sumatorio_fluencias
-    return energia_media
-
-
-def calcular_kerma_medio(fluencias, energias, coeficientes_mutr_rho):
-    sumatorio_producto_kerma = sum(fluencia * energia * coeficiente_mutr_rho
-                                   for fluencia, energia, coeficiente_mutr_rho
-                                   in zip(fluencias, energias, coeficientes_mutr_rho))
-    sumatorio_fluencias = sum(fluencias)
-
-    if sumatorio_fluencias == 0:
-        return 0
-
-    kerma_medio = sumatorio_producto_kerma / sumatorio_fluencias
-    return kerma_medio
-
-
-def calcular_hpk(fluencias, energias, coeficientes_mutr_rho, hk):
-    sumatorio_numerador = sum(fluencia * energia * coeficiente_mutr_rho * hk
-                              for fluencia, energia, coeficiente_mutr_rho, hk
-                              in zip(fluencias, energias, coeficientes_mutr_rho, hk))
-    sumatorio_denominador = sum(fluencia * energia * coeficiente_mutr_rho for fluencia, energia, coeficiente_mutr_rho
-                                in zip(fluencias, energias, coeficientes_mutr_rho))
-
-    if sumatorio_denominador == 0:
-        return 0
-    hpk = sumatorio_numerador / sumatorio_denominador
-    return hpk
-
-
-def programa_principal():
-    global nini, umutrr
-    nini = int(var_n.get())
-    umutrr = float(var_umutrr.get())
-
-    for x in range(2, 47):
-        # Opens Excel file
-        archivo_excel = openpyxl.load_workbook(
-            'inputN60_no_us_@1000mm_TEST.xlsx')  # Reemplaza 'tu_archivo.xlsx' con la ruta de tu archivo Excel
-        # print("x", x)
-        # selects working sheet by default
-        hoja = archivo_excel.active
-
-        # Acceds to cell B1 (row 1, column 2...47)
-        z = 2
-        calidad = hoja.cell(row=1, column=x).value
-        # print("z", z)
-        print("calidad", calidad)
-        filter_Al = hoja.cell(row=z, column=x).value
-        z = z + 1
-        filter_Cu = hoja.cell(row=z, column=x).value
-        z = z + 1
-        print("filter_Cu", filter_Cu)
-        filter_Sn = hoja.cell(row=z, column=x).value
-        z = z + 1
-        filter_Pb = hoja.cell(row=z, column=x).value
-        z = z + 1
-        # print("z5", z)
-        filter_Be = hoja.cell(row=z, column=x).value
-        z = z + 1
-        filter_Air = hoja.cell(row=z, column=x).value
-        z = z + 1
-        kvp = hoja.cell(row=z, column=x).value
-        z = z + 1
-        th = hoja.cell(row=z, column=x).value
-        z = z + 1
-        uAl = hoja.cell(row=z, column=x).value
-        z = z + 1
-        uCu = hoja.cell(row=z, column=x).value
-        z = z + 1
-        uSn = hoja.cell(row=z, column=x).value
-        z = z + 1
-        uPb = hoja.cell(row=z, column=x).value
-        z = z + 1
-        uBe = hoja.cell(row=z, column=x).value
-        z = z + 1
-        uAir = hoja.cell(row=z, column=x).value
-        z = z + 1
-        ukvp = hoja.cell(row=z, column=x).value
-        z = z + 1
-        # print("z", z)
-        uth = hoja.cell(row=z, column=x).value
-
-        lower_be = filter_Be * (1 - uBe * math.sqrt(3))
-        high_be = filter_Be * (1 + uBe * math.sqrt(3))
-
-        lower_al = filter_Al * (1 - uAl * math.sqrt(3))
-        high_al = filter_Al * (1 + uAl * math.sqrt(3))
-
-        lower_cu = filter_Cu * (1 - uCu * math.sqrt(3))
-        high_cu = filter_Cu * (1 + uCu * math.sqrt(3))
-
-        lower_sn = filter_Sn * (1 - uSn * math.sqrt(3))
-        high_sn = filter_Sn * (1 + uSn * math.sqrt(3))
-
-        lower_pb = filter_Pb * (1 - uPb * math.sqrt(3))
-        high_pb = filter_Pb * (1 + uPb * math.sqrt(3))
-
-        # definition of empty lists to calculate std deviation and std. rel uncertainty, ur% (variation coefficient %)
-        energiasMedia = []
-        kermasMedia = []
-        hvlmean = []
-        hvl2mean = []
-        hvlCumean = []
-        hvl2Cumean = []
-        hpkMedia = []
-        hpkMedia15 = []
-        hpkMedia30 = []
-        hpkMedia45 = []
-        hpkMedia60 = []
-        hpkMedia75 = []
-        hpkMedia90 = []
-        hpkMedia180 = []
-
-        # CREATE DIRECTORY TO STORE OUTPUT FILES
-        ruta = var_carpeta.get()
-        Path(ruta).mkdir(parents=True, exist_ok=True)
-        # print("directory path to save files", ruta)
-
-        # ARRAY WITH SPECTRA FILE NAMES AND MONOENERGETIC CONV. COEFF.
-        ficheros_monoenergeticos = lista_mono  # PAL: list of monoenergetic coefficients (8 different depending on angles)
-
-        # READ MONOENERGETIC FILES
-        for f_m in ficheros_monoenergeticos:
-            hk_table = pd.read_csv(directorio.get() + "/" + f_m, sep=";", encoding='ISO-8859-1')
-            buscar_eliminar(ruta + "/" + f_m.upper() + ".txt")
-            buscar_eliminar(ruta + "/" + f_m.upper() + "_0.txt")
-            buscar_eliminar(ruta + "/" + f_m.upper() + "_15.txt")
-            buscar_eliminar(ruta + "/" + f_m.upper() + "_30.txt")
-            buscar_eliminar(ruta + "/" + f_m.upper() + "_45.txt")
-            buscar_eliminar(ruta + "/" + f_m.upper() + "_60.txt")
-            buscar_eliminar(ruta + "/" + f_m.upper() + "_75.txt")
-            buscar_eliminar(ruta + "/" + f_m.upper() + "_90.txt")
-            buscar_eliminar(ruta + "/" + f_m.upper() + "_180.txt")
-
-            ###############################################################################################################
-            ###############################################################################################################
-            # FIRST LOOP in monoenergetic conversion coefficients defined at incident angle = 0
-            # ("h_amb_10.csv","hp_0.07_pill.csv", "hp_0.07_rod.csv")
-            ###############################################################################################################
-            ###############################################################################################################
-            # TEST THAT THE FILE HAS LESS OR EQUAL THAN 2 COLUMNS
-            if len(hk_table.columns) <= 2:
-                tiempo_inicial_columns_2 = time()
-
-                # SAVE VARIABLES (E, hK)
-                Ehk = hk_table.iloc[:, 0].values
-                hk = hk_table.iloc[:, 1].values
-
-                # take logs for interpolation
-                LEhk = []
-                Lhk = []
-
-                for x in Ehk:
-                    LEhk.append(math.log(x))
-
-                for x in hk:
-                    Lhk.append(math.log(x))
-
-                # READ FILE MUTR_RHO
-                mutr_rho = pd.read_csv(var_mutrrho.get(), sep="\t", header=None, encoding='ISO-8859-1')
-                # SAVE VARIABLES (E, mutr/rho)
-                E_mut_aux = mutr_rho.iloc[:, 0].values
-                mtr_aux = mutr_rho.iloc[:, 1].values
-
-                E_mut = []
-                mtr = []
-
-                # REPLACE IF NEEDED COMMAS AND DOTS
-                for x in E_mut_aux:
-                    E_mut.append(float(x))
-
-                for x in mtr_aux:
-                    mtr.append(float(x))
-
-                LE_mut = [math.log(x) for x in E_mut]
-                Lmtr = [math.log(x) for x in mtr]
-
-                ##############################################################################################
-                # NINI= Number of times that a spectrum is randomly generated (the parameters that define
-                #   a quality are changed around a central value using a gaussian or uniform distribution
-                #############################################################################################
-
-                plt.figure()
-
-                for j in range(nini):
-                    if filter_Al != 0 and uAl != 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-                    elif filter_Al != 0 and uAl == 0 and j == 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-                    elif filter_Al == 0 and j == 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-
-                    if filter_Be != 0 and uBe != 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-                    elif filter_Be != 0 and uBe == 0 and j == 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-                    elif filter_Be == 0 and j == 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-
-                    if filter_Cu != 0 and uCu != 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-                    elif filter_Cu != 0 and uCu == 0 and j == 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-                    elif filter_Cu == 0 and j == 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-
-                    if filter_Sn != 0 and uSn != 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-                    elif filter_Sn != 0 and uSn == 0 and j == 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-                    elif filter_Sn == 0 and j == 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-
-                    if filter_Pb != 0 and uPb != 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-                    elif filter_Pb != 0 and uPb == 0 and j == 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-                    elif filter_Pb == 0 and j == 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-
-                    if filter_Air != 0 and uAir != 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-                    elif filter_Air != 0 and uAir == 0 and j == 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-                    elif filter_Air == 0 and j == 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-
-                    if kvp != 0 and ukvp != 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-                    elif kvp != 0 and ukvp == 0 and j == 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-                    elif kvp == 0 and j == 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-
-                    if th != 0 and uth != 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-                    elif th != 0 and uth == 0 and j == 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-                    elif th_rand == 0 and j == 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-
-                    # SPEKPY ###########################################
-                    my_filters = [
-                        ("Al", filter_Al_rand[0]),
-                        ("Be", filter_Be_rand[0]),
-                        ("Air", filter_Air_rand[0]),
-                        ("Cu", filter_Cu_rand[0]),
-                        ("Sn", filter_Sn_rand[0]),
-                        ("Pb", filter_Pb_rand[0]),
-                    ]
-
-                    s = sp.Spek(kvp=kvp_rand[0], th=th_rand[0])
-                    s.multi_filter(my_filters)
-
-                    E, fluencia = s.get_spectrum(edges=False)  # Get the spectrum
-                    hvl = s.get_hvl1()  # Get the 1st half-value-layer mm Al
-                    hvlmean.append(hvl)
-                    hvl2 = s.get_hvl2()  # Get the 2nd half-value-layer mm Al
-                    hvl2mean.append(hvl2)
-
-                    hvlCu = s.get_hvl1(matl='Cu')  # Get the 1st half-value-layer mm Cu
-                    hvl2Cu = s.get_hvl2(matl='Cu')  # Get the 2nd half-value-layer mm Cu
-                    hvlCumean.append(hvlCu)
-                    hvl2Cumean.append(hvl2Cu)
-
-                    # SPEKPY ###########################################
-                    # FILTERING SPECTRUM TO AVOID INTREPOLATION ERRORS (monoenergetic hK start sometimes at 7 keV)
-                    mascara = E >= 8
-                    E_filtrado_temp = E[mascara]
-                    fluencia_filtrada_temp = fluencia[mascara]
-
-                    # PRINTING OUT SPECTRA ONLY WHEN OPERATIONAL "h_amb_10.csv","hp_0.07_pill.csv", "hp_0.07_rod.csv" ARE SELECTED ####
-                    # Comment out this section when sepctra are not required
-                    # File name based on quality writes down the spectrum
-
-                    # c=[E_filtrado_temp,fluencia_filtrada_temp]
-
-                    # nombre_archivo = f"{f_m}_{calidad}_{j}_spectrum.txt"
-                    # ruta_completa = os.path.join(ruta, nombre_archivo)
-
-                    # with open(ruta_completa, "a") as archivo:
-                    # Write all results in the opened file
-                    #    for x in zip(*c):
-                    #        archivo.write("{0}\t{1}\n".format(*x))
-                    ###################################################################################################################
-
-                    # Calculation of mean energy
-                    # first creating 2 empty lists to acumulate data from all loop iterations
-                    fluencias_acumuladas = []
-                    energias_acumuladas = []
-
-                    # Adding values to empty lists
-                    fluencias_acumuladas.extend(fluencia_filtrada_temp)
-                    energias_acumuladas.extend(E_filtrado_temp)
-                    # plt.plot(E_filtrado_temp, fluencia_filtrada_temp, label=f"Iteración {j+1}")
-                    # plt.plot(E_filtrado_temp, fluencia_filtrada_temp)
-
-                    # Calculation of mean energy out of the loop
-                    energia_media = calcular_energia_media(fluencias_acumuladas, energias_acumuladas)
-
-                    energiasMedia.append(energia_media)
-
-                    nfilas = len(fluencia_filtrada_temp)
-
-                    # Take log
-                    LE = []
-                    for x in E_filtrado_temp:
-                        LE.append(math.log(x))
-
-                    ###################################################################
-                    # Making Akima interpolation with MUTR_RHO (after taking logs)
-                    interpolacion_uno_mut = interpolate.Akima1DInterpolator(LE_mut, Lmtr, axis=0)
-                    list_mutr = []
-
-                    for i in LE:
-                        mutrrho = math.exp(interpolacion_uno_mut(i))
-                        mutr = np.random.normal(mutrrho, umutrr * mutrrho,
-                                                1)  # HERE mutr/rho is sampled randomly from gaussian distrib
-                        list_mutr.append(mutr)
-
-                    coeficientes_mutr_rho = []
-                    coeficientes_mutr_rho.extend(list_mutr)
-
-                    # Calculation of mean air kerma out of the loop
-                    kerma_medio = calcular_kerma_medio(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho)
-                    kermasMedia.append(kerma_medio)
-                    # print("contenido p_int", p_int)
-
-                    ###################################################################
-                    # Making Akima interpolation with monoenergetic hK (after taking logs)
-                    interpolacion_uno_hk = interpolate.Akima1DInterpolator(LEhk, Lhk, axis=0)
-                    ln_hk_int = []
-
-                    for i in LE:
-                        interpolacion_final_hk = math.exp(interpolacion_uno_hk(i))
-                        ln_hk_int.append(interpolacion_final_hk)
-
-                    hk_int = ln_hk_int
-                    hk = []
-                    hk.extend(hk_int)
-
-                    # Calculation of mean conv. coeff out of the loop
-                    hpk = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk)
-                    hpkMedia.append(hpk)
-
-                np.set_printoptions(linewidth=np.inf)
-                print("")
-                print("---------- ESPECTROS SIN ÁNGULOS ----------")
-
-                # PLOTTING SPECTRA FOR THE CASE OF CONV. COEF WITHOUT ANGLES
-                #                 plt.xlabel('Energía (keV)')
-                #                 plt.ylabel('Fluencia')
-                #                 plt.title('Fluencia vs. Energía')
-                #                 plt.legend()
-                #                 plt.show()
-
-                # MEAN ENERGY
-                media_energia = np.mean(energiasMedia)
-                desviacion_energia = np.std(energiasMedia, ddof=0)
-                coef_variacion_energia = (desviacion_energia / media_energia) * 100
-
-                # MEAN AIR KERMA
-                media_kerma = np.mean(kermasMedia)
-                desviacion_kerma = np.std(kermasMedia, ddof=0)
-                coef_variacion_kerma = (desviacion_kerma / media_kerma) * 100
-
-                # MEAN CONVERSION COEFFICIENT
-                media_hpk = np.mean(hpkMedia)
-                sd_hpk = np.std(hpkMedia, ddof=0)
-                v_hpk = (sd_hpk / media_hpk) * 100
-
-                # MEAN 1st HVL
-                mean_hvl = np.mean(hvlmean)
-                sd_hvl = np.std(hvlmean, ddof=0)
-                v_hvl = (sd_hvl / hvlmean) * 100
-
-                mean_hvlCu = np.mean(hvlCumean)
-                sd_hvlCu = np.std(hvlCumean, ddof=0)
-                v_hvlCu = (sd_hvlCu / hvlCumean) * 100
-
-                # MEAN 2nd HVL
-                mean_hvl2 = np.mean(hvl2mean)
-                sd_hvl2 = np.std(hvl2mean, ddof=0)
-                v_hvl2 = (sd_hvl2 / hvl2mean) * 100
-
-                mean_hvl2Cu = np.mean(hvl2Cumean)
-                sd_hvl2Cu = np.std(hvl2Cumean, ddof=0)
-                v_hvl2Cu = (sd_hvl2Cu / hvl2Cumean) * 100
-
-                # File name based on quality
-                nombre_archivo = f"{f_m}_{calidad}_resultados.txt"
-                ruta_completa = os.path.join(ruta, nombre_archivo)
-
-                # Open (or create) file in adding mode ('a')
-                with open(ruta_completa, "a") as archivo:
-                    # Write all results in the opened file
-                    archivo.write(f"Quality: {calidad}\n")
-                    archivo.write(f"Mean value conversion coefficient: {media_hpk}\n")
-                    archivo.write(f"Std dev on hK: {sd_hpk}\n")
-                    archivo.write(f"ur% hK: {v_hpk}\n")
-                    archivo.write(
-                        f"Mean Energy - Emean: {media_energia}, Std dev Emean: {desviacion_energia}, ur% Emean: {coef_variacion_energia}\n")
-                    archivo.write(
-                        f"Mean air kerma  - Kair mean: {media_kerma}, Std dev Kair: {desviacion_kerma}, ur% Kair: {coef_variacion_kerma}\n\n")
-                    archivo.write(
-                        f"Kerma Medio - mean value: {media_kerma}, std deviation Kair: {desviacion_kerma}, ur% Kair: {coef_variacion_kerma}\n\n")
-                    archivo.write(
-                        f"1st HVL mm Al- mean value: {mean_hvl}, std deviation mm Al: {sd_hvl}, ur%: {v_hvl}\n\n")
-                    archivo.write(
-                        f"2nd HVL mm Al- mean value: {mean_hvl2}, std deviation mm Al: {sd_hvl2}, ur%: {v_hvl2}\n\n")
-                    archivo.write(
-                        f"1st HVL mm Cu- mean value: {mean_hvlCu}, std deviation mm Cu: {sd_hvlCu}, ur%: {v_hvlCu}\n\n")
-                    archivo.write(
-                        f"2nd HVL mm Cu- mean value: {mean_hvl2Cu}, std deviation mm Cu: {sd_hvl2Cu}, ur%: {v_hvl2Cu}\n\n")
-
-                tiempo_final_columns_2 = time()
-
-                tiempo_ejecucion_columns_2 = tiempo_final_columns_2 - tiempo_inicial_columns_2
-
-                print('Execution time in (s):', tiempo_ejecucion_columns_2)
-            ###############################################################################################################
-            ###############################################################################################################
-            # SECOND LOOP IN monoenergetic coefficients defined at 6 incident angles: 0 -75deg
-            # ("hp_10_slab.csv","hp_0.07_slab.csv")
-            ###############################################################################################################
-            ###############################################################################################################
-            elif len(hk_table.columns) == 7:
-                tiempo_inicial_columns_7 = time()
-
-                # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
-                hk_table15 = hk_table[hk_table['15angle'] > 0]
-                hk_table30 = hk_table[hk_table['30angle'] > 0]
-                hk_table45 = hk_table[hk_table['45angle'] > 0]
-                hk_table60 = hk_table[hk_table['60angle'] > 0]
-                hk_table75 = hk_table[hk_table['75angle'] > 0]
-
-                Ehk = hk_table.iloc[:, 0].values
-                hk_0 = hk_table.iloc[:, 1].values
-
-                Ehk15 = hk_table15.iloc[:, 0].values
-                hk_15 = hk_table15.iloc[:, 2].values
-
-                Ehk30 = hk_table30.iloc[:, 0].values
-                hk_30 = hk_table30.iloc[:, 3].values
-
-                Ehk45 = hk_table45.iloc[:, 0].values
-                hk_45 = hk_table45.iloc[:, 4].values
-
-                Ehk60 = hk_table60.iloc[:, 0].values
-                hk_60 = hk_table60.iloc[:, 5].values
-
-                Ehk75 = hk_table75.iloc[:, 0].values
-                hk_75 = hk_table75.iloc[:, 6].values
-
-                # TAKE LOGS FOR FURTHER AKIMA INTERPOLATIONS
-                LEhk = []
-                LEhk15 = []
-                LEhk30 = []
-                LEhk45 = []
-                LEhk60 = []
-                LEhk75 = []
-                Lhk_0 = []
-                Lhk_15 = []
-                Lhk_30 = []
-                Lhk_45 = []
-                Lhk_60 = []
-                Lhk_75 = []
-
-                [LEhk.append(math.log(x)) for x in Ehk]
-                [LEhk15.append(math.log(x)) for x in Ehk15]
-                [LEhk30.append(math.log(x)) for x in Ehk30]
-                [LEhk45.append(math.log(x)) for x in Ehk45]
-                [LEhk60.append(math.log(x)) for x in Ehk60]
-                [LEhk75.append(math.log(x)) for x in Ehk75]
-
-                [Lhk_0.append(math.log(x)) for x in hk_0]
-                [Lhk_15.append(math.log(x)) for x in hk_15]
-                [Lhk_30.append(math.log(x)) for x in hk_30]
-                [Lhk_45.append(math.log(x)) for x in hk_45]
-                [Lhk_60.append(math.log(x)) for x in hk_60]
-                [Lhk_75.append(math.log(x)) for x in hk_75]
-
-                # READ MUTR_RHO FILE
-                mutr_rho = pd.read_csv(var_mutrrho.get(), sep="\t", header=None, encoding='ISO-8859-1')
-
-                # SAVE VARIABLES MUTR_RHO vs Energy
-                E_mut_aux = mutr_rho.iloc[:, 0].values
-                mtr_aux = mutr_rho.iloc[:, 1].values
-
-                E_mut = []
-                mtr = []
-
-                # Replace dots by commas
-                for x in E_mut_aux:
-                    E_mut.append(float(x))
-
-                for x in mtr_aux:
-                    mtr.append(float(x))
-
-                # Take logs
-                LE_mut = [math.log(x) for x in E_mut]
-                Lmtr = [math.log(x) for x in mtr]
-
-                # plt.figure()
-
-                ##############################################################################################
-                # NINI= Number of times that a random spectrum is generated (the parameters that define
-                #   a quality are changed around a central value using a gaussian or uniform distribution
-                #############################################################################################
-
-                for j in range(nini):
-                    if filter_Al != 0 and uAl != 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-                    elif filter_Al != 0 and uAl == 0 and j == 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-                    elif filter_Al == 0 and j == 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-
-                    if filter_Be != 0 and uBe != 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-                    elif filter_Be != 0 and uBe == 0 and j == 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-                    elif filter_Be == 0 and j == 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-
-                    if filter_Cu != 0 and uCu != 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-                    elif filter_Cu != 0 and uCu == 0 and j == 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-                    elif filter_Cu == 0 and j == 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-
-                    if filter_Sn != 0 and uSn != 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-                    elif filter_Sn != 0 and uSn == 0 and j == 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-                    elif filter_Sn == 0 and j == 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-
-                    if filter_Pb != 0 and uPb != 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-                    elif filter_Pb != 0 and uPb == 0 and j == 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-                    elif filter_Pb == 0 and j == 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-
-                    if filter_Air != 0 and uAir != 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-                    elif filter_Air != 0 and uAir == 0 and j == 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-                    elif filter_Air == 0 and j == 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-
-                    if kvp != 0 and ukvp != 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-                    elif kvp != 0 and ukvp == 0 and j == 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-                    elif kvp == 0 and j == 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-
-                    if th != 0 and uth != 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-                    elif th != 0 and uth == 0 and j == 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-                    elif th_rand == 0 and j == 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-
-                    # SPEKPY ###########################################
-                    my_filters = [
-                        ("Al", filter_Al_rand[0]),
-                        ("Be", filter_Be_rand[0]),
-                        ("Air", filter_Air_rand[0]),
-                        ("Cu", filter_Cu_rand[0]),
-                        ("Sn", filter_Sn_rand[0]),
-                        ("Pb", filter_Pb_rand[0]),
-                    ]
-
-                    s = sp.Spek(kvp=kvp_rand[0], th=th_rand[0])
-                    s.multi_filter(my_filters)
-
-                    E, fluencia = s.get_spectrum(edges=False)  # Obtener el espectro
-                    hvl = s.get_hvl1()  # Get the 1st half-value-layer mm Al
-                    hvlmean.append(hvl)
-                    hvl2 = s.get_hvl2()  # Get the 2nd half-value-layer mm Al
-                    hvl2mean.append(hvl2)
-
-                    hvlCu = s.get_hvl1(matl='Cu')  # Get the 1st half-value-layer mm Cu
-                    hvl2Cu = s.get_hvl2(matl='Cu')  # Get the 2nd half-value-layer mm Cu
-                    hvlCumean.append(hvlCu)
-                    hvl2Cumean.append(hvl2Cu)
-
-                    # SPEKPY ###########################################
-                    # FILTRADO DE SPEKPY Y OPERACIONES SOBRE ESPECTRO
-                    mascara = E >= 8  # cortamos para que no de error al interpolar los hK monoenergetico (comienzan a veces en 7keV)
-                    E_filtrado_temp = E[mascara]
-                    fluencia_filtrada_temp = fluencia[mascara]
-                    # plt.plot(E_filtrado_temp, fluencia_filtrada_temp, label=f"Iteración {j+1}")
-
-                    # Calculo de energia media
-                    # primero debemos crear 2 listas vacias para que vaya acumuludando todos los datos de todas las iteraciones del bucle
-                    fluencias_acumuladas = []
-                    energias_acumuladas = []
-
-                    # Agrego valores a las listas vacias
-                    fluencias_acumuladas.extend(fluencia_filtrada_temp)
-                    energias_acumuladas.extend(E_filtrado_temp)
-                    energia_media = calcular_energia_media(fluencias_acumuladas, energias_acumuladas)
-
-                    energiasMedia.append(energia_media)
-
-                    nfilas = len(fluencia_filtrada_temp)
-
-                    # Realizar EL LOGARITMO
-                    LE = []
-                    for x in E_filtrado_temp:
-                        LE.append(math.log(x))
-
-                    # print("LE", LE)
-
-                    ###################################################################
-                    # Making Akima interpolation with MUTR_RHO (after taking logs)
-                    interpolacion_uno_mut = interpolate.Akima1DInterpolator(LE_mut, Lmtr, axis=0)
-                    list_mutr = []
-
-                    for i in LE:
-                        mutrrho = math.exp(interpolacion_uno_mut(i))
-                        mutr = np.random.normal(mutrrho, umutrr * mutrrho,
-                                                1)  # HERE mutr/rho is sampled randomly from gaussian distrib
-                        list_mutr.append(mutr)
-
-                    coeficientes_mutr_rho = []
-                    coeficientes_mutr_rho.extend(list_mutr)
-                    ###################################################################
-
-                    # Calculo de kerma medio fuera del bucle
-                    kerma_medio = calcular_kerma_medio(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho)
-                    kermasMedia.append(kerma_medio)
-
-                    ###################################################################
-                    # Making Akima interpolation with monoenergetic hK (after taking logs)
-                    interpolacion_uno_0 = interpolate.Akima1DInterpolator(LEhk, Lhk_0, axis=0)
-                    interpolacion_uno_15 = interpolate.Akima1DInterpolator(LEhk15, Lhk_15, axis=0)
-                    interpolacion_uno_30 = interpolate.Akima1DInterpolator(LEhk30, Lhk_30, axis=0)
-                    interpolacion_uno_45 = interpolate.Akima1DInterpolator(LEhk45, Lhk_45, axis=0)
-                    interpolacion_uno_60 = interpolate.Akima1DInterpolator(LEhk60, Lhk_60, axis=0)
-                    interpolacion_uno_75 = interpolate.Akima1DInterpolator(LEhk75, Lhk_75, axis=0)
-
-                    ln_hk_int_0 = []
-                    ln_hk_int_15 = []
-                    ln_hk_int_30 = []
-                    ln_hk_int_45 = []
-                    ln_hk_int_60 = []
-                    ln_hk_int_75 = []
-
-                    for i in LE:
-                        interpolacion_final_0 = math.exp(interpolacion_uno_0(i))
-                        ln_hk_int_0.append(interpolacion_final_0)
-
-                        interpolacion_final_15 = math.exp(interpolacion_uno_15(i))
-                        ln_hk_int_15.append(interpolacion_final_15)
-
-                        interpolacion_final_30 = math.exp(interpolacion_uno_30(i))
-                        ln_hk_int_30.append(interpolacion_final_30)
-
-                        interpolacion_final_45 = math.exp(interpolacion_uno_45(i))
-                        ln_hk_int_45.append(interpolacion_final_45)
-
-                        interpolacion_final_60 = math.exp(interpolacion_uno_60(i))
-                        ln_hk_int_60.append(interpolacion_final_60)
-
-                        interpolacion_final_75 = math.exp(interpolacion_uno_75(i))
-                        ln_hk_int_75.append(interpolacion_final_75)
-
-                    hk_int_0 = ln_hk_int_0
-                    hk_int_15 = ln_hk_int_15
-                    hk_int_30 = ln_hk_int_30
-                    hk_int_45 = ln_hk_int_45
-                    hk_int_60 = ln_hk_int_60
-                    hk_int_75 = ln_hk_int_75
-
-                    hk = []
-                    hk15 = []
-                    hk30 = []
-                    hk45 = []
-                    hk60 = []
-                    hk75 = []
-
-                    hk.extend(hk_int_0)
-                    hpk = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk)
-                    hpkMedia.append(hpk)
-
-                    hk15.extend(hk_int_15)
-                    hpk15 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk15)
-                    hpkMedia15.append(hpk15)
-
-                    hk30.extend(hk_int_30)
-                    hpk30 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk30)
-                    hpkMedia30.append(hpk30)
-
-                    hk45.extend(hk_int_45)
-                    hpk45 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk45)
-                    hpkMedia45.append(hpk45)
-
-                    hk60.extend(hk_int_60)
-                    hpk60 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk60)
-                    hpkMedia60.append(hpk60)
-
-                    hk75.extend(hk_int_75)
-                    hpk75 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk75)
-                    hpkMedia75.append(hpk75)
-                    # print("hk_int", hk_int)
-
-                np.set_printoptions(linewidth=np.inf)
-                print("")
-                print("---------- ESPECTROS ANGULOS 75º ----------")
-
-                # MEAN ENERGY
-                media_energia = np.mean(energiasMedia)
-                desviacion_energia = np.std(energiasMedia, ddof=0)
-                coef_variacion_energia = (desviacion_energia / media_energia) * 100
-
-                # MEAN Kair
-                media_kerma = np.mean(kermasMedia)
-                desviacion_kerma = np.std(kermasMedia, ddof=0)
-                coef_variacion_kerma = (desviacion_kerma / media_kerma) * 100
-
-                # MEAN 1st HVL
-                mean_hvl = np.mean(hvlmean)
-                sd_hvl = np.std(hvlmean, ddof=0)
-                v_hvl = (sd_hvl / hvlmean) * 100
-
-                mean_hvlCu = np.mean(hvlCumean)
-                sd_hvlCu = np.std(hvlCumean, ddof=0)
-                v_hvlCu = (sd_hvlCu / hvlCumean) * 100
-
-                # MEAN 2nd HVL
-                mean_hvl2 = np.mean(hvl2mean)
-                sd_hvl2 = np.std(hvl2mean, ddof=0)
-                v_hvl2 = (sd_hvl2 / hvl2mean) * 100
-
-                mean_hvl2Cu = np.mean(hvl2Cumean)
-                sd_hvl2Cu = np.std(hvl2Cumean, ddof=0)
-                v_hvl2Cu = (sd_hvl2Cu / hvl2Cumean) * 100
-
-                # MEAN CONVERSION COEFFICIENTS AT DIFFERENT ANGLES
-                media_hpk = np.mean(hpkMedia)
-                media_hpk15 = np.mean(hpkMedia15)
-                media_hpk30 = np.mean(hpkMedia30)
-                media_hpk45 = np.mean(hpkMedia45)
-                media_hpk60 = np.mean(hpkMedia60)
-                media_hpk75 = np.mean(hpkMedia75)
-
-                sd_hpk = np.std(hpkMedia, ddof=0)
-                sd_hpk_15 = np.std(hpkMedia15, ddof=0)
-                sd_hpk_30 = np.std(hpkMedia30, ddof=0)
-                sd_hpk_45 = np.std(hpkMedia45, ddof=0)
-                sd_hpk_60 = np.std(hpkMedia60, ddof=0)
-                sd_hpk_75 = np.std(hpkMedia75, ddof=0)
-
-                v_hpk = (sd_hpk / media_hpk) * 100
-                v_hpk_15 = (sd_hpk_15 / media_hpk15) * 100
-                v_hpk_30 = (sd_hpk_30 / media_hpk30) * 100
-                v_hpk_45 = (sd_hpk_45 / media_hpk45) * 100
-                v_hpk_60 = (sd_hpk_75 / media_hpk60) * 100
-                v_hpk_75 = (sd_hpk_75 / media_hpk75) * 100
-
-                print("Conversion coefficient:", f_m)
-                print("Quality", calidad)
-
-                # Lista de ángulos y sus respectivos valores hpk y sd_hpk
-                angulos = [(0, hpk, sd_hpk, v_hpk), (15, hpk15, sd_hpk_15, v_hpk_15), (30, hpk30, sd_hpk_30, v_hpk_30),
-                           (45, hpk45, sd_hpk_45, v_hpk_45), (60, hpk60, sd_hpk_60, v_hpk_60),
-                           (75, hpk75, sd_hpk_75, v_hpk_75)]
-
-                # Nombre del archivo basado en la calidad
-                nombre_archivo = f"{f_m}_{calidad}_resultados.txt"
-                ruta_completa = os.path.join(ruta, nombre_archivo)
-
-                # Abrir (o crear) el archivo en modo de añadir ('a')
-                with open(ruta_completa, "a") as archivo:
-                    # Escribir los resultados para cada ángulo en el mismo archivo
-                    for angulo, hpk_actual, sd_hpk_actual, v_hpk_actual in angulos:
-                        archivo.write(f"Quality: {calidad}\n")
-                        archivo.write(f"angle: {angulo} deg\n")
-                        archivo.write(f"Mean value of conversion coeff: {hpk_actual}\n")
-                        archivo.write(f"Std deviation: {sd_hpk_actual}\n")
-                        archivo.write(f"ur%(hK): {v_hpk_actual}\n")
-                        archivo.write(
-                            f"Mean E keV: {media_energia}, std dev keV: {desviacion_energia}, ur%: {coef_variacion_energia}\n")
-                        archivo.write(
-                            f"Kerma Medio - Valor medio: {media_kerma}, Desviación estándar: {desviacion_kerma}, ur%: {coef_variacion_kerma}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Al- mean value: {mean_hvl}, std deviation mm Al: {sd_hvl}, ur%: {v_hvl}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Al- mean value: {mean_hvl2}, std deviation mm Al: {sd_hvl2}, ur%: {v_hvl2}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Cu- mean value: {mean_hvlCu}, std deviation mm Cu: {sd_hvlCu}, ur%: {v_hvlCu}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Cu- mean value: {mean_hvl2Cu}, std deviation mm Cu: {sd_hvl2Cu}, ur%: {v_hvl2Cu}\n\n")
-
-                tiempo_final_columns_7 = time()
-
-                tiempo_ejecucion_columns_7 = tiempo_final_columns_7 - tiempo_inicial_columns_7
-
-                # print ('El tiempo de ejecucion para hktable columns 7 en (s) fue:',tiempo_ejecucion_columns_7)
-
-            ###############################################################################################################
-            ###############################################################################################################
-            # THIRD LOOP in monoenergetic tables for the ISO conversion coefficient at 7 incident angles: 0 -90deg
-            # ("hp_3_cyl.csv")
-            ###############################################################################################################
-            ###############################################################################################################
-
-            elif len(hk_table.columns) == 8:
-                tiempo_inicial_columns_8 = time()
-
-                # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
-                hk_table15 = hk_table[hk_table['15angle'] > 0]
-                hk_table30 = hk_table[hk_table['30angle'] > 0]
-                hk_table45 = hk_table[hk_table['45angle'] > 0]
-                hk_table60 = hk_table[hk_table['60angle'] > 0]
-                hk_table75 = hk_table[hk_table['75angle'] > 0]
-                hk_table90 = hk_table[hk_table['90angle'] > 0]
-
-                Ehk = hk_table.iloc[:, 0].values
-                hk_0 = hk_table.iloc[:, 1].values
-
-                Ehk15 = hk_table15.iloc[:, 0].values
-                hk_15 = hk_table15.iloc[:, 2].values
-
-                Ehk30 = hk_table30.iloc[:, 0].values
-                hk_30 = hk_table30.iloc[:, 3].values
-
-                Ehk45 = hk_table45.iloc[:, 0].values
-                hk_45 = hk_table45.iloc[:, 4].values
-
-                Ehk60 = hk_table60.iloc[:, 0].values
-                hk_60 = hk_table60.iloc[:, 5].values
-
-                Ehk75 = hk_table75.iloc[:, 0].values
-                hk_75 = hk_table75.iloc[:, 6].values
-
-                Ehk90 = hk_table90.iloc[:, 0].values
-                hk_90 = hk_table90.iloc[:, 7].values
-
-                # TAKE LOGS FOR FURTHER AKIMA INTERPOLATIONS
-                LEhk = []
-                LEhk15 = []
-                LEhk30 = []
-                LEhk45 = []
-                LEhk60 = []
-                LEhk75 = []
-                LEhk90 = []
-                Lhk_0 = []
-                Lhk_15 = []
-                Lhk_30 = []
-                Lhk_45 = []
-                Lhk_60 = []
-                Lhk_75 = []
-                Lhk_90 = []
-
-                [LEhk.append(math.log(x)) for x in Ehk]
-                [LEhk15.append(math.log(x)) for x in Ehk15]
-                [LEhk30.append(math.log(x)) for x in Ehk30]
-                [LEhk45.append(math.log(x)) for x in Ehk45]
-                [LEhk60.append(math.log(x)) for x in Ehk60]
-                [LEhk75.append(math.log(x)) for x in Ehk75]
-                [LEhk90.append(math.log(x)) for x in Ehk90]
-
-                [Lhk_0.append(math.log(x)) for x in hk_0]
-                [Lhk_15.append(math.log(x)) for x in hk_15]
-                [Lhk_30.append(math.log(x)) for x in hk_30]
-                [Lhk_45.append(math.log(x)) for x in hk_45]
-                [Lhk_60.append(math.log(x)) for x in hk_60]
-                [Lhk_75.append(math.log(x)) for x in hk_75]
-                [Lhk_90.append(math.log(x)) for x in hk_90]
-
-                # READ MUTR_RHO file
-                mutr_rho = pd.read_csv(var_mutrrho.get(), sep="\t", header=None, encoding='ISO-8859-1')
-
-                # Save variables
-                E_mut_aux = mutr_rho.iloc[:, 0].values
-                mtr_aux = mutr_rho.iloc[:, 1].values
-
-                E_mut = []
-                mtr = []
-
-                # Replace dots by commas
-                for x in E_mut_aux:
-                    E_mut.append(float(x))
-
-                for x in mtr_aux:
-                    mtr.append(float(x))
-
-                # Take logs
-                LE_mut = [math.log(x) for x in E_mut]
-                Lmtr = [math.log(x) for x in mtr]
-
-                # plt.figure()
-
-                ##############################################################################################
-                # NINI= Number of times that a random spectrum is generated (the parameters that define
-                #   a quality are changed around a central value using a gaussian or uniform distribution
-                #############################################################################################
-
-                for j in range(nini):
-                    if filter_Al != 0 and uAl != 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-                    elif filter_Al != 0 and uAl == 0 and j == 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-                    elif filter_Al == 0 and j == 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-
-                    if filter_Be != 0 and uBe != 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-                    elif filter_Be != 0 and uBe == 0 and j == 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-                    elif filter_Be == 0 and j == 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-
-                    if filter_Cu != 0 and uCu != 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-                    elif filter_Cu != 0 and uCu == 0 and j == 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-                    elif filter_Cu == 0 and j == 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-
-                    if filter_Sn != 0 and uSn != 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-                    elif filter_Sn != 0 and uSn == 0 and j == 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-                    elif filter_Sn == 0 and j == 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-
-                    if filter_Pb != 0 and uPb != 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-                    elif filter_Pb != 0 and uPb == 0 and j == 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-                    elif filter_Pb == 0 and j == 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-
-                    if filter_Air != 0 and uAir != 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-                    elif filter_Air != 0 and uAir == 0 and j == 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-                    elif filter_Air == 0 and j == 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-
-                    if kvp != 0 and ukvp != 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-                    elif kvp != 0 and ukvp == 0 and j == 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-                    elif kvp == 0 and j == 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-
-                    if th != 0 and uth != 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-                    elif th != 0 and uth == 0 and j == 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-                    elif th_rand == 0 and j == 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-
-                    # SPEKPY ###########################################
-                    my_filters = [
-                        ("Al", filter_Al_rand[0]),
-                        ("Be", filter_Be_rand[0]),
-                        ("Air", filter_Air_rand[0]),
-                        ("Cu", filter_Cu_rand[0]),
-                        ("Sn", filter_Sn_rand[0]),
-                        ("Pb", filter_Pb_rand[0]),
-                    ]
-
-                    s = sp.Spek(kvp=kvp_rand[0], th=th_rand[0])
-                    s.multi_filter(my_filters)
-
-                    E, fluencia = s.get_spectrum(edges=False)  # Obtener el espectro
-                    hvl = s.get_hvl1()  # Get the 1st half-value-layer mm Al
-                    hvlmean.append(hvl)
-                    hvl2 = s.get_hvl2()  # Get the 2nd half-value-layer mm Al
-                    hvl2mean.append(hvl2)
-
-                    hvlCu = s.get_hvl1(matl='Cu')  # Get the 1st half-value-layer mm Cu
-                    hvl2Cu = s.get_hvl2(matl='Cu')  # Get the 2nd half-value-layer mm Cu
-                    hvlCumean.append(hvlCu)
-                    hvl2Cumean.append(hvl2Cu)
-
-                    # SPEKPY ###########################################
-                    # FILTRADO DE SPEKPY Y OPERACIONES SOBRE ESPECTRO
-                    mascara = E >= 8  # cortamos para que no de error al interpolar los hK monoenergetico (comienzan a veces en 7keV)
-                    E_filtrado_temp = E[mascara]
-                    fluencia_filtrada_temp = fluencia[mascara]
-                    # plt.plot(E_filtrado_temp, fluencia_filtrada_temp, label=f"Iteración {j+1}")
-
-                    # Calculo de energia media
-                    # primero debemos crear 2 listas vacias para que vaya acumuludando todos los datos de todas las iteraciones del bucle
-                    fluencias_acumuladas = []
-                    energias_acumuladas = []
-
-                    # Agrego valores a las listas vacias
-                    fluencias_acumuladas.extend(fluencia_filtrada_temp)
-                    energias_acumuladas.extend(E_filtrado_temp)
-
-                    energia_media = calcular_energia_media(fluencias_acumuladas, energias_acumuladas)
-
-                    energiasMedia.append(energia_media)
-
-                    nfilas = len(fluencia_filtrada_temp)
-
-                    # Realizar EL LOGARITMO
-                    LE = []
-                    for x in E_filtrado_temp:
-                        LE.append(math.log(x))
-
-                    # print("LE", LE)
-
-                    ###################################################################
-                    # Making Akima interpolation with MUTR_RHO (after taking logs)
-                    interpolacion_uno_mut = interpolate.Akima1DInterpolator(LE_mut, Lmtr, axis=0)
-                    list_mutr = []
-
-                    for i in LE:
-                        mutrrho = math.exp(interpolacion_uno_mut(i))
-                        mutr = np.random.normal(mutrrho, umutrr * mutrrho,
-                                                1)  # HERE mutr/rho is sampled randomly from gaussian distrib
-                        list_mutr.append(mutr)
-
-                    coeficientes_mutr_rho = []
-                    coeficientes_mutr_rho.extend(list_mutr)
-                    ###################################################################
-
-                    # Calculo de kerma medio fuera del bucle
-                    kerma_medio = calcular_kerma_medio(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho)
-                    kermasMedia.append(kerma_medio)
-
-                    # REALIZAR INTERPOLACIÓN CON HK
-                    interpolacion_uno_0 = interpolate.Akima1DInterpolator(LEhk, Lhk_0, axis=0)
-                    interpolacion_uno_15 = interpolate.Akima1DInterpolator(LEhk15, Lhk_15, axis=0)
-                    interpolacion_uno_30 = interpolate.Akima1DInterpolator(LEhk30, Lhk_30, axis=0)
-                    interpolacion_uno_45 = interpolate.Akima1DInterpolator(LEhk45, Lhk_45, axis=0)
-                    interpolacion_uno_60 = interpolate.Akima1DInterpolator(LEhk60, Lhk_60, axis=0)
-                    interpolacion_uno_75 = interpolate.Akima1DInterpolator(LEhk75, Lhk_75, axis=0)
-                    interpolacion_uno_90 = interpolate.Akima1DInterpolator(LEhk90, Lhk_90, axis=0)
-
-                    ln_hk_int_0 = []
-                    ln_hk_int_15 = []
-                    ln_hk_int_30 = []
-                    ln_hk_int_45 = []
-                    ln_hk_int_60 = []
-                    ln_hk_int_75 = []
-                    ln_hk_int_90 = []
-
-                    for i in LE:
-                        interpolacion_final_0 = math.exp(interpolacion_uno_0(i))
-                        ln_hk_int_0.append(interpolacion_final_0)
-
-                        interpolacion_final_15 = math.exp(interpolacion_uno_15(i))
-                        ln_hk_int_15.append(interpolacion_final_15)
-
-                        interpolacion_final_30 = math.exp(interpolacion_uno_30(i))
-                        ln_hk_int_30.append(interpolacion_final_30)
-
-                        interpolacion_final_45 = math.exp(interpolacion_uno_45(i))
-                        ln_hk_int_45.append(interpolacion_final_45)
-
-                        interpolacion_final_60 = math.exp(interpolacion_uno_60(i))
-                        ln_hk_int_60.append(interpolacion_final_60)
-
-                        interpolacion_final_75 = math.exp(interpolacion_uno_75(i))
-                        ln_hk_int_75.append(interpolacion_final_75)
-
-                        interpolacion_final_90 = math.exp(interpolacion_uno_90(i))
-                        ln_hk_int_90.append(interpolacion_final_90)
-
-                    hk_int_0 = ln_hk_int_0
-                    hk_int_15 = ln_hk_int_15
-                    hk_int_30 = ln_hk_int_30
-                    hk_int_45 = ln_hk_int_45
-                    hk_int_60 = ln_hk_int_60
-                    hk_int_75 = ln_hk_int_75
-                    hk_int_90 = ln_hk_int_90
-
-                    hk = []
-                    hk15 = []
-                    hk30 = []
-                    hk45 = []
-                    hk60 = []
-                    hk75 = []
-                    hk90 = []
-
-                    hk.extend(hk_int_0)
-                    hpk = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk)
-                    hpkMedia.append(hpk)
-
-                    hk15.extend(hk_int_15)
-                    hpk15 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk15)
-                    hpkMedia15.append(hpk15)
-
-                    hk30.extend(hk_int_30)
-                    hpk30 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk30)
-                    hpkMedia30.append(hpk30)
-
-                    hk45.extend(hk_int_45)
-                    hpk45 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk45)
-                    hpkMedia45.append(hpk45)
-
-                    hk60.extend(hk_int_60)
-                    hpk60 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk60)
-                    hpkMedia60.append(hpk60)
-
-                    hk75.extend(hk_int_75)
-                    hpk75 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk75)
-                    hpkMedia75.append(hpk75)
-
-                    hk90.extend(hk_int_90)
-                    hpk90 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk90)
-                    hpkMedia90.append(hpk90)
-                    # print("hk_int", hk_int)
-
-                np.set_printoptions(linewidth=np.inf)
-                print("")
-                print("---------- ESPECTROS ANGULOS 90º ----------")
-
-                # plt.xlabel('Energía (keV)')
-                # plt.ylabel('Fluencia')
-                # plt.title('Fluencia vs. Energía para Diferentes Iteraciones de nini')
-                # plt.legend()
-                # plt.show()
-
-                # MEAN ENERGY
-                media_energia = np.mean(energiasMedia)
-                desviacion_energia = np.std(energiasMedia, ddof=0)
-                coef_variacion_energia = (desviacion_energia / media_energia) * 100
-
-                # MEAN Kair
-                media_kerma = np.mean(kermasMedia)
-                desviacion_kerma = np.std(kermasMedia, ddof=0)
-                coef_variacion_kerma = (desviacion_kerma / media_kerma) * 100
-
-                # MEAN 1st HVL
-                mean_hvl = np.mean(hvlmean)
-                sd_hvl = np.std(hvlmean, ddof=0)
-                v_hvl = (sd_hvl / hvlmean) * 100
-
-                mean_hvlCu = np.mean(hvlCumean)
-                sd_hvlCu = np.std(hvlCumean, ddof=0)
-                v_hvlCu = (sd_hvlCu / hvlCumean) * 100
-
-                # MEAN 2nd HVL
-                mean_hvl2 = np.mean(hvl2mean)
-                sd_hvl2 = np.std(hvl2mean, ddof=0)
-                v_hvl2 = (sd_hvl2 / hvl2mean) * 100
-
-                mean_hvl2Cu = np.mean(hvl2Cumean)
-                sd_hvl2Cu = np.std(hvl2Cumean, ddof=0)
-                v_hvl2Cu = (sd_hvl2Cu / hvl2Cumean) * 100
-
-                # MEDIA DEL ESPECTRO
-                media_hpk = np.mean(hpkMedia)
-                media_hpk15 = np.mean(hpkMedia15)
-                media_hpk30 = np.mean(hpkMedia30)
-                media_hpk45 = np.mean(hpkMedia45)
-                media_hpk60 = np.mean(hpkMedia60)
-                media_hpk75 = np.mean(hpkMedia75)
-                media_hpk90 = np.mean(hpkMedia90)
-
-                sd_hpk = np.std(hpkMedia, ddof=0)
-                sd_hpk_15 = np.std(hpkMedia15, ddof=0)
-                sd_hpk_30 = np.std(hpkMedia30, ddof=0)
-                sd_hpk_45 = np.std(hpkMedia45, ddof=0)
-                sd_hpk_60 = np.std(hpkMedia60, ddof=0)
-                sd_hpk_75 = np.std(hpkMedia75, ddof=0)
-                sd_hpk_90 = np.std(hpkMedia90, ddof=0)
-
-                v_hpk = (sd_hpk / media_hpk) * 100
-                v_hpk_15 = (sd_hpk_15 / media_hpk15) * 100
-                v_hpk_30 = (sd_hpk_30 / media_hpk30) * 100
-                v_hpk_45 = (sd_hpk_45 / media_hpk45) * 100
-                v_hpk_60 = (sd_hpk_75 / media_hpk60) * 100
-                v_hpk_75 = (sd_hpk_75 / media_hpk75) * 100
-                v_hpk_90 = (sd_hpk_90 / media_hpk90) * 100
-
-                # Lista de ángulos y sus respectivos valores hpk y sd_hpk
-                angulos = [(0, hpk, sd_hpk, v_hpk), (15, hpk15, sd_hpk_15, v_hpk_15), (30, hpk30, sd_hpk_30, v_hpk_30),
-                           (45, hpk45, sd_hpk_45, v_hpk_45), (60, hpk60, sd_hpk_60, v_hpk_60),
-                           (75, hpk75, sd_hpk_75, v_hpk_75), (90, hpk90, sd_hpk_90, v_hpk_90)]
-
-                # Nombre del archivo basado en la calidad
-                nombre_archivo = f"{f_m}_{calidad}_resultados.txt"
-                ruta_completa = os.path.join(ruta, nombre_archivo)
-
-                # Abrir (o crear) el archivo en modo de añadir ('a')
-                with open(ruta_completa, "a") as archivo:
-                    # Escribir los resultados para cada ángulo en el mismo archivo
-                    for angulo, hpk_actual, sd_hpk_actual, v_hpk_actual in angulos:
-                        archivo.write(f"Quality: {calidad}\n")
-                        archivo.write(f"angle: {angulo} deg\n")
-                        archivo.write(f"Mean value of conversion coeff: {hpk_actual}\n")
-                        archivo.write(f"Std deviation: {sd_hpk_actual}\n")
-                        archivo.write(f"ur%(hK): {v_hpk_actual}\n")
-                        archivo.write(
-                            f"Mean E keV: {media_energia}, std dev keV: {desviacion_energia}, ur%: {coef_variacion_energia}\n")
-                        archivo.write(
-                            f"Kerma Medio - Valor medio: {media_kerma}, Desviación estándar: {desviacion_kerma}, ur%: {coef_variacion_kerma}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Al- mean value: {mean_hvl}, std deviation mm Al: {sd_hvl}, ur%: {v_hvl}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Al- mean value: {mean_hvl2}, std deviation mm Al: {sd_hvl2}, ur%: {v_hvl2}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Cu- mean value: {mean_hvlCu}, std deviation mm Cu: {sd_hvlCu}, ur%: {v_hvlCu}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Cu- mean value: {mean_hvl2Cu}, std deviation mm Cu: {sd_hvl2Cu}, ur%: {v_hvl2Cu}\n\n")
-
-                tiempo_final_columns_8 = time()
-
-                tiempo_ejecucion_columns_8 = tiempo_final_columns_8 - tiempo_inicial_columns_8
-
-                print('El tiempo de ejecucion para hktable columns 8 en (s) fue:', tiempo_ejecucion_columns_8)
-
-            ###############################################################################################################
-            # CUARTO LOOP EN the monoenergetic tables for the ISO conversion coefficients at 8 incident angles: 0 -1800
-            # ("h_prime_3.csv", "h_prime_0.07.csv")
-            ###############################################################################################################
-            elif len(hk_table.columns) == 9:
-                tiempo_inicial_columns_9 = time()
-
-                # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
-                hk_table15 = hk_table[hk_table['15angle'] > 0]
-                hk_table30 = hk_table[hk_table['30angle'] > 0]
-                hk_table45 = hk_table[hk_table['45angle'] > 0]
-                hk_table60 = hk_table[hk_table['60angle'] > 0]
-                hk_table75 = hk_table[hk_table['75angle'] > 0]
-                hk_table90 = hk_table[hk_table['90angle'] > 0]
-                hk_table180 = hk_table[hk_table['180angle'] > 0]
-
-                Ehk = hk_table.iloc[:, 0].values
-                hk_0 = hk_table.iloc[:, 1].values
-
-                Ehk15 = hk_table15.iloc[:, 0].values
-                hk_15 = hk_table15.iloc[:, 2].values
-
-                Ehk30 = hk_table30.iloc[:, 0].values
-                hk_30 = hk_table30.iloc[:, 3].values
-
-                Ehk45 = hk_table45.iloc[:, 0].values
-                hk_45 = hk_table45.iloc[:, 4].values
-
-                Ehk60 = hk_table60.iloc[:, 0].values
-                hk_60 = hk_table60.iloc[:, 5].values
-
-                Ehk75 = hk_table75.iloc[:, 0].values
-                hk_75 = hk_table75.iloc[:, 6].values
-
-                Ehk90 = hk_table90.iloc[:, 0].values
-                hk_90 = hk_table90.iloc[:, 7].values
-
-                Ehk180 = hk_table180.iloc[:, 0].values
-                hk_180 = hk_table180.iloc[:, 8].values
-
-                # TAKE LOGS FOR FURTHER AKIMA INTERPOLATIONS
-                LEhk = []
-                LEhk15 = []
-                LEhk30 = []
-                LEhk45 = []
-                LEhk60 = []
-                LEhk75 = []
-                LEhk90 = []
-                LEhk180 = []
-                Lhk_0 = []
-                Lhk_15 = []
-                Lhk_30 = []
-                Lhk_45 = []
-                Lhk_60 = []
-                Lhk_75 = []
-                Lhk_90 = []
-                Lhk_180 = []
-
-                [LEhk.append(math.log(x)) for x in Ehk]
-                [LEhk15.append(math.log(x)) for x in Ehk15]
-                [LEhk30.append(math.log(x)) for x in Ehk30]
-                [LEhk45.append(math.log(x)) for x in Ehk45]
-                [LEhk60.append(math.log(x)) for x in Ehk60]
-                [LEhk75.append(math.log(x)) for x in Ehk75]
-                [LEhk90.append(math.log(x)) for x in Ehk90]
-                [LEhk180.append(math.log(x)) for x in Ehk180]
-
-                [Lhk_0.append(math.log(x)) for x in hk_0]
-                [Lhk_15.append(math.log(x)) for x in hk_15]
-                [Lhk_30.append(math.log(x)) for x in hk_30]
-                [Lhk_45.append(math.log(x)) for x in hk_45]
-                [Lhk_60.append(math.log(x)) for x in hk_60]
-                [Lhk_75.append(math.log(x)) for x in hk_75]
-                [Lhk_90.append(math.log(x)) for x in hk_90]
-                [Lhk_180.append(math.log(x)) for x in hk_180]
-
-                # READ MUTR_RHO file
-                mutr_rho = pd.read_csv(var_mutrrho.get(), sep="\t", header=None, encoding='ISO-8859-1')
-
-                # Save MUTR_RHO vs Energy
-                E_mut_aux = mutr_rho.iloc[:, 0].values
-                mtr_aux = mutr_rho.iloc[:, 1].values
-
-                E_mut = []
-                mtr = []
-
-                # Replace dots by commas
-                for x in E_mut_aux:
-                    E_mut.append(float(x))
-
-                for x in mtr_aux:
-                    mtr.append(float(x))
-
-                # Take logs
-                LE_mut = [math.log(x) for x in E_mut]
-                Lmtr = [math.log(x) for x in mtr]
-
-                # plt.figure()
-                ##############################################################################################
-                # NINI= Number of times that a random spectrum is generated (the parameters that define
-                #   a quality are changed around a central value using a gaussian or uniform distribution
-                #############################################################################################
-                for j in range(nini):
-                    if filter_Al != 0 and uAl != 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-                    elif filter_Al != 0 and uAl == 0 and j == 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-                    elif filter_Al == 0 and j == 0:
-                        filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
-
-                    if filter_Be != 0 and uBe != 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-                    elif filter_Be != 0 and uBe == 0 and j == 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-                    elif filter_Be == 0 and j == 0:
-                        filter_Be_rand = np.random.uniform(lower_be, high_be, 1)
-
-                    if filter_Cu != 0 and uCu != 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-                    elif filter_Cu != 0 and uCu == 0 and j == 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-                    elif filter_Cu == 0 and j == 0:
-                        filter_Cu_rand = np.random.uniform(lower_cu, high_cu, 1)
-
-                    if filter_Sn != 0 and uSn != 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-                    elif filter_Sn != 0 and uSn == 0 and j == 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-                    elif filter_Sn == 0 and j == 0:
-                        filter_Sn_rand = np.random.uniform(lower_sn, high_sn, 1)
-
-                    if filter_Pb != 0 and uPb != 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-                    elif filter_Pb != 0 and uPb == 0 and j == 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-                    elif filter_Pb == 0 and j == 0:
-                        filter_Pb_rand = np.random.uniform(lower_pb, high_pb, 1)
-
-                    if filter_Air != 0 and uAir != 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-                    elif filter_Air != 0 and uAir == 0 and j == 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-                    elif filter_Air == 0 and j == 0:
-                        filter_Air_rand = np.random.normal(filter_Air, uAir * filter_Air, 1)
-
-                    if kvp != 0 and ukvp != 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-                    elif kvp != 0 and ukvp == 0 and j == 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-                    elif kvp == 0 and j == 0:
-                        kvp_rand = np.random.normal(kvp, ukvp * kvp, 1)
-
-                    if th != 0 and uth != 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-                    elif th != 0 and uth == 0 and j == 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-                    elif th_rand == 0 and j == 0:
-                        th_rand = np.random.normal(th, uth * th, 1)
-
-                    # SPEKPY ###########################################
-                    my_filters = [
-                        ("Al", filter_Al_rand[0]),
-                        ("Be", filter_Be_rand[0]),
-                        ("Air", filter_Air_rand[0]),
-                        ("Cu", filter_Cu_rand[0]),
-                        ("Sn", filter_Sn_rand[0]),
-                        ("Pb", filter_Pb_rand[0]),
-                    ]
-
-                    s = sp.Spek(kvp=kvp_rand[0], th=th_rand[0])
-                    s.multi_filter(my_filters)
-
-                    E, fluencia = s.get_spectrum(edges=False)  # Obtener el espectro
-                    hvl = s.get_hvl1()  # Get the 1st half-value-layer mm Al
-                    hvlmean.append(hvl)
-                    hvl2 = s.get_hvl2()  # Get the 2nd half-value-layer mm Al
-                    hvl2mean.append(hvl2)
-
-                    hvlCu = s.get_hvl1(matl='Cu')  # Get the 1st half-value-layer mm Cu
-                    hvl2Cu = s.get_hvl2(matl='Cu')  # Get the 2nd half-value-layer mm Cu
-                    hvlCumean.append(hvlCu)
-                    hvl2Cumean.append(hvl2Cu)
-
-                    # SPEKPY ###########################################
-                    # FILTRADO DE SPEKPY Y OPERACIONES SOBRE ESPECTRO
-                    mascara = E >= 8  # cortamos para que no de error al interpolar los hK monoenergetico (comienzan a veces en 7keV)
-                    E_filtrado_temp = E[mascara]
-                    fluencia_filtrada_temp = fluencia[mascara]
-                    # plt.plot(E_filtrado_temp, fluencia_filtrada_temp, label=f"Iteración {j+1}")
-                    # Calculo de energia media
-                    # primero debemos crear 2 listas vacias para que vaya acumuludando todos los datos de todas las iteraciones del bucle
-                    fluencias_acumuladas = []
-                    energias_acumuladas = []
-
-                    # Agrego valores a las listas vacias
-                    fluencias_acumuladas.extend(fluencia_filtrada_temp)
-                    energias_acumuladas.extend(E_filtrado_temp)
-
-                    energia_media = calcular_energia_media(fluencias_acumuladas, energias_acumuladas)
-
-                    energiasMedia.append(energia_media)
-
-                    nfilas = len(fluencia_filtrada_temp)
-
-                    # Realizar EL LOGARITMO
-                    LE = []
-                    for x in E_filtrado_temp:
-                        LE.append(math.log(x))
-
-                    # print("LE", LE)
-
-                    ###################################################################
-                    # Making Akima interpolation with MUTR_RHO (after taking logs)
-                    interpolacion_uno_mut = interpolate.Akima1DInterpolator(LE_mut, Lmtr, axis=0)
-                    list_mutr = []
-
-                    for i in LE:
-                        mutrrho = math.exp(interpolacion_uno_mut(i))
-                        mutr = np.random.normal(mutrrho, umutrr * mutrrho,
-                                                1)  # HERE mutr/rho is sampled randomly from gaussian distrib
-                        list_mutr.append(mutr)
-
-                    coeficientes_mutr_rho = []
-                    coeficientes_mutr_rho.extend(list_mutr)
-                    ###################################################################
-                    # Calculation of air kerma (out of the loop)
-                    kerma_medio = calcular_kerma_medio(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho)
-                    kermasMedia.append(kerma_medio)
-
-                    # REALIZAR INTERPOLACIÓN CON HK
-                    interpolacion_uno_0 = interpolate.Akima1DInterpolator(LEhk, Lhk_0, axis=0)
-                    interpolacion_uno_15 = interpolate.Akima1DInterpolator(LEhk15, Lhk_15, axis=0)
-                    interpolacion_uno_30 = interpolate.Akima1DInterpolator(LEhk30, Lhk_30, axis=0)
-                    interpolacion_uno_45 = interpolate.Akima1DInterpolator(LEhk45, Lhk_45, axis=0)
-                    interpolacion_uno_60 = interpolate.Akima1DInterpolator(LEhk60, Lhk_60, axis=0)
-                    interpolacion_uno_75 = interpolate.Akima1DInterpolator(LEhk75, Lhk_75, axis=0)
-                    interpolacion_uno_90 = interpolate.Akima1DInterpolator(LEhk90, Lhk_90, axis=0)
-                    interpolacion_uno_180 = interpolate.Akima1DInterpolator(LEhk180, Lhk_180, axis=0)
-
-                    ln_hk_int_0 = []
-                    ln_hk_int_15 = []
-                    ln_hk_int_30 = []
-                    ln_hk_int_45 = []
-                    ln_hk_int_60 = []
-                    ln_hk_int_75 = []
-                    ln_hk_int_90 = []
-                    ln_hk_int_180 = []
-
-                    for i in LE:
-                        interpolacion_final_0 = math.exp(interpolacion_uno_0(i))
-                        ln_hk_int_0.append(interpolacion_final_0)
-
-                        interpolacion_final_15 = math.exp(interpolacion_uno_15(i))
-                        ln_hk_int_15.append(interpolacion_final_15)
-
-                        interpolacion_final_30 = math.exp(interpolacion_uno_30(i))
-                        ln_hk_int_30.append(interpolacion_final_30)
-
-                        interpolacion_final_45 = math.exp(interpolacion_uno_45(i))
-                        ln_hk_int_45.append(interpolacion_final_45)
-
-                        interpolacion_final_60 = math.exp(interpolacion_uno_60(i))
-                        ln_hk_int_60.append(interpolacion_final_60)
-
-                        interpolacion_final_75 = math.exp(interpolacion_uno_75(i))
-                        ln_hk_int_75.append(interpolacion_final_75)
-
-                        interpolacion_final_90 = math.exp(interpolacion_uno_90(i))
-                        ln_hk_int_90.append(interpolacion_final_90)
-
-                        interpolacion_final_180 = math.exp(interpolacion_uno_180(i))
-                        ln_hk_int_180.append(interpolacion_final_180)
-
-                    hk_int_0 = ln_hk_int_0
-                    hk_int_15 = ln_hk_int_15
-                    hk_int_30 = ln_hk_int_30
-                    hk_int_45 = ln_hk_int_45
-                    hk_int_60 = ln_hk_int_60
-                    hk_int_75 = ln_hk_int_75
-                    hk_int_90 = ln_hk_int_90
-                    hk_int_180 = ln_hk_int_180
-
-                    hk = []
-                    hk15 = []
-                    hk30 = []
-                    hk45 = []
-                    hk60 = []
-                    hk75 = []
-                    hk90 = []
-                    hk180 = []
-
-                    # print("hpkmedia180 antes de hacer hpkMedia180.append(hpk180)", hpkMedia180)
-                    # print("hpkmedia90 antes de hacer hpkMedia90.append(hpk90)", hpkMedia90)
-                    hk.extend(hk_int_0)
-                    hpk = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk)
-                    hpkMedia.append(hpk)
-
-                    hk15.extend(hk_int_15)
-                    hpk15 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk15)
-                    hpkMedia15.append(hpk15)
-
-                    hk30.extend(hk_int_30)
-                    hpk30 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk30)
-                    hpkMedia30.append(hpk30)
-
-                    hk45.extend(hk_int_45)
-                    hpk45 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk45)
-                    hpkMedia45.append(hpk45)
-
-                    hk60.extend(hk_int_60)
-                    hpk60 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk60)
-                    hpkMedia60.append(hpk60)
-
-                    hk75.extend(hk_int_75)
-                    hpk75 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk75)
-                    hpkMedia75.append(hpk75)
-
-                    hk90.extend(hk_int_90)
-                    hpk90 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk90)
-                    hpkMedia90.append(hpk90)
-
-                    hk180.extend(hk_int_180)
-                    hpk180 = calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk180)
-
-                    hpkMedia180.extend(hk180)
-
-                np.set_printoptions(linewidth=np.inf)
-                print("")
-                print("---------- ESPECTROS ANGULOS 180º ----------")
-
-                # plt.xlabel('Energía (keV)')
-                # plt.ylabel('Fluencia')
-                # plt.title('Fluencia vs. Energía para Diferentes Iteraciones de nini')
-                # plt.legend()
-                # plt.show()
-
-                # MEAN ENERGY
-                media_energia = np.mean(energiasMedia)
-                desviacion_energia = np.std(energiasMedia, ddof=0)
-                coef_variacion_energia = (desviacion_energia / media_energia) * 100
-
-                # MEAN Kair
-                media_kerma = np.mean(kermasMedia)
-                desviacion_kerma = np.std(kermasMedia, ddof=0)
-                coef_variacion_kerma = (desviacion_kerma / media_kerma) * 100
-
-                # MEAN 1st HVL
-                mean_hvl = np.mean(hvlmean)
-                sd_hvl = np.std(hvlmean, ddof=0)
-                v_hvl = (sd_hvl / hvlmean) * 100
-
-                mean_hvlCu = np.mean(hvlCumean)
-                sd_hvlCu = np.std(hvlCumean, ddof=0)
-                v_hvlCu = (sd_hvlCu / hvlCumean) * 100
-
-                # MEAN 2nd HVL
-                mean_hvl2 = np.mean(hvl2mean)
-                sd_hvl2 = np.std(hvl2mean, ddof=0)
-                v_hvl2 = (sd_hvl2 / hvl2mean) * 100
-
-                mean_hvl2Cu = np.mean(hvl2Cumean)
-                sd_hvl2Cu = np.std(hvl2Cumean, ddof=0)
-                v_hvl2Cu = (sd_hvl2Cu / hvl2Cumean) * 100
-
-                # MEDIA DEL ESPECTRO
-                media_hpk = np.mean(hpkMedia)
-                media_hpk15 = np.mean(hpkMedia15)
-                media_hpk30 = np.mean(hpkMedia30)
-                media_hpk45 = np.mean(hpkMedia45)
-                media_hpk60 = np.mean(hpkMedia60)
-                media_hpk75 = np.mean(hpkMedia75)
-                media_hpk90 = np.mean(hpkMedia90)
-                media_hpk180 = np.mean(hpkMedia180)
-
-                sd_hpk = np.std(hpkMedia, ddof=0)
-                sd_hpk_15 = np.std(hpkMedia15, ddof=0)
-                sd_hpk_30 = np.std(hpkMedia30, ddof=0)
-                sd_hpk_45 = np.std(hpkMedia45, ddof=0)
-                sd_hpk_60 = np.std(hpkMedia60, ddof=0)
-                sd_hpk_75 = np.std(hpkMedia75, ddof=0)
-                sd_hpk_90 = np.std(hpkMedia90, ddof=0)
-                sd_hpk_180 = np.std(hpkMedia180, ddof=0)
-
-                v_hpk = (sd_hpk / media_hpk) * 100
-                v_hpk_15 = (sd_hpk_15 / media_hpk15) * 100
-                v_hpk_30 = (sd_hpk_30 / media_hpk30) * 100
-                v_hpk_45 = (sd_hpk_45 / media_hpk45) * 100
-                v_hpk_60 = (sd_hpk_75 / media_hpk60) * 100
-                v_hpk_75 = (sd_hpk_75 / media_hpk75) * 100
-                v_hpk_90 = (sd_hpk_90 / media_hpk90) * 100
-                v_hpk_180 = (sd_hpk_90 / media_hpk180) * 100
-
-                print("Conversion coefficient:", f_m)
-                print("Quality", calidad)
-
-                # Lista de ángulos y sus respectivos valores hpk y sd_hpk
-                angulos = [(0, hpk, sd_hpk, v_hpk), (15, hpk15, sd_hpk_15, v_hpk_15), (30, hpk30, sd_hpk_30, v_hpk_30),
-                           (45, hpk45, sd_hpk_45, v_hpk_45), (60, hpk60, sd_hpk_60, v_hpk_60),
-                           (75, hpk75, sd_hpk_75, v_hpk_75), (90, hpk90, sd_hpk_90, v_hpk_90),
-                           (180, hpk180, sd_hpk_180, v_hpk_180)]
-
-                # Nombre del archivo basado en la calidad
-                nombre_archivo = f"{f_m}_{calidad}_resultados.txt"
-                ruta_completa = os.path.join(ruta, nombre_archivo)
-
-                # Abrir (o crear) el archivo en modo de añadir ('a')
-                with open(ruta_completa, "a") as archivo:
-                    # Escribir los resultados para cada ángulo en el mismo archivo
-                    for angulo, hpk_actual, sd_hpk_actual, v_hpk_actual in angulos:
-                        archivo.write(f"Quality: {calidad}\n")
-                        archivo.write(f"angle: {angulo} deg\n")
-                        archivo.write(f"Mean value of conversion coeff: {hpk_actual}\n")
-                        archivo.write(f"Std deviation: {sd_hpk_actual}\n")
-                        archivo.write(f"ur%(hK): {v_hpk_actual}\n")
-                        archivo.write(
-                            f"Mean E keV: {media_energia}, std dev keV: {desviacion_energia}, ur%: {coef_variacion_energia}\n")
-                        archivo.write(
-                            f"Kerma Medio - Valor medio: {media_kerma}, Desviación estándar: {desviacion_kerma}, ur%: {coef_variacion_kerma}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Al- mean value: {mean_hvl}, std deviation mm Al: {sd_hvl}, ur%: {v_hvl}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Al- mean value: {mean_hvl2}, std deviation mm Al: {sd_hvl2}, ur%: {v_hvl2}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Cu- mean value: {mean_hvlCu}, std deviation mm Cu: {sd_hvlCu}, ur%: {v_hvlCu}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Cu- mean value: {mean_hvl2Cu}, std deviation mm Cu: {sd_hvl2Cu}, ur%: {v_hvl2Cu}\n\n")
-
-                tiempo_final_columns_9 = time()
-
-                tiempo_ejecucion_columns_9 = tiempo_final_columns_9 - tiempo_inicial_columns_9
-
-                print('El tiempo de ejecucion para hktable columns 9 en (s) fue:', tiempo_ejecucion_columns_9)
-
-
-pantalla.mainloop()
+from tkinter import ttk
+
+from ttkthemes import ThemedTk
+
+
+class MainWindow:
+    """
+    Main window class for the USpekPy application.
+
+    This class represents the main window of the USpekPy application, providing functionality to interact
+    with various widgets and perform actions such as selecting files and folders, and running the application.
+
+    Attributes:
+        root (tk.Tk or ThemedTk): The root window of the application.
+        frame (ttk.Frame): The frame containing all the widgets.
+        header_font (tuple): Font style for header text.
+        normal_font (tuple): Font style for normal text.
+        frame_pad_y (int): Padding for the frame.
+        widget_pad_x (int): Horizontal padding for widgets.
+        widget_pad_y (int): Vertical padding for widgets.
+        widget_sticky (str): Alignment property for widgets.
+        entry_width (int): Width of entry widgets.
+        style1 (ttk.Style): Custom style for buttons.
+        style2 (ttk.Style): Custom style for buttons.
+        button_sticky (str): Alignment property for buttons.
+        frame_header (ttk.Frame): Frame to contain header widgets.
+        frame_input (ttk.Frame): Frame to contain input widgets.
+        frame_buttons (ttk.Frame): Frame to contain button widgets.
+        header (ttk.Label): Label for displaying the application header.
+        label1 (ttk.Label): Label for describing the first input field.
+        label2 (ttk.Label): Label for describing the second input field.
+        label3 (ttk.Label): Label for describing the third input field.
+        label4 (ttk.Label): Label for describing the fourth input field.
+        label5 (ttk.Label): Label for describing the fifth input field.
+        entry1 (ttk.Entry): Entry widget for the first input field.
+        entry2 (ttk.Entry): Entry widget for the second input field.
+        entry3 (ttk.Entry): Entry widget for the third input field.
+        entry4 (ttk.Entry): Entry widget for the fourth input field.
+        entry5 (ttk.Entry): Entry widget for the fifth input field.
+        button1 (ttk.Button): Button for selecting a file path for the first input field.
+        button2 (ttk.Button): Button for selecting a file path for the second input field.
+        button5 (ttk.Button): Button for selecting a folder path for the fifth input field.
+        button_run (ttk.Button) - Button for running the USpekPy application.
+
+    Methods:
+        __init__(root): Initialize the main window.
+        styling_widgets(): Define styles and fonts for the widgets.
+        create_widgets(): Create all the widgets for the main window.
+        grid_widgets(): Grid all the widgets within the main window.
+        select_file(entry): Open a file dialog to select a file path and insert it into an entry.
+        select_folder(entry): Open a folder dialog to select a folder path and insert it into an entry.
+        run(): Run the USpekPy application.
+    """
+
+    def __init__(self, root):
+        """
+        Initialize the main window.
+
+        Parameters
+        ----------
+        root : tk.Tk or ThemedTk
+            The root window of the application.
+        """
+        # Initialize the main root window of the Tkinter application, setting its title and its icon
+        self.root = root
+        self.root.title("USpekPy")
+        self.root.iconbitmap('assets/letter-u.ico')
+
+        # Create a frame to hold all the widgets with padding
+        self.frame = ttk.Frame(self.root, padding="50 0 50 50")
+        self.frame.grid(row=0, column=0)
+
+        # Set up styles and fonts for the widgets
+        self.styling_widgets()
+
+        # Create all the widgets
+        self.create_widgets()
+
+        # Organize the layout of the widgets
+        self.grid_widgets()
+
+    def styling_widgets(self):
+        """
+        Define styles and fonts for the widgets.
+
+        This method sets various styles and fonts used by the widgets within the main window.
+        """
+        # Define font styles for header and normal text
+        self.header_font = ('', 20, 'bold')
+        self.normal_font = ('', 14, '')
+
+        # Define padding for the frame and widgets
+        self.frame_pad_y = 20
+        self.widget_pad_x = 20
+        self.widget_pad_y = 10
+
+        # Define sticky property for widget alignment
+        self.widget_sticky = 'w'
+
+        # Define width for entry widgets
+        self.entry_width = 35
+
+        # Configure custom button styles
+        self.style1 = ttk.Style()
+        self.style1.configure('Custom1.TButton', font=('', 14, 'bold'), foreground='RoyalBlue2')
+        self.style2 = ttk.Style()
+        self.style2.configure('Custom2.TButton', font=self.normal_font)
+
+        # Define sticky property for button alignment
+        self.button_sticky = 'e'
+
+    def create_widgets(self):
+        """
+        Create all the widgets for the main window.
+
+        This method initializes all the widgets including labels, entries, buttons, etc.
+        """
+        # Create frames to organize the layout
+        self.frame_header = ttk.Frame(self.frame)
+        self.frame_input = ttk.Frame(self.frame)
+        self.frame_buttons = ttk.Frame(self.frame)
+
+        # Create labels for various inputs
+        self.header = ttk.Label(self.frame_header, text="USpekPy: ISO 4037:2019 Magnitudes & uncertainties",
+                                font=self.header_font)
+        self.label1 = ttk.Label(self.frame_input, text="Mono-energetic conversion coefficients", font=self.normal_font)
+        self.label2 = ttk.Label(self.frame_input, text="Mass transmission coefficients", font=self.normal_font)
+        self.label3 = ttk.Label(self.frame_input, text="Uncertainty of mass transmission coefficients",
+                                font=self.normal_font)
+        self.label4 = ttk.Label(self.frame_input, text="Number of simulations", font=self.normal_font)
+        self.label5 = ttk.Label(self.frame_input, text="Select output folder", font=self.normal_font)
+
+        # Create entry widgets for input fields
+        self.entry1 = ttk.Entry(self.frame_input, width=self.entry_width, font=self.normal_font, state='disabled')
+        self.entry2 = ttk.Entry(self.frame_input, width=self.entry_width, font=self.normal_font, state='disabled')
+        self.entry3 = ttk.Entry(self.frame_input, width=self.entry_width, font=self.normal_font)
+        self.entry4 = ttk.Entry(self.frame_input, width=self.entry_width, font=self.normal_font)
+        self.entry5 = ttk.Entry(self.frame_input, width=self.entry_width, font=self.normal_font, state='disabled')
+
+        # Create buttons for file/folder selection and running the application
+        self.button1 = ttk.Button(self.frame_input, text="Select", command=lambda: self.select_file(self.entry1),
+                                  style='Custom2.TButton')
+        self.button2 = ttk.Button(self.frame_input, text="Select", command=lambda: self.select_file(self.entry2),
+                                  style='Custom2.TButton')
+        self.button5 = ttk.Button(self.frame_input, text="Select", command=lambda: self.select_folder(self.entry5),
+                                  style='Custom2.TButton')
+        self.button_run = ttk.Button(self.frame_buttons, text='Run', command=self.run, style='Custom1.TButton')
+
+    def grid_widgets(self):
+        """
+        Grid all the widgets within the main window.
+
+        This method organizes the layout of all the widgets within the main window.
+        """
+        # Grid frames
+        self.frame_header.grid(row=0, column=0, pady=self.frame_pad_y)
+        self.frame_input.grid(row=1, column=0, pady=self.frame_pad_y)
+        self.frame_buttons.grid(row=2, column=0, pady=self.frame_pad_y, sticky=self.button_sticky)
+
+        # Grid labels
+        self.header.grid(row=0, column=0)
+        self.label1.grid(row=1, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.label2.grid(row=2, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.label3.grid(row=3, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.label4.grid(row=4, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.label5.grid(row=5, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
+
+        # Grid entries
+        self.entry1.grid(row=1, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.entry2.grid(row=2, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.entry3.grid(row=3, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.entry4.grid(row=4, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.entry5.grid(row=5, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
+
+        # Grid buttons
+        self.button1.grid(row=1, column=2, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.button2.grid(row=2, column=2, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.button5.grid(row=5, column=2, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.button_run.grid(row=0, column=2, padx=self.widget_pad_x, sticky=self.button_sticky)
+
+    @staticmethod
+    def select_file(entry):
+        """
+        Open a file dialog to select a file path and insert it into an entry.
+
+        Parameters
+        ----------
+        entry : ttk.Entry
+            The entry widget to insert the selected file path.
+        """
+        # Open a file dialog to select a file path
+        file_path = filedialog.askopenfilename()
+
+        # Enable the entry widget to allow editing
+        entry.config(state='normal')
+
+        # Delete any existing text in the entry widget
+        entry.delete(0, tk.END)
+
+        # Insert the selected file path into the entry widget
+        entry.insert(0, file_path)
+
+        # Disable the entry widget to prevent further editing
+        entry.config(state='disabled')
+
+    @staticmethod
+    def select_folder(entry):
+        """
+        Open a folder dialog to select a folder path and insert it into an entry.
+
+        Parameters
+        ----------
+        entry : ttk.Entry
+            The entry widget to insert the selected folder path.
+        """
+        # Open a folder dialog to select a folder path
+        folder_path = filedialog.askdirectory()
+
+        # Enable the entry widget to allow editing
+        entry.config(state='normal')
+
+        # Delete any existing text in the entry widget
+        entry.delete(0, tk.END)
+
+        # Insert the selected folder path into the entry widget
+        entry.insert(0, folder_path)
+
+        # Disable the entry widget to prevent further editing
+        entry.config(state='disabled')
+
+    def run(self):
+        """
+        Run the USpekPy application.
+
+        This method retrieves input values from the entry widgets and displays them in a new window.
+        """
+        # Get input values
+        conversion_coefficients_file = self.entry1.get()
+        transmission_coefficients_file = self.entry2.get()
+        transmission_coefficients_uncertainty = self.entry3.get()
+        simulations_number = self.entry4.get()
+        output_folder = self.entry5.get()
+
+        # Create a new window to display input values
+        new_window = tk.Toplevel(self.root)
+        new_window.title("USpekPy")
+        new_window.iconbitmap('assets/letter-u.ico')
+
+        # Prepare items to display
+        items = [
+            f"Mono-energetic conversion coefficients: {conversion_coefficients_file}",
+            f"Mass transmission coefficients: {transmission_coefficients_file}",
+            f"Uncertainty of mass transmission coefficients: {transmission_coefficients_uncertainty}",
+            f"Number of simulations: {simulations_number}",
+            f"Output folder: {output_folder}"]
+
+        # Create a listbox to display items
+        listbox = tk.Listbox(new_window, width=50, height=20)
+        for item in items:
+            listbox.insert(tk.END, item)
+        listbox.grid(row=0, column=0)
+
+
+# Main function to create and run the USpekPy application
+def main():
+    """
+    Main function to create and run the USpekPy application.
+
+    This function creates the main Tkinter root window, initializes the main application window, and starts the event loop.
+
+    Returns
+    -------
+    None
+        This function does not return anything.
+    """
+    # Create a themed Tkinter root window with the "arc" theme
+    root = ThemedTk(theme="arc")
+
+    # Initialize the main window of the application
+    window = MainWindow(root)
+
+    # Start the Tkinter event loop
+    root.mainloop()
+
+
+# Entry point of the script
+if __name__ == "__main__":
+    # If the script is executed directly, call the main function
+    main()
