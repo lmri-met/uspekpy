@@ -1,0 +1,96 @@
+Quality: N-60
+angle: 0 deg
+Mean value of conversion coeff: [1.551393]
+Std deviation: 2.220446049250313e-16
+ur%(hK): 1.4312595469086716e-14
+Mean E keV: 47.659963347997504, std dev keV: 0.0, ur%: 0.0
+Kerma Medio - Valor medio: 2.228167135029655, Desviación estándar: 4.440892098500626e-16, ur%: 1.993069563177774e-14
+
+1st HVL mm Al- mean value: 5.86707370107788, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+2nd HVL mm Al- mean value: 6.204328670370641, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+1st HVL mm Cu- mean value: 0.23286109914442005, std deviation mm Cu: 2.7755575615628914e-17, ur%: [1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14]
+
+2nd HVL mm Cu- mean value: 0.26021616569423667, std deviation mm Cu: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Quality: N-60
+angle: 15 deg
+Mean value of conversion coeff: [1.5344963]
+Std deviation: 2.220446049250313e-16
+ur%(hK): 1.4470194863536003e-14
+Mean E keV: 47.659963347997504, std dev keV: 0.0, ur%: 0.0
+Kerma Medio - Valor medio: 2.228167135029655, Desviación estándar: 4.440892098500626e-16, ur%: 1.993069563177774e-14
+
+1st HVL mm Al- mean value: 5.86707370107788, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+2nd HVL mm Al- mean value: 6.204328670370641, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+1st HVL mm Cu- mean value: 0.23286109914442005, std deviation mm Cu: 2.7755575615628914e-17, ur%: [1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14]
+
+2nd HVL mm Cu- mean value: 0.26021616569423667, std deviation mm Cu: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Quality: N-60
+angle: 30 deg
+Mean value of conversion coeff: [1.49378091]
+Std deviation: 0.0
+ur%(hK): 0.0
+Mean E keV: 47.659963347997504, std dev keV: 0.0, ur%: 0.0
+Kerma Medio - Valor medio: 2.228167135029655, Desviación estándar: 4.440892098500626e-16, ur%: 1.993069563177774e-14
+
+1st HVL mm Al- mean value: 5.86707370107788, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+2nd HVL mm Al- mean value: 6.204328670370641, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+1st HVL mm Cu- mean value: 0.23286109914442005, std deviation mm Cu: 2.7755575615628914e-17, ur%: [1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14]
+
+2nd HVL mm Cu- mean value: 0.26021616569423667, std deviation mm Cu: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Quality: N-60
+angle: 45 deg
+Mean value of conversion coeff: [1.42339131]
+Std deviation: 2.220446049250313e-16
+ur%(hK): 1.5599688146877567e-14
+Mean E keV: 47.659963347997504, std dev keV: 0.0, ur%: 0.0
+Kerma Medio - Valor medio: 2.228167135029655, Desviación estándar: 4.440892098500626e-16, ur%: 1.993069563177774e-14
+
+1st HVL mm Al- mean value: 5.86707370107788, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+2nd HVL mm Al- mean value: 6.204328670370641, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+1st HVL mm Cu- mean value: 0.23286109914442005, std deviation mm Cu: 2.7755575615628914e-17, ur%: [1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14]
+
+2nd HVL mm Cu- mean value: 0.26021616569423667, std deviation mm Cu: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Quality: N-60
+angle: 60 deg
+Mean value of conversion coeff: [1.3068538]
+Std deviation: 0.0
+ur%(hK): 0.0
+Mean E keV: 47.659963347997504, std dev keV: 0.0, ur%: 0.0
+Kerma Medio - Valor medio: 2.228167135029655, Desviación estándar: 4.440892098500626e-16, ur%: 1.993069563177774e-14
+
+1st HVL mm Al- mean value: 5.86707370107788, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+2nd HVL mm Al- mean value: 6.204328670370641, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+1st HVL mm Cu- mean value: 0.23286109914442005, std deviation mm Cu: 2.7755575615628914e-17, ur%: [1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14]
+
+2nd HVL mm Cu- mean value: 0.26021616569423667, std deviation mm Cu: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+Quality: N-60
+angle: 75 deg
+Mean value of conversion coeff: [1.21715451]
+Std deviation: 0.0
+ur%(hK): 0.0
+Mean E keV: 47.659963347997504, std dev keV: 0.0, ur%: 0.0
+Kerma Medio - Valor medio: 2.228167135029655, Desviación estándar: 4.440892098500626e-16, ur%: 1.993069563177774e-14
+
+1st HVL mm Al- mean value: 5.86707370107788, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+2nd HVL mm Al- mean value: 6.204328670370641, std deviation mm Al: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+1st HVL mm Cu- mean value: 0.23286109914442005, std deviation mm Cu: 2.7755575615628914e-17, ur%: [1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14 1.19193698e-14]
+
+2nd HVL mm Cu- mean value: 0.26021616569423667, std deviation mm Cu: 0.0, ur%: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
