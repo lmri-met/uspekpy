@@ -12,20 +12,36 @@ from scipy import interpolate
 
 import uspeckpy.tools as tl
 
-lista_mono = []
-lista_espectros = []
-
-
-def main(conversion_coefficients_file, transmission_coefficients_file, transmission_coefficients_uncertainty,
+def main(beam_data_file, conversion_coefficients_files, transmission_coefficients_file, transmission_coefficients_uncertainty,
          simulations_number, output_folder):
+    print('READING INPUT ARGUMENTS')
+    # PAL code
+    lista_mono = []
+    lista_espectros = []
+
+    # XCB code
     nini = simulations_number
     umutrr = transmission_coefficients_uncertainty
     ruta = output_folder
+    directorio = ''
+    for x in conversion_coefficients_files:
+        lista_mono.append(os.path.basename(x))
+        directorio = os.path.dirname(x)
 
+    print(f'beam_data_file: {beam_data_file}')
+    print(f'lista_mono: {lista_mono}')
+    print(f'dir_mono_list: {directorio}')
+    print(f'transmission_coefficients_file: {transmission_coefficients_file}')
+    print(f'transmission_coefficients_uncertainty: {umutrr}')
+    print(f'simulations_number: {nini}')
+    print(f'output_folder: {ruta}')
+
+    # PAL code
+    print('READING INPUT BEAM DATA FILE')
     for x in range(2, 47):
+        print(f'x={x}')
         # Opens Excel file
-        archivo_excel = openpyxl.load_workbook(
-            'inputN60_no_us_@1000mm_TEST.xlsx')  # Reemplaza 'tu_archivo.xlsx' con la ruta de tu archivo Excel
+        archivo_excel = openpyxl.load_workbook(beam_data_file)
         # print("x", x)
         # selects working sheet by default
         hoja = archivo_excel.active
@@ -33,42 +49,54 @@ def main(conversion_coefficients_file, transmission_coefficients_file, transmiss
         # Acceds to cell B1 (row 1, column 2...47)
         z = 2
         calidad = hoja.cell(row=1, column=x).value
-        # print("z", z)
         print("calidad", calidad)
         filter_Al = hoja.cell(row=z, column=x).value
+        print(f'filter_Al: {filter_Al} (z={z})')
         z = z + 1
         filter_Cu = hoja.cell(row=z, column=x).value
+        print(f'filter_Cu: {filter_Cu} (z={z})')
         z = z + 1
-        print("filter_Cu", filter_Cu)
         filter_Sn = hoja.cell(row=z, column=x).value
+        print(f'filter_Sn: {filter_Sn} (z={z})')
         z = z + 1
         filter_Pb = hoja.cell(row=z, column=x).value
+        print(f'filter_Pb: {filter_Pb} (z={z})')
         z = z + 1
-        # print("z5", z)
         filter_Be = hoja.cell(row=z, column=x).value
+        print(f'filter_Be: {filter_Be} (z={z})')
         z = z + 1
         filter_Air = hoja.cell(row=z, column=x).value
+        print(f'filter_Air: {filter_Air} (z={z})')
         z = z + 1
         kvp = hoja.cell(row=z, column=x).value
+        print(f'kvp: {kvp} (z={z})')
         z = z + 1
         th = hoja.cell(row=z, column=x).value
+        print(f'th: {th} (z={z})')
         z = z + 1
         uAl = hoja.cell(row=z, column=x).value
+        print(f'uAl: {uAl} (z={z})')
         z = z + 1
         uCu = hoja.cell(row=z, column=x).value
+        print(f'uCu: {uCu} (z={z})')
         z = z + 1
         uSn = hoja.cell(row=z, column=x).value
+        print(f'uSn: {uSn} (z={z})')
         z = z + 1
         uPb = hoja.cell(row=z, column=x).value
+        print(f'uPb: {uPb} (z={z})')
         z = z + 1
         uBe = hoja.cell(row=z, column=x).value
+        print(f'uBe: {uBe} (z={z})')
         z = z + 1
         uAir = hoja.cell(row=z, column=x).value
+        print(f'uAir: {uAir} (z={z})')
         z = z + 1
         ukvp = hoja.cell(row=z, column=x).value
+        print(f'ukvp: {ukvp} (z={z})')
         z = z + 1
-        # print("z", z)
         uth = hoja.cell(row=z, column=x).value
+        print(f'uth: {uth} (z={z})')
 
         lower_be = filter_Be * (1 - uBe * math.sqrt(3))
         high_be = filter_Be * (1 + uBe * math.sqrt(3))
@@ -101,16 +129,19 @@ def main(conversion_coefficients_file, transmission_coefficients_file, transmiss
         hpkMedia90 = []
         hpkMedia180 = []
 
+        print('CREATE DIRECTORY TO STORE OUTPUT FILES')
         # CREATE DIRECTORY TO STORE OUTPUT FILES
         Path(ruta).mkdir(parents=True, exist_ok=True)
         # print("directory path to save files", ruta)
 
+        print('READ MONO ENERGETIC FILES')
         # ARRAY WITH SPECTRA FILE NAMES AND MONOENERGETIC CONV. COEFF.
         ficheros_monoenergeticos = lista_mono  # PAL: list of monoenergetic coefficients (8 different depending on angles)
 
         # READ MONOENERGETIC FILES
         for f_m in ficheros_monoenergeticos:
-            hk_table = pd.read_csv(directorio.get() + "/" + f_m, sep=";", encoding='ISO-8859-1')
+            print(directorio + "/" + f_m)
+            hk_table = pd.read_csv(directorio + "/" + f_m, sep=";", encoding='ISO-8859-1')
             tl.buscar_eliminar(ruta + "/" + f_m.upper() + ".txt")
             tl.buscar_eliminar(ruta + "/" + f_m.upper() + "_0.txt")
             tl.buscar_eliminar(ruta + "/" + f_m.upper() + "_15.txt")
@@ -129,6 +160,7 @@ def main(conversion_coefficients_file, transmission_coefficients_file, transmiss
             ###############################################################################################################
             # TEST THAT THE FILE HAS LESS OR EQUAL THAN 2 COLUMNS
             if len(hk_table.columns) <= 2:
+                print('FIRST LOOP in monoenergetic conversion coefficients defined at incident angle = 0')
                 tiempo_inicial_columns_2 = time()
 
                 # SAVE VARIABLES (E, hK)
@@ -378,7 +410,7 @@ def main(conversion_coefficients_file, transmission_coefficients_file, transmiss
                 v_hvl2Cu = (sd_hvl2Cu / hvl2Cumean) * 100
 
                 # File name based on quality
-                nombre_archivo = f"{f_m}_{calidad}_resultados.txt"
+                nombre_archivo = f"{f_m}_{calidad}_resultados_.txt"
                 ruta_completa = os.path.join(ruta, nombre_archivo)
 
                 # Open (or create) file in adding mode ('a')
@@ -415,6 +447,7 @@ def main(conversion_coefficients_file, transmission_coefficients_file, transmiss
             ###############################################################################################################
             ###############################################################################################################
             elif len(hk_table.columns) == 7:
+                print('SECOND LOOP IN monoenergetic coefficients defined at 6 incident angles: 0-75deg')
                 tiempo_inicial_columns_7 = time()
 
                 # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
@@ -764,7 +797,7 @@ def main(conversion_coefficients_file, transmission_coefficients_file, transmiss
                            (75, hpk75, sd_hpk_75, v_hpk_75)]
 
                 # Nombre del archivo basado en la calidad
-                nombre_archivo = f"{f_m}_{calidad}_resultados.txt"
+                nombre_archivo = f"{f_m}_{calidad}_resultados_.txt"
                 ruta_completa = os.path.join(ruta, nombre_archivo)
 
                 # Abrir (o crear) el archivo en modo de añadir ('a')
@@ -803,6 +836,7 @@ def main(conversion_coefficients_file, transmission_coefficients_file, transmiss
             ###############################################################################################################
 
             elif len(hk_table.columns) == 8:
+                print('THIRD LOOP in monoenergetic tables for the ISO conversion coefficient at 7 incident angles: 0 -90deg')
                 tiempo_inicial_columns_8 = time()
 
                 # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
@@ -1177,7 +1211,7 @@ def main(conversion_coefficients_file, transmission_coefficients_file, transmiss
                            (75, hpk75, sd_hpk_75, v_hpk_75), (90, hpk90, sd_hpk_90, v_hpk_90)]
 
                 # Nombre del archivo basado en la calidad
-                nombre_archivo = f"{f_m}_{calidad}_resultados.txt"
+                nombre_archivo = f"{f_m}_{calidad}_resultados_.txt"
                 ruta_completa = os.path.join(ruta, nombre_archivo)
 
                 # Abrir (o crear) el archivo en modo de añadir ('a')
@@ -1213,6 +1247,7 @@ def main(conversion_coefficients_file, transmission_coefficients_file, transmiss
             # ("h_prime_3.csv", "h_prime_0.07.csv")
             ###############################################################################################################
             elif len(hk_table.columns) == 9:
+                print('CUARTO LOOP EN the monoenergetic tables for the ISO conversion coefficients at 8 incident angles: 0 -1800')
                 tiempo_inicial_columns_9 = time()
 
                 # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
@@ -1611,7 +1646,7 @@ def main(conversion_coefficients_file, transmission_coefficients_file, transmiss
                            (180, hpk180, sd_hpk_180, v_hpk_180)]
 
                 # Nombre del archivo basado en la calidad
-                nombre_archivo = f"{f_m}_{calidad}_resultados.txt"
+                nombre_archivo = f"{f_m}_{calidad}_resultados_.txt"
                 ruta_completa = os.path.join(ruta, nombre_archivo)
 
                 # Abrir (o crear) el archivo en modo de añadir ('a')
