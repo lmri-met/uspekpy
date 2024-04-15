@@ -38,6 +38,10 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
         # Acceds to cell B1 (row 1, column 2...47)
         z = 2
         calidad = hoja.cell(row=1, column=x).value
+        # XCB: Add condidtion to break the loop if calidad is None
+        if calidad is None:
+            break
+        # XCB: Keep reading if calidad is not None
         filter_Al = hoja.cell(row=z, column=x).value
         z = z + 1
         filter_Cu = hoja.cell(row=z, column=x).value
