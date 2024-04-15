@@ -28,75 +28,47 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
         lista_mono.append(os.path.basename(x))
         directorio = os.path.dirname(x)
 
-    print(f'beam_data_file: {beam_data_file}')
-    print(f'lista_mono: {lista_mono}')
-    print(f'dir_mono_list: {directorio}')
-    print(f'transmission_coefficients_file: {transmission_coefficients_file}')
-    print(f'transmission_coefficients_uncertainty: {umutrr}')
-    print(f'simulations_number: {nini}')
-    print(f'output_folder: {ruta}')
-
     # PAL code
     print('READING INPUT BEAM DATA FILE')
     for x in range(2, 47):
-        print(f'x={x}')
         # Opens Excel file
         archivo_excel = openpyxl.load_workbook(beam_data_file)
-        # print("x", x)
         # selects working sheet by default
         hoja = archivo_excel.active
-
         # Acceds to cell B1 (row 1, column 2...47)
         z = 2
         calidad = hoja.cell(row=1, column=x).value
-        print("calidad", calidad)
         filter_Al = hoja.cell(row=z, column=x).value
-        print(f'filter_Al: {filter_Al} (z={z})')
         z = z + 1
         filter_Cu = hoja.cell(row=z, column=x).value
-        print(f'filter_Cu: {filter_Cu} (z={z})')
         z = z + 1
         filter_Sn = hoja.cell(row=z, column=x).value
-        print(f'filter_Sn: {filter_Sn} (z={z})')
         z = z + 1
         filter_Pb = hoja.cell(row=z, column=x).value
-        print(f'filter_Pb: {filter_Pb} (z={z})')
         z = z + 1
         filter_Be = hoja.cell(row=z, column=x).value
-        print(f'filter_Be: {filter_Be} (z={z})')
         z = z + 1
         filter_Air = hoja.cell(row=z, column=x).value
-        print(f'filter_Air: {filter_Air} (z={z})')
         z = z + 1
         kvp = hoja.cell(row=z, column=x).value
-        print(f'kvp: {kvp} (z={z})')
         z = z + 1
         th = hoja.cell(row=z, column=x).value
-        print(f'th: {th} (z={z})')
         z = z + 1
         uAl = hoja.cell(row=z, column=x).value
-        print(f'uAl: {uAl} (z={z})')
         z = z + 1
         uCu = hoja.cell(row=z, column=x).value
-        print(f'uCu: {uCu} (z={z})')
         z = z + 1
         uSn = hoja.cell(row=z, column=x).value
-        print(f'uSn: {uSn} (z={z})')
         z = z + 1
         uPb = hoja.cell(row=z, column=x).value
-        print(f'uPb: {uPb} (z={z})')
         z = z + 1
         uBe = hoja.cell(row=z, column=x).value
-        print(f'uBe: {uBe} (z={z})')
         z = z + 1
         uAir = hoja.cell(row=z, column=x).value
-        print(f'uAir: {uAir} (z={z})')
         z = z + 1
         ukvp = hoja.cell(row=z, column=x).value
-        print(f'ukvp: {ukvp} (z={z})')
         z = z + 1
         uth = hoja.cell(row=z, column=x).value
-        print(f'uth: {uth} (z={z})')
 
         lower_be = filter_Be * (1 - uBe * math.sqrt(3))
         high_be = filter_Be * (1 + uBe * math.sqrt(3))
@@ -132,7 +104,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
         print('CREATE DIRECTORY TO STORE OUTPUT FILES')
         # CREATE DIRECTORY TO STORE OUTPUT FILES
         Path(ruta).mkdir(parents=True, exist_ok=True)
-        # print("directory path to save files", ruta)
 
         print('READ MONO ENERGETIC FILES')
         # ARRAY WITH SPECTRA FILE NAMES AND MONOENERGETIC CONV. COEFF.
@@ -140,7 +111,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
         # READ MONOENERGETIC FILES
         for f_m in ficheros_monoenergeticos:
-            print(directorio + "/" + f_m)
             hk_table = pd.read_csv(directorio + "/" + f_m, sep=";", encoding='ISO-8859-1')
             tl.buscar_eliminar(ruta + "/" + f_m.upper() + ".txt")
             tl.buscar_eliminar(ruta + "/" + f_m.upper() + "_0.txt")
@@ -346,7 +316,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     kerma_medio = tl.calcular_kerma_medio(fluencias_acumuladas, energias_acumuladas,
                                                           coeficientes_mutr_rho)
                     kermasMedia.append(kerma_medio)
-                    # print("contenido p_int", p_int)
 
                     ###################################################################
                     # Making Akima interpolation with monoenergetic hK (after taking logs)
@@ -366,15 +335,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     hpkMedia.append(hpk)
 
                 np.set_printoptions(linewidth=np.inf)
-                print("")
-                print("---------- ESPECTROS SIN ÁNGULOS ----------")
-
-                # PLOTTING SPECTRA FOR THE CASE OF CONV. COEF WITHOUT ANGLES
-                #                 plt.xlabel('Energía (keV)')
-                #                 plt.ylabel('Fluencia')
-                #                 plt.title('Fluencia vs. Energía')
-                #                 plt.legend()
-                #                 plt.show()
 
                 # MEAN ENERGY
                 media_energia = np.mean(energiasMedia)
@@ -638,8 +598,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     for x in E_filtrado_temp:
                         LE.append(math.log(x))
 
-                    # print("LE", LE)
-
                     ###################################################################
                     # Making Akima interpolation with MUTR_RHO (after taking logs)
                     interpolacion_uno_mut = interpolate.Akima1DInterpolator(LE_mut, Lmtr, axis=0)
@@ -732,11 +690,8 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     hk75.extend(hk_int_75)
                     hpk75 = tl.calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk75)
                     hpkMedia75.append(hpk75)
-                    # print("hk_int", hk_int)
 
                 np.set_printoptions(linewidth=np.inf)
-                print("")
-                print("---------- ESPECTROS ANGULOS 75º ----------")
 
                 # MEAN ENERGY
                 media_energia = np.mean(energiasMedia)
@@ -788,9 +743,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 v_hpk_60 = (sd_hpk_75 / media_hpk60) * 100
                 v_hpk_75 = (sd_hpk_75 / media_hpk75) * 100
 
-                print("Conversion coefficient:", f_m)
-                print("Quality", calidad)
-
                 # Lista de ángulos y sus respectivos valores hpk y sd_hpk
                 angulos = [(0, hpk, sd_hpk, v_hpk), (15, hpk15, sd_hpk_15, v_hpk_15), (30, hpk30, sd_hpk_30, v_hpk_30),
                            (45, hpk45, sd_hpk_45, v_hpk_45), (60, hpk60, sd_hpk_60, v_hpk_60),
@@ -825,8 +777,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 tiempo_final_columns_7 = time()
 
                 tiempo_ejecucion_columns_7 = tiempo_final_columns_7 - tiempo_inicial_columns_7
-
-                # print ('El tiempo de ejecucion para hktable columns 7 en (s) fue:',tiempo_ejecucion_columns_7)
 
             ###############################################################################################################
             ###############################################################################################################
@@ -1036,8 +986,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     for x in E_filtrado_temp:
                         LE.append(math.log(x))
 
-                    # print("LE", LE)
-
                     ###################################################################
                     # Making Akima interpolation with MUTR_RHO (after taking logs)
                     interpolacion_uno_mut = interpolate.Akima1DInterpolator(LE_mut, Lmtr, axis=0)
@@ -1140,17 +1088,8 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     hk90.extend(hk_int_90)
                     hpk90 = tl.calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk90)
                     hpkMedia90.append(hpk90)
-                    # print("hk_int", hk_int)
 
                 np.set_printoptions(linewidth=np.inf)
-                print("")
-                print("---------- ESPECTROS ANGULOS 90º ----------")
-
-                # plt.xlabel('Energía (keV)')
-                # plt.ylabel('Fluencia')
-                # plt.title('Fluencia vs. Energía para Diferentes Iteraciones de nini')
-                # plt.legend()
-                # plt.show()
 
                 # MEAN ENERGY
                 media_energia = np.mean(energiasMedia)
@@ -1452,8 +1391,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     for x in E_filtrado_temp:
                         LE.append(math.log(x))
 
-                    # print("LE", LE)
-
                     ###################################################################
                     # Making Akima interpolation with MUTR_RHO (after taking logs)
                     interpolacion_uno_mut = interpolate.Akima1DInterpolator(LE_mut, Lmtr, axis=0)
@@ -1535,8 +1472,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     hk90 = []
                     hk180 = []
 
-                    # print("hpkmedia180 antes de hacer hpkMedia180.append(hpk180)", hpkMedia180)
-                    # print("hpkmedia90 antes de hacer hpkMedia90.append(hpk90)", hpkMedia90)
                     hk.extend(hk_int_0)
                     hpk = tl.calcular_hpk(fluencias_acumuladas, energias_acumuladas, coeficientes_mutr_rho, hk)
                     hpkMedia.append(hpk)
@@ -1571,14 +1506,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     hpkMedia180.extend(hk180)
 
                 np.set_printoptions(linewidth=np.inf)
-                print("")
-                print("---------- ESPECTROS ANGULOS 180º ----------")
-
-                # plt.xlabel('Energía (keV)')
-                # plt.ylabel('Fluencia')
-                # plt.title('Fluencia vs. Energía para Diferentes Iteraciones de nini')
-                # plt.legend()
-                # plt.show()
 
                 # MEAN ENERGY
                 media_energia = np.mean(energiasMedia)
@@ -1635,9 +1562,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 v_hpk_75 = (sd_hpk_75 / media_hpk75) * 100
                 v_hpk_90 = (sd_hpk_90 / media_hpk90) * 100
                 v_hpk_180 = (sd_hpk_90 / media_hpk180) * 100
-
-                print("Conversion coefficient:", f_m)
-                print("Quality", calidad)
 
                 # Lista de ángulos y sus respectivos valores hpk y sd_hpk
                 angulos = [(0, hpk, sd_hpk, v_hpk), (15, hpk15, sd_hpk_15, v_hpk_15), (30, hpk30, sd_hpk_30, v_hpk_30),
