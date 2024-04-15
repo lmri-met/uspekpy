@@ -19,7 +19,7 @@ Example:
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
-
+import time
 from ttkthemes import ThemedTk
 
 
@@ -143,12 +143,14 @@ class MainWindow:
         # Create labels for various inputs
         self.header = ttk.Label(self.frame_header, text="USpekPy: ISO 4037:2019 Magnitudes & uncertainties",
                                 font=self.header_font)
-        self.label1 = ttk.Label(self.frame_input, text="Mono-energetic conversion coefficients", font=self.normal_font)
-        self.label2 = ttk.Label(self.frame_input, text="Mass transmission coefficients", font=self.normal_font)
+        self.label1 = ttk.Label(self.frame_input, text="Mono-energetic conversion coefficients files",
+                                font=self.normal_font)
+        self.label2 = ttk.Label(self.frame_input, text="Mass transmission coefficients file", font=self.normal_font)
         self.label3 = ttk.Label(self.frame_input, text="Uncertainty of mass transmission coefficients",
                                 font=self.normal_font)
         self.label4 = ttk.Label(self.frame_input, text="Number of simulations", font=self.normal_font)
-        self.label5 = ttk.Label(self.frame_input, text="Select output folder", font=self.normal_font)
+        self.label5 = ttk.Label(self.frame_input, text="Output folder", font=self.normal_font)
+        self.label6 = ttk.Label(self.frame_input, text="Beam data file", font=self.normal_font)
 
         # Create entry widgets for input fields
         self.entry1 = ttk.Entry(self.frame_input, width=self.entry_width, font=self.normal_font, state='disabled')
@@ -156,13 +158,16 @@ class MainWindow:
         self.entry3 = ttk.Entry(self.frame_input, width=self.entry_width, font=self.normal_font)
         self.entry4 = ttk.Entry(self.frame_input, width=self.entry_width, font=self.normal_font)
         self.entry5 = ttk.Entry(self.frame_input, width=self.entry_width, font=self.normal_font, state='disabled')
+        self.entry6 = ttk.Entry(self.frame_input, width=self.entry_width, font=self.normal_font, state='disabled')
 
         # Create buttons for file/folder selection and running the application
-        self.button1 = ttk.Button(self.frame_input, text="Select", command=lambda: self.select_file(self.entry1),
+        self.button1 = ttk.Button(self.frame_input, text="Select", command=lambda: self.select_files(self.entry1),
                                   style='Custom2.TButton')
         self.button2 = ttk.Button(self.frame_input, text="Select", command=lambda: self.select_file(self.entry2),
                                   style='Custom2.TButton')
         self.button5 = ttk.Button(self.frame_input, text="Select", command=lambda: self.select_folder(self.entry5),
+                                  style='Custom2.TButton')
+        self.button6 = ttk.Button(self.frame_input, text="Select", command=lambda: self.select_file(self.entry6),
                                   style='Custom2.TButton')
         self.button_run = ttk.Button(self.frame_buttons, text='Run', command=self.run, style='Custom1.TButton')
 
@@ -179,23 +184,26 @@ class MainWindow:
 
         # Grid labels
         self.header.grid(row=0, column=0)
-        self.label1.grid(row=1, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
-        self.label2.grid(row=2, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
-        self.label3.grid(row=3, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
-        self.label4.grid(row=4, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
-        self.label5.grid(row=5, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.label1.grid(row=2, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.label2.grid(row=3, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.label3.grid(row=4, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.label4.grid(row=5, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.label5.grid(row=6, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.label6.grid(row=1, column=0, pady=self.widget_pad_y, padx=self.widget_pad_x, sticky=self.widget_sticky)
 
         # Grid entries
-        self.entry1.grid(row=1, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
-        self.entry2.grid(row=2, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
-        self.entry3.grid(row=3, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
-        self.entry4.grid(row=4, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
-        self.entry5.grid(row=5, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.entry1.grid(row=2, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.entry2.grid(row=3, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.entry3.grid(row=4, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.entry4.grid(row=5, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.entry5.grid(row=6, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.entry6.grid(row=1, column=1, padx=self.widget_pad_x, sticky=self.widget_sticky)
 
         # Grid buttons
-        self.button1.grid(row=1, column=2, padx=self.widget_pad_x, sticky=self.widget_sticky)
-        self.button2.grid(row=2, column=2, padx=self.widget_pad_x, sticky=self.widget_sticky)
-        self.button5.grid(row=5, column=2, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.button1.grid(row=2, column=2, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.button2.grid(row=3, column=2, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.button5.grid(row=6, column=2, padx=self.widget_pad_x, sticky=self.widget_sticky)
+        self.button6.grid(row=1, column=2, padx=self.widget_pad_x, sticky=self.widget_sticky)
         self.button_run.grid(row=0, column=2, padx=self.widget_pad_x, sticky=self.button_sticky)
 
     @staticmethod
@@ -210,6 +218,31 @@ class MainWindow:
         """
         # Open a file dialog to select a file path
         file_path = filedialog.askopenfilename()
+
+        # Enable the entry widget to allow editing
+        entry.config(state='normal')
+
+        # Delete any existing text in the entry widget
+        entry.delete(0, tk.END)
+
+        # Insert the selected file path into the entry widget
+        entry.insert(0, file_path)
+
+        # Disable the entry widget to prevent further editing
+        entry.config(state='disabled')
+
+    @staticmethod
+    def select_files(entry):
+        """
+        Open a file dialog to select one or several files path and insert them into an entry.
+
+        Parameters
+        ----------
+        entry : ttk.Entry
+            The entry widget to insert the selected file path.
+        """
+        # Open a file dialog to select a file path
+        file_path = filedialog.askopenfilenames()
 
         # Enable the entry widget to allow editing
         entry.config(state='normal')
@@ -254,31 +287,50 @@ class MainWindow:
 
         This method retrieves input values from the entry widgets and displays them in a new window.
         """
+        # Change and disable button
+        self.button_run.config(text="Running...")
+        self.button_run.config(state=tk.DISABLED)
+        self.root.update()  # Update the GUI to immediately show the change
+
         # Get input values
         conversion_coefficients_file = self.entry1.get()
         transmission_coefficients_file = self.entry2.get()
         transmission_coefficients_uncertainty = self.entry3.get()
         simulations_number = self.entry4.get()
         output_folder = self.entry5.get()
+        input_file = self.entry6.get()
 
-        # Create a new window to display input values
+        # Prepare items to display
+        self.prompt_window(output_folder)
+
+        # Change and enable button
+        self.button_run.config(text="Run")
+        self.button_run.config(state=tk.NORMAL)
+
+    def prompt_window(self, output_folder):
+        # Simulate a time-consuming task
+        time.sleep(10)
+
+        # Prepare items to display
+        items = [
+            f"Output file saved to the folder:",
+            f"{output_folder}"]
+
+        # Create a new window to display input values, setting its title and its icon
         new_window = tk.Toplevel(self.root)
         new_window.title("USpekPy")
         new_window.iconbitmap('assets/letter-u.ico')
 
-        # Prepare items to display
-        items = [
-            f"Mono-energetic conversion coefficients: {conversion_coefficients_file}",
-            f"Mass transmission coefficients: {transmission_coefficients_file}",
-            f"Uncertainty of mass transmission coefficients: {transmission_coefficients_uncertainty}",
-            f"Number of simulations: {simulations_number}",
-            f"Output folder: {output_folder}"]
+        # Create a frame to hold all the widgets with padding
+        frame = ttk.Frame(new_window, padding="50 50 50 50")
+        frame.grid(row=0, column=0)
 
-        # Create a listbox to display items
-        listbox = tk.Listbox(new_window, width=50, height=20)
+        # Create labels to display items
+        i = 0
         for item in items:
-            listbox.insert(tk.END, item)
-        listbox.grid(row=0, column=0)
+            label = ttk.Label(frame, text=item, font=self.normal_font)
+            label.grid(row=i, column=0, pady=self.widget_pad_y)
+            i += 1
 
 
 # Main function to create and run the USpekPy application
