@@ -249,3 +249,63 @@ def calcular_hpk(fluencias, energias, coeficientes_mutr_rho, hk):
     hpk = sumatorio_numerador / sumatorio_denominador
 
     return hpk
+
+
+def output_digest(operational_magnitude, quality, mean_magnitudes, conversion_coefficients, execution_time,
+                  output_folder):
+    """
+    Generate a summary of mean magnitudes and conversion coefficients and save it as both a text file and a CSV file.
+
+    Parameters:
+    - operational_magnitude (str): The operational magnitude.
+    - quality (str): The x-ray radiation quality.
+    - mean_magnitudes (list): A list of tuples containing mean magnitudes (value, standard deviation and percentage uncertainty).
+    - conversion_coefficients (list): A list of tuples containing conversion coefficients (angle, value, standard deviation and percentage uncertainty).
+    - execution_time (float): The time taken for execution in seconds.
+    - output_folder (str): The directory where output files will be saved.
+
+    Returns:
+    - df (pandas.DataFrame): The DataFrame containing the summary data.
+
+    Example:
+    >>> mean_magnitudes = [(10, 0.5, 1.5), (20, 0.8, 2.0)]
+    >>> conversion_coefficients = [(0, 0.1, 0.01, 0.05), (15, 0.2, 0.02, 0.08)]
+    >>> output_digest('h_amb_10', 'N-60', mean_magnitudes, conversion_coefficients, 30.5, 'results')
+    """
+
+    # Create names for the data columns
+    names = ['Mean energy', 'Mean kerma', 'Mean HVL1 Al', 'Mean HVL2 Al', 'Mean HVL1 Cu', 'Mean HVL2 Cu']
+    names += [f'Conv. Coeff. {angle[0]} degrees' for angle in conversion_coefficients]
+
+    # Gather values for the data columns
+    values = [mean_magnitude[0] for mean_magnitude in mean_magnitudes]
+    values += [conversion_coefficient[1] for conversion_coefficient in conversion_coefficients]
+
+    # Gather standard deviations for the data columns
+    standard_deviations = [mean_magnitude[1] for mean_magnitude in mean_magnitudes]
+    standard_deviations += [conversion_coefficient[2] for conversion_coefficient in conversion_coefficients]
+
+    # Gather percentage uncertainties for the data columns
+    percentage_uncertainty = [mean_magnitude[2] for mean_magnitude in mean_magnitudes]
+    percentage_uncertainty += [conversion_coefficient[3] for conversion_coefficient in conversion_coefficients]
+
+    # Create a dictionary to hold the data
+    data = {'Magnitude': names, 'Value': values, 'Std. Dev.': standard_deviations, '% Unc.': percentage_uncertainty}
+
+    # Create a pandas DataFrame from the data
+    df = pd.DataFrame(data)
+
+    # Build path of output file for text file and CSV file
+    file_path_txt = os.path.join(output_folder, f"{operational_magnitude}_{quality}_results.txt")
+    file_path_csv = os.path.join(output_folder, f"{operational_magnitude}_{quality}_results.csv")
+
+    # Create text file
+    with open(file_path_txt, 'w') as file:
+        file.write(f'Conversion coefficients for magnitude {operational_magnitude} and quality {quality}\n\n')
+        file.write(df.to_string())
+        file.write(f'\n\nExecution time: {execution_time} s.')
+
+    # Save DataFrame to a CSV file
+    df.to_csv(file_path_csv, index=False)
+
+    return df
