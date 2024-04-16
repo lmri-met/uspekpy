@@ -14,11 +14,13 @@ import uspeckpy.tools as tl
 
 def main(beam_data_file, conversion_coefficients_files, transmission_coefficients_file, transmission_coefficients_uncertainty,
          simulations_number, output_folder):
-    print('READING INPUT ARGUMENTS')
+    print('RUNNING')
     # PAL code
     lista_mono = []
     lista_espectros = []
 
+    # XCB: INPUT DATA DIGEST: SIMULATIONS NUMBER, UNCERTAINTY OF MU_TR, OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
+    # ------------------------------------------------------------------------------------------------------------------
     # XCB code
     nini = simulations_number
     umutrr = transmission_coefficients_uncertainty
@@ -27,9 +29,12 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
     for x in conversion_coefficients_files:
         lista_mono.append(os.path.basename(x))
         directorio = os.path.dirname(x)
+    # XCB: END OF INPUT DATA DIGEST: SIMULATIONS NUMBER, UNCERTAINTY OF MU_TR, OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
+    # ------------------------------------------------------------------------------------------------------------------
 
+    # XCB: INPUT DATA DIGEST: BEAM DATA FILE
+    # ------------------------------------------------------------------------------------------------------------------
     # PAL code
-    print('READING INPUT BEAM DATA FILE')
     for x in range(2, 47):
         # Opens Excel file
         archivo_excel = openpyxl.load_workbook(beam_data_file)
@@ -73,6 +78,8 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
         ukvp = hoja.cell(row=z, column=x).value
         z = z + 1
         uth = hoja.cell(row=z, column=x).value
+        # XCB: END OF INPUT DATA DIGEST: BEAM DATA FILE
+        # ------------------------------------------------------------------------------------------------------------------
 
         lower_be = filter_Be * (1 - uBe * math.sqrt(3))
         high_be = filter_Be * (1 + uBe * math.sqrt(3))
@@ -105,11 +112,12 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
         hpkMedia90 = []
         hpkMedia180 = []
 
-        print('CREATE DIRECTORY TO STORE OUTPUT FILES')
+    # XCB: INPUT DATA DIGEST: OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
+    # ------------------------------------------------------------------------------------------------------------------
+
         # CREATE DIRECTORY TO STORE OUTPUT FILES
         Path(ruta).mkdir(parents=True, exist_ok=True)
 
-        print('READ MONO ENERGETIC FILES')
         # ARRAY WITH SPECTRA FILE NAMES AND MONOENERGETIC CONV. COEFF.
         ficheros_monoenergeticos = lista_mono  # PAL: list of monoenergetic coefficients (8 different depending on angles)
 
@@ -125,6 +133,8 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
             tl.buscar_eliminar(ruta + "/" + f_m.upper() + "_75.txt")
             tl.buscar_eliminar(ruta + "/" + f_m.upper() + "_90.txt")
             tl.buscar_eliminar(ruta + "/" + f_m.upper() + "_180.txt")
+    # XCB: END OF INPUT DATA DIGEST: OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
+    # ------------------------------------------------------------------------------------------------------------------
 
             ###############################################################################################################
             ###############################################################################################################
@@ -134,7 +144,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
             ###############################################################################################################
             # TEST THAT THE FILE HAS LESS OR EQUAL THAN 2 COLUMNS
             if len(hk_table.columns) <= 2:
-                print('FIRST LOOP in monoenergetic conversion coefficients defined at incident angle = 0')
+                print('FIRST LOOP: monoenergetic conversion coefficients defined at incident angle = 0')
                 tiempo_inicial_columns_2 = time()
 
                 # SAVE VARIABLES (E, hK)
@@ -264,19 +274,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     E_filtrado_temp = E[mascara]
                     fluencia_filtrada_temp = fluencia[mascara]
 
-                    # PRINTING OUT SPECTRA ONLY WHEN OPERATIONAL "h_amb_10.csv","hp_0.07_pill.csv", "hp_0.07_rod.csv" ARE SELECTED ####
-                    # Comment out this section when sepctra are not required
-                    # File name based on quality writes down the spectrum
-
-                    # c=[E_filtrado_temp,fluencia_filtrada_temp]
-
-                    # nombre_archivo = f"{f_m}_{calidad}_{j}_spectrum.txt"
-                    # ruta_completa = os.path.join(ruta, nombre_archivo)
-
-                    # with open(ruta_completa, "a") as archivo:
-                    # Write all results in the opened file
-                    #    for x in zip(*c):
-                    #        archivo.write("{0}\t{1}\n".format(*x))
                     ###################################################################################################################
 
                     # Calculation of mean energy
@@ -358,50 +355,43 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 # MEAN 1st HVL
                 mean_hvl = np.mean(hvlmean)
                 sd_hvl = np.std(hvlmean, ddof=0)
-                v_hvl = (sd_hvl / hvlmean) * 100
+                v_hvl = (sd_hvl / mean_hvl) * 100
 
                 mean_hvlCu = np.mean(hvlCumean)
                 sd_hvlCu = np.std(hvlCumean, ddof=0)
-                v_hvlCu = (sd_hvlCu / hvlCumean) * 100
+                v_hvlCu = (sd_hvlCu / mean_hvl) * 100
 
                 # MEAN 2nd HVL
                 mean_hvl2 = np.mean(hvl2mean)
                 sd_hvl2 = np.std(hvl2mean, ddof=0)
-                v_hvl2 = (sd_hvl2 / hvl2mean) * 100
+                v_hvl2 = (sd_hvl2 / mean_hvl2) * 100
 
                 mean_hvl2Cu = np.mean(hvl2Cumean)
                 sd_hvl2Cu = np.std(hvl2Cumean, ddof=0)
-                v_hvl2Cu = (sd_hvl2Cu / hvl2Cumean) * 100
-
-                # File name based on quality
-                nombre_archivo = f"{f_m}_{calidad}_resultados_.txt"
-                ruta_completa = os.path.join(ruta, nombre_archivo)
-
-                # Open (or create) file in adding mode ('a')
-                with open(ruta_completa, "a") as archivo:
-                    # Write all results in the opened file
-                    archivo.write(f"Quality: {calidad}\n")
-                    archivo.write(f"Mean value conversion coefficient: {media_hpk}\n")
-                    archivo.write(f"Std dev on hK: {sd_hpk}\n")
-                    archivo.write(f"ur% hK: {v_hpk}\n")
-                    archivo.write(
-                        f"Mean Energy - Emean: {media_energia}, Std dev Emean: {desviacion_energia}, ur% Emean: {coef_variacion_energia}\n")
-                    archivo.write(
-                        f"Mean air kerma  - Kair mean: {media_kerma}, Std dev Kair: {desviacion_kerma}, ur% Kair: {coef_variacion_kerma}\n\n")
-                    archivo.write(
-                        f"Kerma Medio - mean value: {media_kerma}, std deviation Kair: {desviacion_kerma}, ur% Kair: {coef_variacion_kerma}\n\n")
-                    archivo.write(
-                        f"1st HVL mm Al- mean value: {mean_hvl}, std deviation mm Al: {sd_hvl}, ur%: {v_hvl}\n\n")
-                    archivo.write(
-                        f"2nd HVL mm Al- mean value: {mean_hvl2}, std deviation mm Al: {sd_hvl2}, ur%: {v_hvl2}\n\n")
-                    archivo.write(
-                        f"1st HVL mm Cu- mean value: {mean_hvlCu}, std deviation mm Cu: {sd_hvlCu}, ur%: {v_hvlCu}\n\n")
-                    archivo.write(
-                        f"2nd HVL mm Cu- mean value: {mean_hvl2Cu}, std deviation mm Cu: {sd_hvl2Cu}, ur%: {v_hvl2Cu}\n\n")
+                v_hvl2Cu = (sd_hvl2Cu / mean_hvl2Cu) * 100
 
                 tiempo_final_columns_2 = time()
 
                 tiempo_ejecucion_columns_2 = tiempo_final_columns_2 - tiempo_inicial_columns_2
+
+                # XCB: OUTPUT DATA DIGEST
+                # ------------------------------------------------------------------------------------------------------
+
+                # Lista de ángulos y sus respectivos valores hpk y sd_hpk
+                angulos = [(0, float(hpk), sd_hpk, v_hpk)]
+
+                # List of magnitudes independent of the angle
+                magnitudes = [(media_energia, desviacion_energia, coef_variacion_energia),
+                              (media_kerma, desviacion_kerma, coef_variacion_kerma),
+                              (mean_hvl, sd_hvl, v_hvl),
+                              (mean_hvl2, sd_hvl2, v_hvl2),
+                              (mean_hvlCu, sd_hvlCu, v_hvlCu),
+                              (mean_hvl2Cu, sd_hvl2Cu, v_hvl2Cu)]
+
+                # Save results in TXT and CSV files
+                df = tl.output_digest(operational_magnitude=f_m, quality=calidad, mean_magnitudes=magnitudes,
+                                      conversion_coefficients=angulos, execution_time=tiempo_ejecucion_columns_2,
+                                      output_folder=ruta)
 
                 print('Execution time in (s):', tiempo_ejecucion_columns_2)
             ###############################################################################################################
@@ -411,7 +401,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
             ###############################################################################################################
             ###############################################################################################################
             elif len(hk_table.columns) == 7:
-                print('SECOND LOOP IN monoenergetic coefficients defined at 6 incident angles: 0-75deg')
+                print('SECOND LOOP: monoenergetic coefficients defined at 6 incident angles: 0 - 75 deg')
                 tiempo_inicial_columns_7 = time()
 
                 # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
@@ -710,20 +700,20 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 # MEAN 1st HVL
                 mean_hvl = np.mean(hvlmean)
                 sd_hvl = np.std(hvlmean, ddof=0)
-                v_hvl = (sd_hvl / hvlmean) * 100
+                v_hvl = (sd_hvl / mean_hvl) * 100
 
                 mean_hvlCu = np.mean(hvlCumean)
                 sd_hvlCu = np.std(hvlCumean, ddof=0)
-                v_hvlCu = (sd_hvlCu / hvlCumean) * 100
+                v_hvlCu = (sd_hvlCu / mean_hvlCu) * 100
 
                 # MEAN 2nd HVL
                 mean_hvl2 = np.mean(hvl2mean)
                 sd_hvl2 = np.std(hvl2mean, ddof=0)
-                v_hvl2 = (sd_hvl2 / hvl2mean) * 100
+                v_hvl2 = (sd_hvl2 / mean_hvl2) * 100
 
                 mean_hvl2Cu = np.mean(hvl2Cumean)
                 sd_hvl2Cu = np.std(hvl2Cumean, ddof=0)
-                v_hvl2Cu = (sd_hvl2Cu / hvl2Cumean) * 100
+                v_hvl2Cu = (sd_hvl2Cu / mean_hvl2Cu) * 100
 
                 # MEAN CONVERSION COEFFICIENTS AT DIFFERENT ANGLES
                 media_hpk = np.mean(hpkMedia)
@@ -747,40 +737,30 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 v_hpk_60 = (sd_hpk_75 / media_hpk60) * 100
                 v_hpk_75 = (sd_hpk_75 / media_hpk75) * 100
 
-                # Lista de ángulos y sus respectivos valores hpk y sd_hpk
-                angulos = [(0, hpk, sd_hpk, v_hpk), (15, hpk15, sd_hpk_15, v_hpk_15), (30, hpk30, sd_hpk_30, v_hpk_30),
-                           (45, hpk45, sd_hpk_45, v_hpk_45), (60, hpk60, sd_hpk_60, v_hpk_60),
-                           (75, hpk75, sd_hpk_75, v_hpk_75)]
-
-                # Nombre del archivo basado en la calidad
-                nombre_archivo = f"{f_m}_{calidad}_resultados_.txt"
-                ruta_completa = os.path.join(ruta, nombre_archivo)
-
-                # Abrir (o crear) el archivo en modo de añadir ('a')
-                with open(ruta_completa, "a") as archivo:
-                    # Escribir los resultados para cada ángulo en el mismo archivo
-                    for angulo, hpk_actual, sd_hpk_actual, v_hpk_actual in angulos:
-                        archivo.write(f"Quality: {calidad}\n")
-                        archivo.write(f"angle: {angulo} deg\n")
-                        archivo.write(f"Mean value of conversion coeff: {hpk_actual}\n")
-                        archivo.write(f"Std deviation: {sd_hpk_actual}\n")
-                        archivo.write(f"ur%(hK): {v_hpk_actual}\n")
-                        archivo.write(
-                            f"Mean E keV: {media_energia}, std dev keV: {desviacion_energia}, ur%: {coef_variacion_energia}\n")
-                        archivo.write(
-                            f"Kerma Medio - Valor medio: {media_kerma}, Desviación estándar: {desviacion_kerma}, ur%: {coef_variacion_kerma}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Al- mean value: {mean_hvl}, std deviation mm Al: {sd_hvl}, ur%: {v_hvl}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Al- mean value: {mean_hvl2}, std deviation mm Al: {sd_hvl2}, ur%: {v_hvl2}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Cu- mean value: {mean_hvlCu}, std deviation mm Cu: {sd_hvlCu}, ur%: {v_hvlCu}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Cu- mean value: {mean_hvl2Cu}, std deviation mm Cu: {sd_hvl2Cu}, ur%: {v_hvl2Cu}\n\n")
-
                 tiempo_final_columns_7 = time()
 
                 tiempo_ejecucion_columns_7 = tiempo_final_columns_7 - tiempo_inicial_columns_7
+
+                # XCB: OUTPUT DATA DIGEST
+                # ------------------------------------------------------------------------------------------------------
+
+                # Lista de ángulos y sus respectivos valores hpk y sd_hpk
+                angulos = [(0, float(hpk), sd_hpk, v_hpk), (15, float(hpk15), sd_hpk_15, v_hpk_15),
+                           (30, float(hpk30), sd_hpk_30, v_hpk_30), (45, float(hpk45), sd_hpk_45, v_hpk_45),
+                           (60, float(hpk60), sd_hpk_60, v_hpk_60), (75, float(hpk75), sd_hpk_75, v_hpk_75)]
+
+                # List of magnitudes independent of the angle
+                magnitudes = [(media_energia, desviacion_energia, coef_variacion_energia),
+                              (media_kerma, desviacion_kerma, coef_variacion_kerma),
+                              (mean_hvl, sd_hvl, v_hvl),
+                              (mean_hvl2, sd_hvl2, v_hvl2),
+                              (mean_hvlCu, sd_hvlCu, v_hvlCu),
+                              (mean_hvl2Cu, sd_hvl2Cu, v_hvl2Cu)]
+
+                # Save results in TXT and CSV files
+                df = tl.output_digest(operational_magnitude=f_m, quality=calidad, mean_magnitudes=magnitudes,
+                                      conversion_coefficients=angulos, execution_time=tiempo_ejecucion_columns_7,
+                                      output_folder=ruta)
 
             ###############################################################################################################
             ###############################################################################################################
@@ -790,7 +770,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
             ###############################################################################################################
 
             elif len(hk_table.columns) == 8:
-                print('THIRD LOOP in monoenergetic tables for the ISO conversion coefficient at 7 incident angles: 0 -90deg')
+                print('THIRD LOOP: monoenergetic conversion coefficient at 7 incident angles: 0 - 90 deg')
                 tiempo_inicial_columns_8 = time()
 
                 # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
@@ -1108,20 +1088,20 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 # MEAN 1st HVL
                 mean_hvl = np.mean(hvlmean)
                 sd_hvl = np.std(hvlmean, ddof=0)
-                v_hvl = (sd_hvl / hvlmean) * 100
+                v_hvl = (sd_hvl / mean_hvl) * 100
 
                 mean_hvlCu = np.mean(hvlCumean)
                 sd_hvlCu = np.std(hvlCumean, ddof=0)
-                v_hvlCu = (sd_hvlCu / hvlCumean) * 100
+                v_hvlCu = (sd_hvlCu / mean_hvlCu) * 100
 
                 # MEAN 2nd HVL
                 mean_hvl2 = np.mean(hvl2mean)
                 sd_hvl2 = np.std(hvl2mean, ddof=0)
-                v_hvl2 = (sd_hvl2 / hvl2mean) * 100
+                v_hvl2 = (sd_hvl2 / mean_hvl2) * 100
 
                 mean_hvl2Cu = np.mean(hvl2Cumean)
                 sd_hvl2Cu = np.std(hvl2Cumean, ddof=0)
-                v_hvl2Cu = (sd_hvl2Cu / hvl2Cumean) * 100
+                v_hvl2Cu = (sd_hvl2Cu / mean_hvl2Cu) * 100
 
                 # MEDIA DEL ESPECTRO
                 media_hpk = np.mean(hpkMedia)
@@ -1148,40 +1128,31 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 v_hpk_75 = (sd_hpk_75 / media_hpk75) * 100
                 v_hpk_90 = (sd_hpk_90 / media_hpk90) * 100
 
-                # Lista de ángulos y sus respectivos valores hpk y sd_hpk
-                angulos = [(0, hpk, sd_hpk, v_hpk), (15, hpk15, sd_hpk_15, v_hpk_15), (30, hpk30, sd_hpk_30, v_hpk_30),
-                           (45, hpk45, sd_hpk_45, v_hpk_45), (60, hpk60, sd_hpk_60, v_hpk_60),
-                           (75, hpk75, sd_hpk_75, v_hpk_75), (90, hpk90, sd_hpk_90, v_hpk_90)]
-
-                # Nombre del archivo basado en la calidad
-                nombre_archivo = f"{f_m}_{calidad}_resultados_.txt"
-                ruta_completa = os.path.join(ruta, nombre_archivo)
-
-                # Abrir (o crear) el archivo en modo de añadir ('a')
-                with open(ruta_completa, "a") as archivo:
-                    # Escribir los resultados para cada ángulo en el mismo archivo
-                    for angulo, hpk_actual, sd_hpk_actual, v_hpk_actual in angulos:
-                        archivo.write(f"Quality: {calidad}\n")
-                        archivo.write(f"angle: {angulo} deg\n")
-                        archivo.write(f"Mean value of conversion coeff: {hpk_actual}\n")
-                        archivo.write(f"Std deviation: {sd_hpk_actual}\n")
-                        archivo.write(f"ur%(hK): {v_hpk_actual}\n")
-                        archivo.write(
-                            f"Mean E keV: {media_energia}, std dev keV: {desviacion_energia}, ur%: {coef_variacion_energia}\n")
-                        archivo.write(
-                            f"Kerma Medio - Valor medio: {media_kerma}, Desviación estándar: {desviacion_kerma}, ur%: {coef_variacion_kerma}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Al- mean value: {mean_hvl}, std deviation mm Al: {sd_hvl}, ur%: {v_hvl}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Al- mean value: {mean_hvl2}, std deviation mm Al: {sd_hvl2}, ur%: {v_hvl2}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Cu- mean value: {mean_hvlCu}, std deviation mm Cu: {sd_hvlCu}, ur%: {v_hvlCu}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Cu- mean value: {mean_hvl2Cu}, std deviation mm Cu: {sd_hvl2Cu}, ur%: {v_hvl2Cu}\n\n")
-
                 tiempo_final_columns_8 = time()
 
                 tiempo_ejecucion_columns_8 = tiempo_final_columns_8 - tiempo_inicial_columns_8
+
+                # XCB: OUTPUT DATA DIGEST
+                # ------------------------------------------------------------------------------------------------------
+
+                # Lista de ángulos y sus respectivos valores hpk y sd_hpk
+                angulos = [(0, float(hpk), sd_hpk, v_hpk), (15, float(hpk15), sd_hpk_15, v_hpk_15),
+                           (30, float(hpk30), sd_hpk_30, v_hpk_30), (45, float(hpk45), sd_hpk_45, v_hpk_45),
+                           (60, float(hpk60), sd_hpk_60, v_hpk_60), (75, float(hpk75), sd_hpk_75, v_hpk_75),
+                           (90, float(hpk90), sd_hpk_90, v_hpk_90)]
+
+                # List of magnitudes independent of the angle
+                magnitudes = [(media_energia, desviacion_energia, coef_variacion_energia),
+                              (media_kerma, desviacion_kerma, coef_variacion_kerma),
+                              (mean_hvl, sd_hvl, v_hvl),
+                              (mean_hvl2, sd_hvl2, v_hvl2),
+                              (mean_hvlCu, sd_hvlCu, v_hvlCu),
+                              (mean_hvl2Cu, sd_hvl2Cu, v_hvl2Cu)]
+
+                # Save results in TXT and CSV files
+                df = tl.output_digest(operational_magnitude=f_m, quality=calidad, mean_magnitudes=magnitudes,
+                                      conversion_coefficients=angulos, execution_time=tiempo_ejecucion_columns_8,
+                                      output_folder=ruta)
 
                 print('El tiempo de ejecucion para hktable columns 8 en (s) fue:', tiempo_ejecucion_columns_8)
 
@@ -1190,7 +1161,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
             # ("h_prime_3.csv", "h_prime_0.07.csv")
             ###############################################################################################################
             elif len(hk_table.columns) == 9:
-                print('CUARTO LOOP EN the monoenergetic tables for the ISO conversion coefficients at 8 incident angles: 0 -1800')
+                print('CUARTO LOOP: monoenergetic conversion coefficients at 8 incident angles: 0 - 180 deg')
                 tiempo_inicial_columns_9 = time()
 
                 # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
@@ -1524,20 +1495,20 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 # MEAN 1st HVL
                 mean_hvl = np.mean(hvlmean)
                 sd_hvl = np.std(hvlmean, ddof=0)
-                v_hvl = (sd_hvl / hvlmean) * 100
+                v_hvl = (sd_hvl / mean_hvl) * 100
 
                 mean_hvlCu = np.mean(hvlCumean)
                 sd_hvlCu = np.std(hvlCumean, ddof=0)
-                v_hvlCu = (sd_hvlCu / hvlCumean) * 100
+                v_hvlCu = (sd_hvlCu / mean_hvlCu) * 100
 
                 # MEAN 2nd HVL
                 mean_hvl2 = np.mean(hvl2mean)
                 sd_hvl2 = np.std(hvl2mean, ddof=0)
-                v_hvl2 = (sd_hvl2 / hvl2mean) * 100
+                v_hvl2 = (sd_hvl2 / mean_hvl2) * 100
 
                 mean_hvl2Cu = np.mean(hvl2Cumean)
                 sd_hvl2Cu = np.std(hvl2Cumean, ddof=0)
-                v_hvl2Cu = (sd_hvl2Cu / hvl2Cumean) * 100
+                v_hvl2Cu = (sd_hvl2Cu / mean_hvl2Cu) * 100
 
                 # MEDIA DEL ESPECTRO
                 media_hpk = np.mean(hpkMedia)
@@ -1567,40 +1538,31 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 v_hpk_90 = (sd_hpk_90 / media_hpk90) * 100
                 v_hpk_180 = (sd_hpk_90 / media_hpk180) * 100
 
-                # Lista de ángulos y sus respectivos valores hpk y sd_hpk
-                angulos = [(0, hpk, sd_hpk, v_hpk), (15, hpk15, sd_hpk_15, v_hpk_15), (30, hpk30, sd_hpk_30, v_hpk_30),
-                           (45, hpk45, sd_hpk_45, v_hpk_45), (60, hpk60, sd_hpk_60, v_hpk_60),
-                           (75, hpk75, sd_hpk_75, v_hpk_75), (90, hpk90, sd_hpk_90, v_hpk_90),
-                           (180, hpk180, sd_hpk_180, v_hpk_180)]
-
-                # Nombre del archivo basado en la calidad
-                nombre_archivo = f"{f_m}_{calidad}_resultados_.txt"
-                ruta_completa = os.path.join(ruta, nombre_archivo)
-
-                # Abrir (o crear) el archivo en modo de añadir ('a')
-                with open(ruta_completa, "a") as archivo:
-                    # Escribir los resultados para cada ángulo en el mismo archivo
-                    for angulo, hpk_actual, sd_hpk_actual, v_hpk_actual in angulos:
-                        archivo.write(f"Quality: {calidad}\n")
-                        archivo.write(f"angle: {angulo} deg\n")
-                        archivo.write(f"Mean value of conversion coeff: {hpk_actual}\n")
-                        archivo.write(f"Std deviation: {sd_hpk_actual}\n")
-                        archivo.write(f"ur%(hK): {v_hpk_actual}\n")
-                        archivo.write(
-                            f"Mean E keV: {media_energia}, std dev keV: {desviacion_energia}, ur%: {coef_variacion_energia}\n")
-                        archivo.write(
-                            f"Kerma Medio - Valor medio: {media_kerma}, Desviación estándar: {desviacion_kerma}, ur%: {coef_variacion_kerma}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Al- mean value: {mean_hvl}, std deviation mm Al: {sd_hvl}, ur%: {v_hvl}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Al- mean value: {mean_hvl2}, std deviation mm Al: {sd_hvl2}, ur%: {v_hvl2}\n\n")
-                        archivo.write(
-                            f"1st HVL mm Cu- mean value: {mean_hvlCu}, std deviation mm Cu: {sd_hvlCu}, ur%: {v_hvlCu}\n\n")
-                        archivo.write(
-                            f"2nd HVL mm Cu- mean value: {mean_hvl2Cu}, std deviation mm Cu: {sd_hvl2Cu}, ur%: {v_hvl2Cu}\n\n")
-
+                # Compute execution time
                 tiempo_final_columns_9 = time()
 
                 tiempo_ejecucion_columns_9 = tiempo_final_columns_9 - tiempo_inicial_columns_9
+
+                # XCB: OUTPUT DATA DIGEST
+                # ------------------------------------------------------------------------------------------------------
+
+                # Lista de ángulos y sus respectivos valores hpk y sd_hpk
+                angulos = [(0, float(hpk), sd_hpk, v_hpk), (15, float(hpk15), sd_hpk_15, v_hpk_15),
+                           (30, float(hpk30), sd_hpk_30, v_hpk_30), (45, float(hpk45), sd_hpk_45, v_hpk_45),
+                           (60, float(hpk60), sd_hpk_60, v_hpk_60), (75, float(hpk75), sd_hpk_75, v_hpk_75),
+                           (90, float(hpk90), sd_hpk_90, v_hpk_90), (180, float(hpk180), sd_hpk_180, v_hpk_180)]
+
+                # List of magnitudes independent of the angle
+                magnitudes = [(media_energia, desviacion_energia, coef_variacion_energia),
+                              (media_kerma, desviacion_kerma, coef_variacion_kerma),
+                              (mean_hvl, sd_hvl, v_hvl),
+                              (mean_hvl2, sd_hvl2, v_hvl2),
+                              (mean_hvlCu, sd_hvlCu, v_hvlCu),
+                              (mean_hvl2Cu, sd_hvl2Cu, v_hvl2Cu)]
+
+                # Save results in TXT and CSV files
+                df = tl.output_digest(operational_magnitude=f_m, quality=calidad, mean_magnitudes=magnitudes,
+                                      conversion_coefficients=angulos, execution_time=tiempo_ejecucion_columns_9,
+                                      output_folder=ruta)
 
                 print('El tiempo de ejecucion para hktable columns 9 en (s) fue:', tiempo_ejecucion_columns_9)
