@@ -136,13 +136,15 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
             # XCB: END OF INPUT DATA DIGEST: OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
             # ----------------------------------------------------------------------------------------------------------
 
+            # Measure initial time
+            initial_time = time()
+
             # FIRST LOOP: monoenergetic conversion coefficients defined at incident angle = 0
             # ("h_amb_10.csv","hp_0.07_pill.csv", "hp_0.07_rod.csv")
             # ----------------------------------------------------------------------------------------------------------
             # TEST THAT THE FILE HAS LESS OR EQUAL THAN 2 COLUMNS
             if len(hk_table.columns) <= 2:
                 print('FIRST LOOP: monoenergetic conversion coefficients defined at incident angle = 0')
-                tiempo_inicial_columns_2 = time()
 
                 # SAVE VARIABLES (E, hK)
                 Ehk = hk_table.iloc[:, 0].values
@@ -356,9 +358,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 sd_hvl2Cu = np.std(hvl2Cumean, ddof=0)
                 v_hvl2Cu = (sd_hvl2Cu / mean_hvl2Cu) * 100
 
-                tiempo_final_columns_2 = time()
-
-                tiempo_ejecucion_columns_2 = tiempo_final_columns_2 - tiempo_inicial_columns_2
+                execution_time = time() - initial_time
 
                 # XCB: OUTPUT DATA DIGEST
                 # ------------------------------------------------------------------------------------------------------
@@ -375,17 +375,16 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                 # Save results in TXT and CSV files
                 df = tl.output_digest(operational_magnitude=f_m, quality=calidad, mean_magnitudes=magnitudes,
-                                      conversion_coefficients=angulos, execution_time=tiempo_ejecucion_columns_2,
+                                      conversion_coefficients=angulos, execution_time=execution_time,
                                       output_folder=ruta)
 
-                print('Execution time in (s):', tiempo_ejecucion_columns_2)
+                print(f'Execution time: {execution_time} s')
 
             # SECOND LOOP: monoenergetic coefficients defined at 6 incident angles: 0 - 75 deg
             # ("hp_10_slab.csv","hp_0.07_slab.csv")
             # ----------------------------------------------------------------------------------------------------------
             elif len(hk_table.columns) == 7:
                 print('SECOND LOOP: monoenergetic coefficients defined at 6 incident angles: 0 - 75 deg')
-                tiempo_inicial_columns_7 = time()
 
                 # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
                 hk_table15 = hk_table[hk_table['15angle'] > 0]
@@ -710,9 +709,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 v_hpk_60 = (sd_hpk_75 / media_hpk60) * 100
                 v_hpk_75 = (sd_hpk_75 / media_hpk75) * 100
 
-                tiempo_final_columns_7 = time()
-
-                tiempo_ejecucion_columns_7 = tiempo_final_columns_7 - tiempo_inicial_columns_7
+                execution_time = time() - initial_time
 
                 # XCB: OUTPUT DATA DIGEST
                 # ------------------------------------------------------------------------------------------------------
@@ -731,15 +728,16 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                 # Save results in TXT and CSV files
                 df = tl.output_digest(operational_magnitude=f_m, quality=calidad, mean_magnitudes=magnitudes,
-                                      conversion_coefficients=angulos, execution_time=tiempo_ejecucion_columns_7,
+                                      conversion_coefficients=angulos, execution_time=execution_time,
                                       output_folder=ruta)
+
+                print(f'Execution time: {execution_time} s')
 
             # THIRD LOOP: monoenergetic conversion coefficient at 7 incident angles: 0 - 90 deg
             # ("hp_3_cyl.csv")
             # ----------------------------------------------------------------------------------------------------------
             elif len(hk_table.columns) == 8:
                 print('THIRD LOOP: monoenergetic conversion coefficient at 7 incident angles: 0 - 90 deg')
-                tiempo_inicial_columns_8 = time()
 
                 # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
                 hk_table15 = hk_table[hk_table['15angle'] > 0]
@@ -1086,9 +1084,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 v_hpk_75 = (sd_hpk_75 / media_hpk75) * 100
                 v_hpk_90 = (sd_hpk_90 / media_hpk90) * 100
 
-                tiempo_final_columns_8 = time()
-
-                tiempo_ejecucion_columns_8 = tiempo_final_columns_8 - tiempo_inicial_columns_8
+                execution_time = time() - initial_time
 
                 # XCB: OUTPUT DATA DIGEST
                 # ------------------------------------------------------------------------------------------------------
@@ -1108,17 +1104,16 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                 # Save results in TXT and CSV files
                 df = tl.output_digest(operational_magnitude=f_m, quality=calidad, mean_magnitudes=magnitudes,
-                                      conversion_coefficients=angulos, execution_time=tiempo_ejecucion_columns_8,
+                                      conversion_coefficients=angulos, execution_time=execution_time,
                                       output_folder=ruta)
 
-                print('El tiempo de ejecucion para hktable columns 8 en (s) fue:', tiempo_ejecucion_columns_8)
+                print(f'Execution time: {execution_time} s')
 
             # CUARTO LOOP: monoenergetic conversion coefficients at 8 incident angles: 0 - 180 deg
             # ("h_prime_3.csv", "h_prime_0.07.csv")
             # ----------------------------------------------------------------------------------------------------------
             elif len(hk_table.columns) == 9:
                 print('CUARTO LOOP: monoenergetic conversion coefficients at 8 incident angles: 0 - 180 deg')
-                tiempo_inicial_columns_9 = time()
 
                 # SLICING THE TABLES WHEN DISCOVERING ZEROES.THIS AVOIDS CRASHING WHEN TAKING LOGS AND DOING AKIMA
                 hk_table15 = hk_table[hk_table['15angle'] > 0]
@@ -1489,9 +1484,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 v_hpk_180 = (sd_hpk_90 / media_hpk180) * 100
 
                 # Compute execution time
-                tiempo_final_columns_9 = time()
-
-                tiempo_ejecucion_columns_9 = tiempo_final_columns_9 - tiempo_inicial_columns_9
+                execution_time = time() - initial_time
 
                 # XCB: OUTPUT DATA DIGEST
                 # ------------------------------------------------------------------------------------------------------
@@ -1511,7 +1504,8 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                 # Save results in TXT and CSV files
                 df = tl.output_digest(operational_magnitude=f_m, quality=calidad, mean_magnitudes=magnitudes,
-                                      conversion_coefficients=angulos, execution_time=tiempo_ejecucion_columns_9,
+                                      conversion_coefficients=angulos, execution_time=execution_time,
                                       output_folder=ruta)
 
-                print('El tiempo de ejecucion para hktable columns 9 en (s) fue:', tiempo_ejecucion_columns_9)
+                print(f'Execution time: {execution_time} s')
+
