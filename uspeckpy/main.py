@@ -3,7 +3,6 @@ import os
 from pathlib import Path
 from time import time
 
-import matplotlib.pyplot as plt
 import numpy as np
 import openpyxl
 import pandas as pd
@@ -12,14 +11,14 @@ from scipy import interpolate
 
 import uspeckpy.tools as tl
 
-def main(beam_data_file, conversion_coefficients_files, transmission_coefficients_file, transmission_coefficients_uncertainty,
-         simulations_number, output_folder):
+
+def main(beam_data_file, conversion_coefficients_files, transmission_coefficients_file,
+         transmission_coefficients_uncertainty, simulations_number, output_folder):
     print('RUNNING')
     # PAL code
     lista_mono = []
-    lista_espectros = []
 
-    # XCB: INPUT DATA DIGEST: SIMULATIONS NUMBER, UNCERTAINTY OF MU_TR, OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
+    # XCB: INPUT DATA DIGEST: SIMULATIONS NUMBER, UNCERTAINTY MU_TR, OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
     # ------------------------------------------------------------------------------------------------------------------
     # XCB code
     nini = simulations_number
@@ -29,7 +28,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
     for x in conversion_coefficients_files:
         lista_mono.append(os.path.basename(x))
         directorio = os.path.dirname(x)
-    # XCB: END OF INPUT DATA DIGEST: SIMULATIONS NUMBER, UNCERTAINTY OF MU_TR, OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
+    # XCB: END OF INPUT DATA DIGEST: SIMULATIONS NUMBER, UNCERTAINTY MU_TR, OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
     # ------------------------------------------------------------------------------------------------------------------
 
     # XCB: INPUT DATA DIGEST: BEAM DATA FILE
@@ -112,14 +111,15 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
         hpkMedia90 = []
         hpkMedia180 = []
 
-    # XCB: INPUT DATA DIGEST: OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
-    # ------------------------------------------------------------------------------------------------------------------
+        # XCB: INPUT DATA DIGEST: OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
+        # ------------------------------------------------------------------------------------------------------------------
 
         # CREATE DIRECTORY TO STORE OUTPUT FILES
         Path(ruta).mkdir(parents=True, exist_ok=True)
 
         # ARRAY WITH SPECTRA FILE NAMES AND MONOENERGETIC CONV. COEFF.
-        ficheros_monoenergeticos = lista_mono  # PAL: list of monoenergetic coefficients (8 different depending on angles)
+        # PAL: list of monoenergetic coefficients (8 different depending on angles)
+        ficheros_monoenergeticos = lista_mono
 
         # READ MONOENERGETIC FILES
         for f_m in ficheros_monoenergeticos:
@@ -133,15 +133,12 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
             tl.buscar_eliminar(ruta + "/" + f_m.upper() + "_75.txt")
             tl.buscar_eliminar(ruta + "/" + f_m.upper() + "_90.txt")
             tl.buscar_eliminar(ruta + "/" + f_m.upper() + "_180.txt")
-    # XCB: END OF INPUT DATA DIGEST: OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
-    # ------------------------------------------------------------------------------------------------------------------
+            # XCB: END OF INPUT DATA DIGEST: OUTPUT FOLDER, CONVERSION COEFFICIENTS FILES
+            # ----------------------------------------------------------------------------------------------------------
 
-            ###############################################################################################################
-            ###############################################################################################################
-            # FIRST LOOP in monoenergetic conversion coefficients defined at incident angle = 0
+            # FIRST LOOP: monoenergetic conversion coefficients defined at incident angle = 0
             # ("h_amb_10.csv","hp_0.07_pill.csv", "hp_0.07_rod.csv")
-            ###############################################################################################################
-            ###############################################################################################################
+            # ----------------------------------------------------------------------------------------------------------
             # TEST THAT THE FILE HAS LESS OR EQUAL THAN 2 COLUMNS
             if len(hk_table.columns) <= 2:
                 print('FIRST LOOP: monoenergetic conversion coefficients defined at incident angle = 0')
@@ -180,13 +177,8 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 LE_mut = [math.log(x) for x in E_mut]
                 Lmtr = [math.log(x) for x in mtr]
 
-                ##############################################################################################
-                # NINI= Number of times that a spectrum is randomly generated (the parameters that define
+                # NINI = Number of times that a spectrum is randomly generated (the parameters that define
                 #   a quality are changed around a central value using a gaussian or uniform distribution
-                #############################################################################################
-
-                plt.figure()
-
                 for j in range(nini):
                     if filter_Al != 0 and uAl != 0:
                         filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
@@ -244,7 +236,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     elif th_rand == 0 and j == 0:
                         th_rand = np.random.normal(th, uth * th, 1)
 
-                    # SPEKPY ###########################################
+                    # SPEKPY
                     my_filters = [
                         ("Al", filter_Al_rand[0]),
                         ("Be", filter_Be_rand[0]),
@@ -267,14 +259,12 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     hvl2Cu = s.get_hvl2(matl='Cu')  # Get the 2nd half-value-layer mm Cu
                     hvlCumean.append(hvlCu)
                     hvl2Cumean.append(hvl2Cu)
+                    # END SPEKPY
 
-                    # SPEKPY ###########################################
                     # FILTERING SPECTRUM TO AVOID INTREPOLATION ERRORS (monoenergetic hK start sometimes at 7 keV)
                     mascara = E >= 8
                     E_filtrado_temp = E[mascara]
                     fluencia_filtrada_temp = fluencia[mascara]
-
-                    ###################################################################################################################
 
                     # Calculation of mean energy
                     # first creating 2 empty lists to acumulate data from all loop iterations
@@ -292,14 +282,11 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                     energiasMedia.append(energia_media)
 
-                    nfilas = len(fluencia_filtrada_temp)
-
                     # Take log
                     LE = []
                     for x in E_filtrado_temp:
                         LE.append(math.log(x))
 
-                    ###################################################################
                     # Making Akima interpolation with MUTR_RHO (after taking logs)
                     interpolacion_uno_mut = interpolate.Akima1DInterpolator(LE_mut, Lmtr, axis=0)
                     list_mutr = []
@@ -318,7 +305,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                                                           coeficientes_mutr_rho)
                     kermasMedia.append(kerma_medio)
 
-                    ###################################################################
                     # Making Akima interpolation with monoenergetic hK (after taking logs)
                     interpolacion_uno_hk = interpolate.Akima1DInterpolator(LEhk, Lhk, axis=0)
                     ln_hk_int = []
@@ -376,7 +362,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                 # XCB: OUTPUT DATA DIGEST
                 # ------------------------------------------------------------------------------------------------------
-
                 # Lista de ángulos y sus respectivos valores hpk y sd_hpk
                 angulos = [(0, float(hpk), sd_hpk, v_hpk)]
 
@@ -394,12 +379,10 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                                       output_folder=ruta)
 
                 print('Execution time in (s):', tiempo_ejecucion_columns_2)
-            ###############################################################################################################
-            ###############################################################################################################
-            # SECOND LOOP IN monoenergetic coefficients defined at 6 incident angles: 0 -75deg
+
+            # SECOND LOOP: monoenergetic coefficients defined at 6 incident angles: 0 - 75 deg
             # ("hp_10_slab.csv","hp_0.07_slab.csv")
-            ###############################################################################################################
-            ###############################################################################################################
+            # ----------------------------------------------------------------------------------------------------------
             elif len(hk_table.columns) == 7:
                 print('SECOND LOOP: monoenergetic coefficients defined at 6 incident angles: 0 - 75 deg')
                 tiempo_inicial_columns_7 = time()
@@ -478,13 +461,8 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 LE_mut = [math.log(x) for x in E_mut]
                 Lmtr = [math.log(x) for x in mtr]
 
-                # plt.figure()
-
-                ##############################################################################################
-                # NINI= Number of times that a random spectrum is generated (the parameters that define
-                #   a quality are changed around a central value using a gaussian or uniform distribution
-                #############################################################################################
-
+                # NINI = Number of times that a random spectrum is generated (the parameters that define
+                # a quality are changed around a central value using a gaussian or uniform distribution
                 for j in range(nini):
                     if filter_Al != 0 and uAl != 0:
                         filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
@@ -542,7 +520,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     elif th_rand == 0 and j == 0:
                         th_rand = np.random.normal(th, uth * th, 1)
 
-                    # SPEKPY ###########################################
+                    # SPEKPY
                     my_filters = [
                         ("Al", filter_Al_rand[0]),
                         ("Be", filter_Be_rand[0]),
@@ -565,16 +543,16 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     hvl2Cu = s.get_hvl2(matl='Cu')  # Get the 2nd half-value-layer mm Cu
                     hvlCumean.append(hvlCu)
                     hvl2Cumean.append(hvl2Cu)
+                    # END SPEKPY
 
-                    # SPEKPY ###########################################
                     # FILTRADO DE SPEKPY Y OPERACIONES SOBRE ESPECTRO
-                    mascara = E >= 8  # cortamos para que no de error al interpolar los hK monoenergetico (comienzan a veces en 7keV)
+                    # cortamos para que no de error al interpolar los hK monoenergetico (comienzan a veces en 7keV)
+                    mascara = E >= 8
                     E_filtrado_temp = E[mascara]
                     fluencia_filtrada_temp = fluencia[mascara]
-                    # plt.plot(E_filtrado_temp, fluencia_filtrada_temp, label=f"Iteración {j+1}")
 
                     # Calculo de energia media
-                    # primero debemos crear 2 listas vacias para que vaya acumuludando todos los datos de todas las iteraciones del bucle
+                    # primero debemos crear 2 listas vacias para que vaya acumuludando los datos de las iteraciones
                     fluencias_acumuladas = []
                     energias_acumuladas = []
 
@@ -585,14 +563,11 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                     energiasMedia.append(energia_media)
 
-                    nfilas = len(fluencia_filtrada_temp)
-
                     # Realizar EL LOGARITMO
                     LE = []
                     for x in E_filtrado_temp:
                         LE.append(math.log(x))
 
-                    ###################################################################
                     # Making Akima interpolation with MUTR_RHO (after taking logs)
                     interpolacion_uno_mut = interpolate.Akima1DInterpolator(LE_mut, Lmtr, axis=0)
                     list_mutr = []
@@ -605,14 +580,12 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                     coeficientes_mutr_rho = []
                     coeficientes_mutr_rho.extend(list_mutr)
-                    ###################################################################
 
                     # Calculo de kerma medio fuera del bucle
                     kerma_medio = tl.calcular_kerma_medio(fluencias_acumuladas, energias_acumuladas,
                                                           coeficientes_mutr_rho)
                     kermasMedia.append(kerma_medio)
 
-                    ###################################################################
                     # Making Akima interpolation with monoenergetic hK (after taking logs)
                     interpolacion_uno_0 = interpolate.Akima1DInterpolator(LEhk, Lhk_0, axis=0)
                     interpolacion_uno_15 = interpolate.Akima1DInterpolator(LEhk15, Lhk_15, axis=0)
@@ -743,7 +716,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                 # XCB: OUTPUT DATA DIGEST
                 # ------------------------------------------------------------------------------------------------------
-
                 # Lista de ángulos y sus respectivos valores hpk y sd_hpk
                 angulos = [(0, float(hpk), sd_hpk, v_hpk), (15, float(hpk15), sd_hpk_15, v_hpk_15),
                            (30, float(hpk30), sd_hpk_30, v_hpk_30), (45, float(hpk45), sd_hpk_45, v_hpk_45),
@@ -762,13 +734,9 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                                       conversion_coefficients=angulos, execution_time=tiempo_ejecucion_columns_7,
                                       output_folder=ruta)
 
-            ###############################################################################################################
-            ###############################################################################################################
-            # THIRD LOOP in monoenergetic tables for the ISO conversion coefficient at 7 incident angles: 0 -90deg
+            # THIRD LOOP: monoenergetic conversion coefficient at 7 incident angles: 0 - 90 deg
             # ("hp_3_cyl.csv")
-            ###############################################################################################################
-            ###############################################################################################################
-
+            # ----------------------------------------------------------------------------------------------------------
             elif len(hk_table.columns) == 8:
                 print('THIRD LOOP: monoenergetic conversion coefficient at 7 incident angles: 0 - 90 deg')
                 tiempo_inicial_columns_8 = time()
@@ -855,13 +823,8 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 LE_mut = [math.log(x) for x in E_mut]
                 Lmtr = [math.log(x) for x in mtr]
 
-                # plt.figure()
-
-                ##############################################################################################
                 # NINI= Number of times that a random spectrum is generated (the parameters that define
-                #   a quality are changed around a central value using a gaussian or uniform distribution
-                #############################################################################################
-
+                # a quality are changed around a central value using a gaussian or uniform distribution
                 for j in range(nini):
                     if filter_Al != 0 and uAl != 0:
                         filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
@@ -919,7 +882,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     elif th_rand == 0 and j == 0:
                         th_rand = np.random.normal(th, uth * th, 1)
 
-                    # SPEKPY ###########################################
+                    # SPEKPY
                     my_filters = [
                         ("Al", filter_Al_rand[0]),
                         ("Be", filter_Be_rand[0]),
@@ -943,12 +906,11 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     hvlCumean.append(hvlCu)
                     hvl2Cumean.append(hvl2Cu)
 
-                    # SPEKPY ###########################################
+                    # SPEKPY
                     # FILTRADO DE SPEKPY Y OPERACIONES SOBRE ESPECTRO
                     mascara = E >= 8  # cortamos para que no de error al interpolar los hK monoenergetico (comienzan a veces en 7keV)
                     E_filtrado_temp = E[mascara]
                     fluencia_filtrada_temp = fluencia[mascara]
-                    # plt.plot(E_filtrado_temp, fluencia_filtrada_temp, label=f"Iteración {j+1}")
 
                     # Calculo de energia media
                     # primero debemos crear 2 listas vacias para que vaya acumuludando todos los datos de todas las iteraciones del bucle
@@ -963,14 +925,11 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                     energiasMedia.append(energia_media)
 
-                    nfilas = len(fluencia_filtrada_temp)
-
                     # Realizar EL LOGARITMO
                     LE = []
                     for x in E_filtrado_temp:
                         LE.append(math.log(x))
 
-                    ###################################################################
                     # Making Akima interpolation with MUTR_RHO (after taking logs)
                     interpolacion_uno_mut = interpolate.Akima1DInterpolator(LE_mut, Lmtr, axis=0)
                     list_mutr = []
@@ -983,7 +942,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                     coeficientes_mutr_rho = []
                     coeficientes_mutr_rho.extend(list_mutr)
-                    ###################################################################
 
                     # Calculo de kerma medio fuera del bucle
                     kerma_medio = tl.calcular_kerma_medio(fluencias_acumuladas, energias_acumuladas,
@@ -1134,7 +1092,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                 # XCB: OUTPUT DATA DIGEST
                 # ------------------------------------------------------------------------------------------------------
-
                 # Lista de ángulos y sus respectivos valores hpk y sd_hpk
                 angulos = [(0, float(hpk), sd_hpk, v_hpk), (15, float(hpk15), sd_hpk_15, v_hpk_15),
                            (30, float(hpk30), sd_hpk_30, v_hpk_30), (45, float(hpk45), sd_hpk_45, v_hpk_45),
@@ -1156,10 +1113,9 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                 print('El tiempo de ejecucion para hktable columns 8 en (s) fue:', tiempo_ejecucion_columns_8)
 
-            ###############################################################################################################
-            # CUARTO LOOP EN the monoenergetic tables for the ISO conversion coefficients at 8 incident angles: 0 -1800
+            # CUARTO LOOP: monoenergetic conversion coefficients at 8 incident angles: 0 - 180 deg
             # ("h_prime_3.csv", "h_prime_0.07.csv")
-            ###############################################################################################################
+            # ----------------------------------------------------------------------------------------------------------
             elif len(hk_table.columns) == 9:
                 print('CUARTO LOOP: monoenergetic conversion coefficients at 8 incident angles: 0 - 180 deg')
                 tiempo_inicial_columns_9 = time()
@@ -1254,11 +1210,8 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                 LE_mut = [math.log(x) for x in E_mut]
                 Lmtr = [math.log(x) for x in mtr]
 
-                # plt.figure()
-                ##############################################################################################
                 # NINI= Number of times that a random spectrum is generated (the parameters that define
-                #   a quality are changed around a central value using a gaussian or uniform distribution
-                #############################################################################################
+                # a quality are changed around a central value using a gaussian or uniform distribution
                 for j in range(nini):
                     if filter_Al != 0 and uAl != 0:
                         filter_Al_rand = np.random.uniform(lower_al, high_al, 1)
@@ -1316,7 +1269,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     elif th_rand == 0 and j == 0:
                         th_rand = np.random.normal(th, uth * th, 1)
 
-                    # SPEKPY ###########################################
+                    # SPEKPY
                     my_filters = [
                         ("Al", filter_Al_rand[0]),
                         ("Be", filter_Be_rand[0]),
@@ -1339,13 +1292,13 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
                     hvl2Cu = s.get_hvl2(matl='Cu')  # Get the 2nd half-value-layer mm Cu
                     hvlCumean.append(hvlCu)
                     hvl2Cumean.append(hvl2Cu)
+                    # SPEKPY
 
-                    # SPEKPY ###########################################
                     # FILTRADO DE SPEKPY Y OPERACIONES SOBRE ESPECTRO
                     mascara = E >= 8  # cortamos para que no de error al interpolar los hK monoenergetico (comienzan a veces en 7keV)
                     E_filtrado_temp = E[mascara]
                     fluencia_filtrada_temp = fluencia[mascara]
-                    # plt.plot(E_filtrado_temp, fluencia_filtrada_temp, label=f"Iteración {j+1}")
+
                     # Calculo de energia media
                     # primero debemos crear 2 listas vacias para que vaya acumuludando todos los datos de todas las iteraciones del bucle
                     fluencias_acumuladas = []
@@ -1359,14 +1312,11 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                     energiasMedia.append(energia_media)
 
-                    nfilas = len(fluencia_filtrada_temp)
-
                     # Realizar EL LOGARITMO
                     LE = []
                     for x in E_filtrado_temp:
                         LE.append(math.log(x))
 
-                    ###################################################################
                     # Making Akima interpolation with MUTR_RHO (after taking logs)
                     interpolacion_uno_mut = interpolate.Akima1DInterpolator(LE_mut, Lmtr, axis=0)
                     list_mutr = []
@@ -1379,7 +1329,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                     coeficientes_mutr_rho = []
                     coeficientes_mutr_rho.extend(list_mutr)
-                    ###################################################################
+
                     # Calculation of air kerma (out of the loop)
                     kerma_medio = tl.calcular_kerma_medio(fluencias_acumuladas, energias_acumuladas,
                                                           coeficientes_mutr_rho)
@@ -1545,7 +1495,6 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                 # XCB: OUTPUT DATA DIGEST
                 # ------------------------------------------------------------------------------------------------------
-
                 # Lista de ángulos y sus respectivos valores hpk y sd_hpk
                 angulos = [(0, float(hpk), sd_hpk, v_hpk), (15, float(hpk15), sd_hpk_15, v_hpk_15),
                            (30, float(hpk30), sd_hpk_30, v_hpk_30), (45, float(hpk45), sd_hpk_45, v_hpk_45),
