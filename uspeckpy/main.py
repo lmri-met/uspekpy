@@ -347,7 +347,7 @@ def main(beam_data_file, conversion_coefficients_files, transmission_coefficient
 
                 mean_hvlCu = np.mean(hvlCumean)
                 sd_hvlCu = np.std(hvlCumean, ddof=0)
-                v_hvlCu = (sd_hvlCu / mean_hvl) * 100
+                v_hvlCu = (sd_hvlCu / mean_hvlCu) * 100
 
                 # MEAN 2nd HVL
                 mean_hvl2 = np.mean(hvl2mean)
