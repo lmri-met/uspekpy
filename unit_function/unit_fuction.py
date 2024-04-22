@@ -55,7 +55,7 @@ def input_digest(excel_file_path, sheet_name):
 # INPUT DATA
 # ----------------------------------------------------------------------------------------------------------------------
 # Define the path to the input Excel file and specify the sheet name
-input_excel_file_path = 'C:/Users/admin/PycharmProjects/uspekpy/unit_function/input.xlsx'
+input_excel_file_path = './input.xlsx'
 input_excel_file_sheet = 'input'
 
 # INPUT DIGEST
