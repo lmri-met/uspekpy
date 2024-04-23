@@ -1,7 +1,9 @@
+from pathlib import Path
 from time import time
 
 import numpy as np
 
+from uspeckpy.simulation import batch_simulation
 from uspeckpy.uspekpy import SpecWrapper, USpek
 
 my_mu = (
@@ -93,3 +95,11 @@ s = USpek(beam_parameters=my_beam, mass_transmission_coefficients=my_mu, convers
 df = s.simulate(simulations_number=my_iter)
 
 print(f'Execution time: {time() - initial_time} s')
+
+# Using batch_simulation
+# ----------------------------------------------------------------------------------------------------------------------
+
+my_excel = Path('data/input/input.xlsx')
+my_sheet = 'input'
+my_folder = Path('/scratches')
+df = batch_simulation(excel_file_path=my_excel, sheet_name=my_sheet, output_folder=my_folder)
