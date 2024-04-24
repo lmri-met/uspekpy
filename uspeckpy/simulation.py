@@ -7,7 +7,7 @@ import uspeckpy.digest as dg
 from uspeckpy.uspekpy import USpek
 
 
-def batch_simulation(excel_file_path, sheet_name, output_folder):
+def batch_simulation(input_file_path, output_folder, sheet_name=None):
     initial_time = time()
 
     # Print a message indicating the start of input digestion
@@ -16,8 +16,12 @@ def batch_simulation(excel_file_path, sheet_name, output_folder):
     # Print a message indicating the start of input digestion
     print('\nInitial input digest')
 
+    # Read input Excel or CSV file into a DataFrame
+    input_df = read_file_to_dataframe(input_file_path, sheet_name=sheet_name)
+    print(type(input_df.iloc[4, 1]))
+
     # Read Excel file into a DataFrame and set 'Name' column as index
-    input_df = pd.read_excel(excel_file_path, sheet_name=sheet_name)
+    # input_df = pd.read_excel(excel_file_path, sheet_name=sheet_name)
     input_df.set_index(keys='Name', inplace=True)
 
     # Initialize an empty list to store the simulations results
@@ -76,3 +80,28 @@ def batch_simulation(excel_file_path, sheet_name, output_folder):
     print(f'\nExecution time: {time() - initial_time} s')
 
     return results
+
+
+def read_file_to_dataframe(file_path, sheet_name=None):
+    """
+    Read an Excel or CSV file into a DataFrame.
+
+    Parameters:
+        file_path (str): The path to the input file.
+        sheet_name (str or int, default None): The name or index of the sheet to read if file_path is an Excel.
+            If None, reads the first sheet.
+
+    Returns:
+        pandas.DataFrame: The DataFrame containing the data from the file.
+    """
+    # Check the file extension to determine the file type
+    if file_path.endswith('.xlsx') or file_path.endswith('.xls'):
+        # Read Excel file
+        df = pd.read_excel(file_path, sheet_name=sheet_name)
+    elif file_path.endswith('.csv'):
+        # Read CSV file
+        df = pd.read_csv(file_path)
+    else:
+        raise ValueError("Unsupported file format. Only Excel (.xlsx, .xls) and CSV (.csv) files are supported.")
+
+    return df
