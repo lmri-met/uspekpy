@@ -1,10 +1,8 @@
-from pathlib import Path
 from time import time
 
 import numpy as np
 
-from uspeckpy.simulation import batch_simulation
-from uspeckpy.uspekpy import SpecWrapper, USpek
+from uspeckpy.uspekpy import SpecWrapper
 
 my_mu = (
     np.array(
@@ -45,17 +43,6 @@ my_filters = [
     ('Be', 0),
     ('Air', 1000)
 ]
-my_beam = {
-    'kVp': (60, 0.01),
-    'th': (20, 0.01),
-    'Al': (4, 0.01),
-    'Cu': (0.6, 0.01),
-    'Sn': (0, 0),
-    'Pb': (0, 0),
-    'Be': (0, 0),
-    'Air': (1000, 0.01)
-}
-my_iter = 3
 
 # Using SpekWrapper
 # ----------------------------------------------------------------------------------------------------------------------
@@ -83,23 +70,3 @@ mean_kerma = spectrum.get_mean_kerma(mass_transmission_coefficients=my_mu)
 mean_hk = spectrum.get_mean_conversion_coefficient(mass_transmission_coefficients=my_mu, conversion_coefficients=my_hk)
 
 print(f'Execution time: {time() - initial_time} s')
-
-# Using USpek
-# ----------------------------------------------------------------------------------------------------------------------
-initial_time = time()
-
-# Create USpekPy object with given beam parameters, mass transmission coefficients and conversion coefficients
-s = USpek(beam_parameters=my_beam, mass_transmission_coefficients=my_mu, conversion_coefficients=my_hk)
-
-# Run simulation with a given number of iterations
-df = s.simulate(simulations_number=my_iter)
-
-print(f'Execution time: {time() - initial_time} s')
-
-# Using batch_simulation
-# ----------------------------------------------------------------------------------------------------------------------
-
-my_excel = Path('data/input/input.xlsx')
-my_sheet = 'input'
-my_folder = Path('/scratches')
-df = batch_simulation(excel_file_path=my_excel, sheet_name=my_sheet, output_folder=my_folder)
