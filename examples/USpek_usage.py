@@ -1,3 +1,5 @@
+# Scripto to demonstrate the functionality of USpek class
+
 import numpy as np
 
 from uspeckpy.uspekpy import USpek

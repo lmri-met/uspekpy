@@ -1,3 +1,5 @@
+# Scripto to demonstrate the functionality of SpekWrapper class
+
 from time import time
 
 import numpy as np
