@@ -101,6 +101,19 @@ def read_file_to_dataframe(file_path, sheet_name=None):
     elif file_path.endswith('.csv'):
         # Read CSV file
         df = pd.read_csv(file_path)
+        # Iterate over all elements in the DataFrame
+        for column in df.columns:
+            for idx, value in enumerate(df[column]):
+                try:
+                    # Try to convert the value to an integer
+                    df.at[idx, column] = int(value)
+                except ValueError:
+                    try:
+                        # If conversion to int fails, try converting to float
+                        df.at[idx, column] = float(value)
+                    except ValueError:
+                        # If conversion to float also fails, leave it unchanged
+                        pass
     else:
         raise ValueError("Unsupported file format. Only Excel (.xlsx, .xls) and CSV (.csv) files are supported.")
 
