@@ -4,21 +4,34 @@ from pathlib import Path
 
 from uspeckpy.simulation import batch_simulation
 
-# Using batch_simulation
-# ----------------------------------------------------------------------------------------------------------------------
 # TODO: units of mu_tr_rho
-# TODO: check uncertainty type for np.random.normal()
 # TODO: batch simulation could be a method of USpek?
 # TODO: add functionalities to SpekWrapper and USpec to use with input files?
 
-my_csv = Path('data/input/input.csv')
+# Using batch_simulation() with excel file input
+# ----------------------------------------------------------------------------------------------------------------------
 
-my_excel = Path('data/input/input.xlsx')
+# Define the path to the input Excel file
+my_excel = 'data/input/input.xlsx'
+
+# Specify the name of the sheet within the Excel file to be used
 my_sheet = 'input'
 
-my_folder = Path('/scratches')
+# Define the output folder path where the simulation results will be saved
+my_folder = 'scratches'
 
-df1 = batch_simulation(excel_file_path=my_excel, sheet_name=my_sheet, output_folder=my_folder)
-df2 = batch_simulation(excel_file_path=my_csv, sheet_name=my_sheet, output_folder=my_folder)
+# Call the batch_simulation function with the provided input arguments
+# and store the resulting DataFrame in df1
+# df1 = batch_simulation(input_file_path=my_excel, output_folder=my_folder, sheet_name=my_sheet)
+
+# Using batch_simulation() with CSV file input
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Define the path to the input CSV file
+my_csv = 'data/input/input.csv'
+
+# Call the batch_simulation function with the provided input arguments
+# and store the resulting DataFrame in df1
+df2 = batch_simulation(input_file_path=my_csv, output_folder=my_folder)
 
 
