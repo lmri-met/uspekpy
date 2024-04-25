@@ -4,6 +4,22 @@ import numpy as np
 
 from uspeckpy.uspekpy import USpek
 
+# Using USpek without input files
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Define x-ray beam parameters
+my_beam = {
+    'kVp': (60, 0.01),
+    'th': (20, 0.01),
+    'Al': (4, 0.01),
+    'Cu': (0.6, 0.01),
+    'Sn': (0, 0),
+    'Pb': (0, 0),
+    'Be': (0, 0),
+    'Air': (1000, 0.01)
+}
+
+# Define mass transmission coefficients
 my_mu = (
     np.array(
         [1.0, 1.1726, 1.25, 1.4, 1.5, 1.75, 2.0, 2.5, 3.0, 3.2063, 3.206301, 3.22391, 3.25051, 3.5, 3.61881, 4.0,
@@ -28,6 +44,7 @@ my_mu = (
          0.018700741656237, 0.018185053120065, 0.017326066208925, 0.016966042150857, 0.016690444038446,
          0.016199645451199, 0.015809252632524])
 )
+# Define conversion coefficients
 my_hk = (
     np.array([7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 80, 100, 150, 200, 300, 400, 500,
               600, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 8000, 10000]),
@@ -35,6 +52,17 @@ my_hk = (
               1.1, 1.47, 1.67, 1.74, 1.72, 1.65, 1.49, 1.4, 1.31, 1.26, 1.23, 1.21, 1.19, 1.17, 1.15, 1.13, 1.12,
               1.11, 1.19, 1.09, 1.08, 1.06])
 )
+
+# Create USpekPy object with given beam parameters, mass transmission coefficients and conversion coefficients
+s = USpek(beam_parameters=my_beam, mass_transmission_coefficients=my_mu, conversion_coefficients=my_hk)
+
+# Run simulation with a given number of iterations
+df1 = s.simulate(simulations_number=3)
+
+# Using USpek with CSV input files
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Define x-ray beam parameters
 my_beam = {
     'kVp': (60, 0.01),
     'th': (20, 0.01),
@@ -45,13 +73,15 @@ my_beam = {
     'Be': (0, 0),
     'Air': (1000, 0.01)
 }
-my_iter = 3
 
-# Using USpek
-# ----------------------------------------------------------------------------------------------------------------------
+# Define mass transmission coefficients
+my_mu_csv = 'data/input/mu_tr_rho.csv'
+
+# Define conversion coefficients
+my_hk_csv = 'data/input/h_k_h_amb_10.csv'
 
 # Create USpekPy object with given beam parameters, mass transmission coefficients and conversion coefficients
-s = USpek(beam_parameters=my_beam, mass_transmission_coefficients=my_mu, conversion_coefficients=my_hk)
+s = USpek(beam_parameters=my_beam, mass_transmission_coefficients=my_mu_csv, conversion_coefficients=my_hk_csv)
 
 # Run simulation with a given number of iterations
-df = s.simulate(simulations_number=my_iter)
+df2 = s.simulate(simulations_number=3)
