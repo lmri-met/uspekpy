@@ -143,5 +143,4 @@ def random_uniform(loc, scale):
 
 
 def random_normal(loc, scale):
-    # TODO: check uncertainty type for np.random.normal()
-    return float(np.random.normal(loc=loc, scale=scale, size=1)[0])
+    return float(np.random.normal(loc=loc, scale=loc * scale, size=1)[0])
