@@ -1,11 +1,23 @@
 # Scripto to demonstrate the functionality of SpekWrapper class
 
-from time import time
-
 import numpy as np
 
 from uspeckpy.uspekpy import SpecWrapper
 
+# Using SpecWrapper without input files
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Define x-ray beam parameters
+my_filters = [
+    ('Al', 4),
+    ('Cu', 0.6),
+    ('Sn', 0),
+    ('Pb', 0),
+    ('Be', 0),
+    ('Air', 1000)
+]
+
+# Define mass transmission coefficients
 my_mu = (
     np.array(
         [1.0, 1.1726, 1.25, 1.4, 1.5, 1.75, 2.0, 2.5, 3.0, 3.2063, 3.206301, 3.22391, 3.25051, 3.5, 3.61881, 4.0,
@@ -30,6 +42,8 @@ my_mu = (
          0.018700741656237, 0.018185053120065, 0.017326066208925, 0.016966042150857, 0.016690444038446,
          0.016199645451199, 0.015809252632524])
 )
+
+# Define conversion coefficients
 my_hk = (
     np.array([7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 80, 100, 150, 200, 300, 400, 500,
               600, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 8000, 10000]),
@@ -37,18 +51,6 @@ my_hk = (
               1.1, 1.47, 1.67, 1.74, 1.72, 1.65, 1.49, 1.4, 1.31, 1.26, 1.23, 1.21, 1.19, 1.17, 1.15, 1.13, 1.12,
               1.11, 1.19, 1.09, 1.08, 1.06])
 )
-my_filters = [
-    ('Al', 4),
-    ('Cu', 0.6),
-    ('Sn', 0),
-    ('Pb', 0),
-    ('Be', 0),
-    ('Air', 1000)
-]
-
-# Using SpekWrapper
-# ----------------------------------------------------------------------------------------------------------------------
-initial_time = time()
 
 # Initialize an SpeckWrapper object and add filters
 spectrum = SpecWrapper(kvp=60, th=20)
@@ -71,4 +73,43 @@ mean_kerma = spectrum.get_mean_kerma(mass_transmission_coefficients=my_mu)
 # Get mean conversion coefficient
 mean_hk = spectrum.get_mean_conversion_coefficient(mass_transmission_coefficients=my_mu, conversion_coefficients=my_hk)
 
-print(f'Execution time: {time() - initial_time} s')
+# Using USpek with CSV input files
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Define x-ray beam parameters
+my_filters = [
+    ('Al', 4),
+    ('Cu', 0.6),
+    ('Sn', 0),
+    ('Pb', 0),
+    ('Be', 0),
+    ('Air', 1000)
+]
+
+# Define mass transmission coefficients
+my_mu_csv = 'data/input/mu_tr_rho.csv'
+
+# Define conversion coefficients
+my_hk_csv = 'data/input/h_k_h_amb_10.csv'
+
+# Initialize an SpeckWrapper object and add filters
+spectrum = SpecWrapper(kvp=60, th=20)
+spectrum.multi_filter(my_filters)
+
+# Calculate half-value layers for aluminum and copper using SpekPy method
+hvl1_al = spectrum.get_hvl1()
+hvl2_al = spectrum.get_hvl2()
+hvl1_cu = spectrum.get_hvl1(matl='Cu')
+hvl2_cu = spectrum.get_hvl2(matl='Cu')
+
+# Get mean energy
+mean_energy = spectrum.get_mean_energy()
+mean_energy_SpekPy = spectrum.get_emean()
+
+# Get mean kerma
+mean_kerma_SpekPy = spectrum.get_kerma()
+mean_kerma = spectrum.get_mean_kerma(mass_transmission_coefficients=my_mu_csv)
+
+# Get mean conversion coefficient
+mean_hk = spectrum.get_mean_conversion_coefficient(mass_transmission_coefficients=my_mu_csv,
+                                                   conversion_coefficients=my_hk_csv)
