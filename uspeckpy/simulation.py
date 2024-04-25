@@ -89,7 +89,7 @@ def read_file_to_dataframe(file_path, sheet_name=None):
     Parameters:
         file_path (str): The path to the input file.
         sheet_name (str or int, default None): The name or index of the sheet to read if file_path is an Excel.
-            If None, reads the first sheet.
+            If None, reads all sheets to a dictionary.
 
     Returns:
         pandas.DataFrame: The DataFrame containing the data from the file.
