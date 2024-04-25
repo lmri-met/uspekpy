@@ -4,7 +4,7 @@ from time import time
 import pandas as pd
 
 import uspeckpy.digest as dg
-from uspeckpy.uspekpy import USpek
+from uspeckpy.uspekpy import USpek, parse_mass_transmission_coefficients, parse_conversion_coefficients
 
 
 def batch_simulation(input_file_path, output_folder, sheet_name=None):
@@ -18,7 +18,6 @@ def batch_simulation(input_file_path, output_folder, sheet_name=None):
 
     # Read input Excel or CSV file into a DataFrame
     input_df = read_file_to_dataframe(input_file_path, sheet_name=sheet_name)
-    print(type(input_df.iloc[4, 1]))
 
     # Read Excel file into a DataFrame and set 'Name' column as index
     # input_df = pd.read_excel(excel_file_path, sheet_name=sheet_name)
@@ -40,11 +39,20 @@ def batch_simulation(input_file_path, output_folder, sheet_name=None):
         # Get beam parameters in the format required by SpekWrapper (dictionary of tuples)
         beam_parameters = dg.parse_beam_parameters(df=input_df, column=column_name)
 
+        # Extract mass transmission coefficients CSV file path from input DataFrame column
+        file_path = input_df.at['Mass transmission coefficients file', column_name]
+
         # Get mass transmission coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-        mass_transmission_coefficients = dg.parse_mass_transmission_coefficients(df=input_df, column=column_name)
+        mass_transmission_coefficients = parse_mass_transmission_coefficients(coefficients=file_path)
+
+        # Extract conversion coefficients CSV file path from input DataFrame column
+        file_path = input_df.at['Mono-energetic conversion coefficients file', column_name]
+
+        # Extract irradiation angle from the input DataFrame column
+        irradiation_angle = input_df.at['Irradiation angle (deg)', column_name]
 
         # Get conversion coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-        conversion_coefficients = dg.parse_conversion_coefficients(df=input_df, column=column_name)
+        conversion_coefficients = parse_conversion_coefficients(coefficients=file_path, irradiation_angle=irradiation_angle)
 
         # Extract number of simulations from the input DataFrame column
         simulations_number = input_df.at['Number of simulations', column_name]
