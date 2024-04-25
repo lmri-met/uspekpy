@@ -2,7 +2,7 @@
 
 from uspeckpy.simulation import batch_simulation
 
-# TODO: units of mu_tr_rho
+# TODO: units of mu_tr_rho. Asked to PAL, waiting for an answer.
 
 # Using batch_simulation() with excel file input
 # ----------------------------------------------------------------------------------------------------------------------

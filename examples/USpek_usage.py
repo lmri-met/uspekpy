@@ -44,6 +44,7 @@ my_mu = (
          0.018700741656237, 0.018185053120065, 0.017326066208925, 0.016966042150857, 0.016690444038446,
          0.016199645451199, 0.015809252632524])
 )
+
 # Define conversion coefficients
 my_hk = (
     np.array([7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 80, 100, 150, 200, 300, 400, 500,
@@ -53,8 +54,12 @@ my_hk = (
               1.11, 1.19, 1.09, 1.08, 1.06])
 )
 
+# Define mass transmission coefficients relative uncertainty (k=1)
+my_mu_std = 0.01
+
 # Create USpekPy object with given beam parameters, mass transmission coefficients and conversion coefficients
-s = USpek(beam_parameters=my_beam, mass_transmission_coefficients=my_mu, conversion_coefficients=my_hk)
+s = USpek(beam_parameters=my_beam, mass_transmission_coefficients=my_mu,
+          mass_transmission_coefficients_uncertainty=my_mu_std, conversion_coefficients=my_hk)
 
 # Run simulation with a given number of iterations
 df1 = s.simulate(simulations_number=3)
@@ -80,8 +85,12 @@ my_mu_csv = 'data/input/mu_tr_rho.csv'
 # Define conversion coefficients
 my_hk_csv = 'data/input/h_k_h_amb_10.csv'
 
+# Define mass transmission coefficients relative uncertainty (k=1)
+my_mu_std = 0.01
+
 # Create USpekPy object with given beam parameters, mass transmission coefficients and conversion coefficients
-s = USpek(beam_parameters=my_beam, mass_transmission_coefficients=my_mu_csv, conversion_coefficients=my_hk_csv)
+s = USpek(beam_parameters=my_beam, mass_transmission_coefficients=my_mu_csv,
+          mass_transmission_coefficients_uncertainty=my_mu_std, conversion_coefficients=my_hk_csv)
 
 # Run simulation with a given number of iterations
 df2 = s.simulate(simulations_number=3)

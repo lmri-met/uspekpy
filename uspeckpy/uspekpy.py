@@ -5,7 +5,6 @@ from scipy.interpolate import Akima1DInterpolator
 from spekpy import Spek
 
 
-# TODO: include uncertainty of mass transmission coeficients
 class SpecWrapper(Spek):
     def __init__(self, kvp, th):
         # Initialize SpecWrapper as a subclass of Spek with kvp and th
@@ -46,13 +45,15 @@ class SpecWrapper(Spek):
 
 
 class USpek:
-    def __init__(self, beam_parameters, mass_transmission_coefficients, conversion_coefficients, angle=None):
+    def __init__(self, beam_parameters, mass_transmission_coefficients, mass_transmission_coefficients_uncertainty,
+                 conversion_coefficients, angle=None):
         # Initialize USpekPy instance with beam parameters
         self.beam = beam_parameters
         self.mass_transmission_coefficients = dg.parse_mass_transmission_coefficients(mass_transmission_coefficients)
         self.conversion_coefficients = dg.parse_conversion_coefficients(conversion_coefficients, angle)
+        self.mass_transmission_coefficients_uncertainty = mass_transmission_coefficients_uncertainty
 
-    def _get_beam_parameters(self):
+    def _get_random_values(self):
         # Method to generate random beam parameters based on the values and uncertainties of the beam parameters
         kvp = random_normal(loc=self.beam['kVp'][0], scale=self.beam['kVp'][1])
         th = random_normal(loc=self.beam['th'][0], scale=self.beam['th'][1])
@@ -64,11 +65,15 @@ class USpek:
             ('Pb', random_uniform(loc=self.beam['Pb'][0], scale=self.beam['Pb'][1])),
             ('Be', random_uniform(loc=self.beam['Be'][0], scale=self.beam['Be'][1])),
         ]
-        return kvp, th, filters
+        energy_mu = self.mass_transmission_coefficients[0]
+        nominal_mu = self.mass_transmission_coefficients[1]
+        mu_std = self.mass_transmission_coefficients_uncertainty
+        random_mu = np.random.normal(loc=nominal_mu, scale=nominal_mu * mu_std)
+        return kvp, th, filters, (energy_mu, random_mu)
 
     def _iteration(self):
         # Generate random beam parameters
-        kvp, th, filters = self._get_beam_parameters()
+        kvp, th, filters, mu_tr_rho = self._get_random_values()
 
         # Initialize an SpeckWrapper object and add filters
         spectrum = SpecWrapper(kvp=kvp, th=th)
@@ -84,13 +89,11 @@ class USpek:
         mean_energy = spectrum.get_mean_energy()
 
         # Get mean kerma
-        mean_kerma = spectrum.get_mean_kerma(mass_transmission_coefficients=self.mass_transmission_coefficients)
+        mean_kerma = spectrum.get_mean_kerma(mass_transmission_coefficients=mu_tr_rho)
 
         # Get mean conversion coefficient
-        mean_hk = spectrum.get_mean_conversion_coefficient(
-            mass_transmission_coefficients=self.mass_transmission_coefficients,
-            conversion_coefficients=self.conversion_coefficients
-        )
+        mean_hk = spectrum.get_mean_conversion_coefficient(mass_transmission_coefficients=mu_tr_rho,
+                                                           conversion_coefficients=self.conversion_coefficients)
 
         return (kvp, th, filters[0][1], filters[1][1], filters[2][1], filters[3][1], filters[4][1], filters[5][1],
                 hvl1_al, hvl2_al, hvl1_cu, hvl2_cu, mean_energy, mean_kerma, mean_hk)

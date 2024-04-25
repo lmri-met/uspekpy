@@ -57,11 +57,15 @@ def batch_simulation(input_file_path, output_folder, sheet_name=None):
         # Extract number of simulations from the input DataFrame column
         simulations_number = input_df.at['Number of simulations', column_name]
 
+        # Extract mass transmission coefficients uncertainty from the input DataFrame column
+        mass_transmission_coefficients_uncertainty = input_df.at['Mass transmission coefficients uncertainty', column_name]
+
         # Print a message indicating the start of input digestion
         print('Simulation')
 
         # Create USpekPy object with given beam parameters, mass transmission coefficients and conversion coefficients
         s = USpek(beam_parameters=beam_parameters, mass_transmission_coefficients=mass_transmission_coefficients,
+                  mass_transmission_coefficients_uncertainty=mass_transmission_coefficients_uncertainty,
                   conversion_coefficients=conversion_coefficients)
 
         # Run simulation with a given number of iterations
