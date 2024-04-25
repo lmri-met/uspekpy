@@ -1,5 +1,4 @@
-import csv
-
+import uspeckpy.digest as dg
 import numpy as np
 import pandas as pd
 from scipy.interpolate import Akima1DInterpolator
@@ -24,7 +23,7 @@ class SpecWrapper(Spek):
         # Get spectrum energy and fluence
         energy, fluence = self.get_spectrum(edges=False)
         # Unpack energy_mu and mu from mass_transmission_coefficients
-        energy_mu, mu = parse_mass_transmission_coefficients(mass_transmission_coefficients)
+        energy_mu, mu = dg.parse_mass_transmission_coefficients(mass_transmission_coefficients)
         # Interpolate mass attenuation coefficients for the given energy spectrum in logarithmic scale
         interpolated_mu = interpolate(x=energy_mu, y=mu, new_x=energy)
         # Compute mean kerma
@@ -35,9 +34,9 @@ class SpecWrapper(Spek):
         # Get spectrum energy and fluence
         energy, fluence = self.get_spectrum(edges=False)
         # Unpack energy_mu and mu from mass_transmission_coefficients
-        energy_mu, mu = parse_mass_transmission_coefficients(mass_transmission_coefficients)
+        energy_mu, mu = dg.parse_mass_transmission_coefficients(mass_transmission_coefficients)
         # Unpack energy_hk and hk from mono_energetic_conversion_coefficients
-        energy_hk, hk = parse_conversion_coefficients(conversion_coefficients, angle)
+        energy_hk, hk = dg.parse_conversion_coefficients(conversion_coefficients, angle)
         # Interpolate mass attenuation coefficients for the given energy spectrum in logarithmic scale
         interpolated_mu = interpolate(x=energy_mu, y=mu, new_x=energy)
         # Interpolate mono energetic conversion coefficients for the given energy spectrum in logarithmic scale
@@ -50,8 +49,8 @@ class USpek:
     def __init__(self, beam_parameters, mass_transmission_coefficients, conversion_coefficients, angle=None):
         # Initialize USpekPy instance with beam parameters
         self.beam = beam_parameters
-        self.mass_transmission_coefficients = parse_mass_transmission_coefficients(mass_transmission_coefficients)
-        self.conversion_coefficients = parse_conversion_coefficients(conversion_coefficients, angle)
+        self.mass_transmission_coefficients = dg.parse_mass_transmission_coefficients(mass_transmission_coefficients)
+        self.conversion_coefficients = dg.parse_conversion_coefficients(conversion_coefficients, angle)
 
     def _get_beam_parameters(self):
         # Method to generate random beam parameters based on the values and uncertainties of the beam parameters
@@ -146,83 +145,3 @@ def random_uniform(loc, scale):
 def random_normal(loc, scale):
     # TODO: check uncertainty type for np.random.normal()
     return float(np.random.normal(loc=loc, scale=scale, size=1)[0])
-
-
-def parse_mass_transmission_coefficients(coefficients):
-    # Get mass transmission coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-
-    if is_tuple_of_two_arrays(coefficients):
-        return coefficients
-    elif is_csv_with_two_columns(coefficients):
-        # The mass transmission coefficients CSV file should have only 2 columns, the first one for the energy and the
-        # second one for the mass transmission coefficients.
-        # Load CSV file into numpy array
-        array2d = np.genfromtxt(coefficients, delimiter=',', skip_header=1, unpack=True)
-        # Build tuple of mass transmission coefficients
-        return array2d[0], array2d[1]
-    else:
-        raise ValueError(f"Unsupported mass transmission coefficients format. Only a tuple of two numpy arrays and "
-                         f"a CSV file with two columns are supported.")
-
-
-def parse_conversion_coefficients(coefficients, irradiation_angle):
-    # Get conversion coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-    if is_tuple_of_two_arrays(coefficients):
-        return coefficients
-    elif is_valid_csv(coefficients):
-        # Read CSV file into DataFrame
-        df = pd.read_csv(coefficients)
-
-        # Get the energies of the mono-energetic conversion coefficients (always the first column of the Dataframe)
-        energies = df.iloc[:, 0].values
-
-        # If the conversion coefficients Dataframe has only 2 columns, the first is the energy and the second is the
-        # conversion coefficients.
-        if df.shape[1] == 2:
-            # Get the values of the mono-energetic conversion coefficients (the second column of the Dataframe)
-            values = df.iloc[:, 1].values
-        # If the conversion coefficients Dataframe has more than 2 columns, then it contains conversion coefficients for
-        # more than one irradiation angle.
-        else:  # TODO: check with multicolumn input file
-            # Get the label of the column which contains the irradiation angle
-            column_label = next((label for label in df.columns if irradiation_angle in label), None)
-
-            # Get the values of the mono-energetic conversion coefficients (the second column of the Dataframe)
-            values = df.loc[:, column_label].values
-
-        # Build tuple of conversion coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-        return energies, values
-    else:
-        raise ValueError(f"Unsupported conversion coefficients format. Only a tuple of two numpy arrays and "
-                         f"a CSV file with two or more columns are supported.")
-
-
-def is_tuple_of_two_arrays(arg):
-    if not isinstance(arg, tuple):
-        return False
-    if len(arg) != 2:
-        return False
-    if not isinstance(arg[0], np.ndarray) or not isinstance(arg[1], np.ndarray):
-        return False
-    return True
-
-
-def is_csv_with_two_columns(filename):
-    try:
-        with open(filename, 'r') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                if len(row) != 2:
-                    return False
-            return True
-    except Exception as e:
-        return False
-
-
-def is_valid_csv(filename):
-    try:
-        with open(filename, 'r') as file:
-            csv.reader(file)
-        return True
-    except Exception as e:
-        return False

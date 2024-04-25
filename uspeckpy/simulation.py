@@ -4,7 +4,7 @@ from time import time
 import pandas as pd
 
 import uspeckpy.digest as dg
-from uspeckpy.uspekpy import USpek, parse_mass_transmission_coefficients, parse_conversion_coefficients
+from uspeckpy.uspekpy import USpek
 
 
 def batch_simulation(input_file_path, output_folder, sheet_name=None):
@@ -43,7 +43,7 @@ def batch_simulation(input_file_path, output_folder, sheet_name=None):
         file_path = input_df.at['Mass transmission coefficients file', column_name]
 
         # Get mass transmission coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-        mass_transmission_coefficients = parse_mass_transmission_coefficients(coefficients=file_path)
+        mass_transmission_coefficients = dg.parse_mass_transmission_coefficients(coefficients=file_path)
 
         # Extract conversion coefficients CSV file path from input DataFrame column
         file_path = input_df.at['Mono-energetic conversion coefficients file', column_name]
@@ -52,7 +52,7 @@ def batch_simulation(input_file_path, output_folder, sheet_name=None):
         irradiation_angle = input_df.at['Irradiation angle (deg)', column_name]
 
         # Get conversion coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-        conversion_coefficients = parse_conversion_coefficients(coefficients=file_path, irradiation_angle=irradiation_angle)
+        conversion_coefficients = dg.parse_conversion_coefficients(coefficients=file_path, irradiation_angle=irradiation_angle)
 
         # Extract number of simulations from the input DataFrame column
         simulations_number = input_df.at['Number of simulations', column_name]

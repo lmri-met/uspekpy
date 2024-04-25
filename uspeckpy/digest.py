@@ -1,7 +1,57 @@
+from csv import reader
 from functools import reduce
 
 import numpy as np
 import pandas as pd
+
+
+def parse_mass_transmission_coefficients(coefficients):
+    # Get mass transmission coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
+
+    if is_tuple_of_two_arrays(coefficients):
+        return coefficients
+    elif is_csv_with_two_columns(coefficients):
+        # The mass transmission coefficients CSV file should have only 2 columns, the first one for the energy and the
+        # second one for the mass transmission coefficients.
+        # Load CSV file into numpy array
+        array2d = np.genfromtxt(coefficients, delimiter=',', skip_header=1, unpack=True)
+        # Build tuple of mass transmission coefficients
+        return array2d[0], array2d[1]
+    else:
+        raise ValueError(f"Unsupported mass transmission coefficients format. Only a tuple of two numpy arrays and "
+                         f"a CSV file with two columns are supported.")
+
+
+def parse_conversion_coefficients(coefficients, irradiation_angle):
+    # Get conversion coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
+    if is_tuple_of_two_arrays(coefficients):
+        return coefficients
+    elif is_valid_csv(coefficients):
+        # Read CSV file into DataFrame
+        df = pd.read_csv(coefficients)
+
+        # Get the energies of the mono-energetic conversion coefficients (always the first column of the Dataframe)
+        energies = df.iloc[:, 0].values
+
+        # If the conversion coefficients Dataframe has only 2 columns, the first is the energy and the second is the
+        # conversion coefficients.
+        if df.shape[1] == 2:
+            # Get the values of the mono-energetic conversion coefficients (the second column of the Dataframe)
+            values = df.iloc[:, 1].values
+        # If the conversion coefficients Dataframe has more than 2 columns, then it contains conversion coefficients for
+        # more than one irradiation angle.
+        else:  # TODO: check with multicolumn input file
+            # Get the label of the column which contains the irradiation angle
+            column_label = next((label for label in df.columns if irradiation_angle in label), None)
+
+            # Get the values of the mono-energetic conversion coefficients (the second column of the Dataframe)
+            values = df.loc[:, column_label].values
+
+        # Build tuple of conversion coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
+        return energies, values
+    else:
+        raise ValueError(f"Unsupported conversion coefficients format. Only a tuple of two numpy arrays and "
+                         f"a CSV file with two or more columns are supported.")
 
 
 def parse_beam_parameters(df, column):
@@ -21,54 +71,6 @@ def parse_beam_parameters(df, column):
 
     # Build dictionary of beam parameters in the format required by SpekWrapper (dictionary of tuples)
     return dict(zip(keys, zip(values, uncertainties)))
-
-
-def parse_mass_transmission_coefficients(df, column):
-    # Get mass transmission coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-    # The mass transmission coefficients CSV file should have only 2 columns, the first one for the energy and the
-    # second one for the mass transmission coefficients.
-
-    # Extract mass transmission coefficients CSV file path from input DataFrame column
-    file_path = df.at['Mass transmission coefficients file', column]
-
-    # Load CSV file into numpy array
-    array2d = np.genfromtxt(file_path, delimiter=',', skip_header=1, unpack=True)
-
-    # Build tuple of mass transmission coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-    return array2d[0], array2d[1]
-
-
-def parse_conversion_coefficients(df, column):
-    # Get conversion coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-
-    # Extract conversion coefficients CSV file path from input DataFrame column
-    file_path = df.at['Mono-energetic conversion coefficients file', column]
-
-    # Read CSV files into DataFrames for mono-energetic conversion coefficients
-    df = pd.read_csv(file_path)
-
-    # Get the energies of the mono-energetic conversion coefficients (always the first column of the Dataframe)
-    energies = df.iloc[:, 0]
-
-    # If the conversion coefficients Dataframe has only 2 columns, the first is the energy and the second is the
-    # conversion coefficients.
-    if df.shape[1] == 2:
-        # Get the values of the mono-energetic conversion coefficients (the second column of the Dataframe)
-        values = df.iloc[:, 1]
-    # If the conversion coefficients Dataframe has more than 2 columns, then it contains conversion coefficients for
-    # more than one irradiation angle.
-    else:  # TODO: check with multicolumn input file
-        # Extract irradiation angle from the input DataFrame column
-        irradiation_angle = df.at['Irradiation angle (deg)', column]
-
-        # Get the label of the column which contains the irradiation angle
-        column_label = next((label for label in df.columns if irradiation_angle in label), None)
-
-        # Get the values of the mono-energetic conversion coefficients (the second column of the Dataframe)
-        values = df.loc[:, column_label]
-
-    # Build tuple of conversion coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-    return energies, values
 
 
 def output_digest(input_df, output_dfs):
@@ -114,3 +116,41 @@ def output_digest(input_df, output_dfs):
 
     # Concatenate along rows
     return pd.concat([input_df, df, merged_df])
+
+
+def is_tuple_of_two_arrays(arg):
+    if not isinstance(arg, tuple):
+        return False
+    if len(arg) != 2:
+        return False
+    if not isinstance(arg[0], np.ndarray) or not isinstance(arg[1], np.ndarray):
+        return False
+    return True
+
+
+def is_csv_with_two_columns(filename):
+    if not filename.lower().endswith('.csv'):
+        return False
+    with open(filename, 'r') as file:
+        rows = reader(file)
+        for row in rows:
+            if len(row) != 2:
+                return False
+        return True
+
+
+def is_valid_csv(filename):
+    if not filename.lower().endswith('.csv'):
+        return False
+    # Open the CSV file
+    with open(filename, 'r') as file:
+        rows = reader(file)
+
+        # Get the length of the first row
+        first_row_length = len(next(rows))
+
+        # Check the length of each subsequent row
+        for row in rows:
+            if len(row) != first_row_length:
+                return False  # If any row has a different length, return False
+        return True  # If all rows have the same length, return True
