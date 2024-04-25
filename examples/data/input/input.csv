@@ -13,8 +13,8 @@ Be filter width (mm),0,0
 Air filter width (mm),1000,1000
 Peak kilovoltage (kV),60,60
 Anode angle (deg),20,20
-Mass transmission coefficients file,C:\Users\u6406\PycharmProjects\uspekpy\examples\data\input\mu_tr_rho.csv,C:\Users\u6406\PycharmProjects\uspekpy\examples\data\input\mu_tr_rho.csv
-Mono-energetic conversion coefficients file,C:\Users\u6406\PycharmProjects\uspekpy\examples\data\input\h_k_h_amb_10.csv,C:\Users\u6406\PycharmProjects\uspekpy\examples\data\input\h_k_h_amb_10.csv
+Mass transmission coefficients file,data\input\mu_tr_rho.csv,data\input\mu_tr_rho.csv
+Mono-energetic conversion coefficients file,data\input\h_k_h_amb_10.csv,data\input\h_k_h_amb_10.csv
 Relative uncertainties (k=1),,
 Al filter width uncertainty,0.01,0.01
 Cu filter width uncertainty,0.01,0.01
