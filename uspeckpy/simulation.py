@@ -151,21 +151,44 @@ def read_file_to_dataframe(file_path, sheet_name=None):
 
 
 def parse_beam_parameters(df, column):
-    # Get beam parameters in the format required by SpekWrapper (dictionary of tuples)
+    """
+    Get beam parameters in the format required by SpekWrapper.
 
-    # Extract values and uncertainties of filters width from the input DataFrame column
+    The DataFrame should have rows in the specified column named:
+    - '<filter name> filter width (mm)' for filter widths.
+    - '<filter name> filter width uncertainty' for filter width uncertainties.
+    - 'Peak kilovoltage (kV)' for peak kilovoltage.
+    - 'Anode angle (deg)' for anode angle.
+    - 'Peak kilovoltage uncertainty' for peak kilovoltage uncertainty.
+    - 'Anode angle uncertainty' for anode angle uncertainty.
+
+    Parameters:
+        df (pd.DataFrame): Input DataFrame containing beam parameters.
+        column (str): Column name in the DataFrame containing the beam parameters.
+
+    Returns:
+        Dict[str, Tuple[float, float]]: Dictionary of beam parameters in the format required by SpekWrapper,
+        where keys are parameter names and values are tuples of parameter values and uncertainties.
+    """
+    # Keys for the filters
     keys = ['Al', 'Cu', 'Sn', 'Pb', 'Be', 'Air']
+
+    # Extracting values for each filter from the specified DataFrame column
     values = [df.at[f'{key} filter width (mm)', column] for key in keys]
+
+    # Extracting uncertainties for each filter from the specified DataFrame column
     uncertainties = [df.at[f'{key} filter width uncertainty', column] for key in keys]
 
-    # Extract values and uncertainties of peak kilovoltage and anode angle filters width from the input DataFrame column
-    # and append them to the previous lists
+    # Append additional keys for peak kilovoltage and anode angle
     keys += ['kVp', 'th']
-    values += [df.at['Peak kilovoltage (kV)', column], df.at['Anode angle (deg)', column]]
-    uncertainties += [df.at['Peak kilovoltage uncertainty', column],
-                      df.at['Anode angle uncertainty', column]]
 
-    # Build dictionary of beam parameters in the format required by SpekWrapper (dictionary of tuples)
+    # Extract values for peak kilovoltage and anode angle from the specified DataFrame column and append them
+    values += [df.at['Peak kilovoltage (kV)', column], df.at['Anode angle (deg)', column]]
+
+    # Extract uncertainties for peak kilovoltage and anode angle from the specified DataFrame column and append them
+    uncertainties += [df.at['Peak kilovoltage uncertainty', column], df.at['Anode angle uncertainty', column]]
+
+    # Build dictionary of beam parameters in the format required by SpekWrapper
     return dict(zip(keys, zip(values, uncertainties)))
 
 
