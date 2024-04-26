@@ -181,7 +181,7 @@ def parse_mass_transmission_coefficients(coefficients):
                          f"a CSV file with two columns are supported.")
 
 
-def parse_conversion_coefficients(coefficients, irradiation_angle):
+def parse_conversion_coefficients(coefficients, irradiation_angle=None):
     """
     Parse conversion coefficients into the required format by SpekWrapper.
 
@@ -193,7 +193,8 @@ def parse_conversion_coefficients(coefficients, irradiation_angle):
     coefficients (tuple or str): Conversion coefficients. This can be either a tuple of two numpy arrays
         representing energies and conversion coefficients, or a string representing the file path of a CSV
         file containing at least two columns: energy and conversion coefficients.
-    irradiation_angle (str): Irradiation angle for which the conversion coefficients are calculated.
+    irradiation_angle (int, optional): Irradiation angle for which the conversion coefficients are calculated.
+        Defaults to None.
 
     Returns:
     tuple: A tuple containing two numpy arrays representing energies and conversion coefficients, respectively.
@@ -218,7 +219,7 @@ def parse_conversion_coefficients(coefficients, irradiation_angle):
             values = df.iloc[:, 1].values
         else:
             # Find the column containing the conversion coefficients corresponding to the specified irradiation angle
-            column_label = next((label for label in df.columns if irradiation_angle in label), None)
+            column_label = next((label for label in df.columns if str(irradiation_angle) in label), None)
 
             # Get the conversion coefficients from the identified column
             values = df.loc[:, column_label].values
