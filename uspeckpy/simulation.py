@@ -12,14 +12,15 @@ def batch_simulation(input_file_path, sheet_name=None):
 
     This function performs batch simulations based on input data provided in an Excel or CSV file.
     It reads the input data into a DataFrame, processes each simulation, and generates output data.
-    The output data is stored in a list of DataFrames, one for each simulation, and returned. TODO
+    The output data is stored in a list of DataFrames, one for each simulation. Finally, it generates
+    a DataFrame by combining the input DataFrame with the simulation results DataFrames.
 
     Args:
     input_file_path (str): The path to the input file containing simulation parameters.
     sheet_name (str, optional): The name of the sheet to read if the input file is in Excel format.
 
     Returns:
-    list: A list of DataFrames containing the output data for each simulation. TODO
+    list: DataFrame combining input and simulation results.
 
     Raises:
     ValueError: If the input file format is not supported or if there are issues with the input data.
