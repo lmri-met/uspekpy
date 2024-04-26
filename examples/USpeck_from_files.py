@@ -1,4 +1,4 @@
-# Scripto to demonstrate the usage of USpek class with CSV input files
+# Scrip to demonstrate the usage of USpek class with CSV input files
 
 from uspeckpy.uspekpy import USpek
 
