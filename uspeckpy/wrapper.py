@@ -6,7 +6,7 @@ from scipy.interpolate import Akima1DInterpolator
 from spekpy import Spek
 
 
-class SpecWrapper(Spek):
+class SpekWrapper(Spek):
     """
     A subclass of Spek representing a spectrum with additional methods for computation of mean quantities.
 

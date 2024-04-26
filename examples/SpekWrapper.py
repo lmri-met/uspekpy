@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from uspeckpy.wrapper import SpecWrapper
+from uspeckpy.wrapper import SpekWrapper
 
 # Define x-ray beam parameters
 my_filters = [
@@ -50,7 +50,7 @@ my_hk = (
 )
 
 # Initialize an SpeckWrapper object and add filters
-spectrum = SpecWrapper(kvp=60, th=20)
+spectrum = SpekWrapper(kvp=60, th=20)
 spectrum.multi_filter(my_filters)
 
 # Calculate half-value layers for aluminum and copper using SpekPy method

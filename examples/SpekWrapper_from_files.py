@@ -1,5 +1,5 @@
 # Scripto to demonstrate the usage of SpekWrapper class with CSV input files
-from uspeckpy.wrapper import SpecWrapper
+from uspeckpy.wrapper import SpekWrapper
 
 # Define x-ray beam parameters
 my_filters = [
@@ -18,7 +18,7 @@ my_mu_csv = 'data/input/mu_tr_rho.csv'
 my_hk_csv = 'data/input/h_k_h_amb_10.csv'
 
 # Initialize an SpeckWrapper object and add filters
-spectrum = SpecWrapper(kvp=60, th=20)
+spectrum = SpekWrapper(kvp=60, th=20)
 spectrum.multi_filter(my_filters)
 
 # Calculate half-value layers for aluminum and copper using SpekPy method

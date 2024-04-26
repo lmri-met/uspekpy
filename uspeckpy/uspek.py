@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from uspeckpy.wrapper import SpecWrapper, parse_mass_transmission_coefficients, parse_conversion_coefficients
+from uspeckpy.wrapper import SpekWrapper, parse_mass_transmission_coefficients, parse_conversion_coefficients
 
 
 class USpek:
@@ -147,7 +147,7 @@ class USpek:
         kvp, th, filters, mu_tr_rho = self._get_random_values()
 
         # Initialize an SpeckWrapper object and add filters
-        spectrum = SpecWrapper(kvp=kvp, th=th)
+        spectrum = SpekWrapper(kvp=kvp, th=th)
         spectrum.multi_filter(filters)
 
         # Calculate half-value layers for aluminum and copper
