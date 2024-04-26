@@ -1,5 +1,4 @@
 from pathlib import Path
-from time import time
 
 import pandas as pd
 
@@ -8,8 +7,6 @@ from uspeckpy.uspekpy import USpek
 
 
 def batch_simulation(input_file_path, output_folder, sheet_name=None):
-    initial_time = time()
-
     # Print a message indicating the start of input digestion
     print('Batch simulation')
 
@@ -52,7 +49,8 @@ def batch_simulation(input_file_path, output_folder, sheet_name=None):
         irradiation_angle = input_df.at['Irradiation angle (deg)', column_name]
 
         # Get conversion coefficients in the format required by SpekWrapper (tuple of two numpy arrays)
-        conversion_coefficients = dg.parse_conversion_coefficients(coefficients=file_path, irradiation_angle=irradiation_angle)
+        conversion_coefficients = dg.parse_conversion_coefficients(coefficients=file_path,
+                                                                   irradiation_angle=irradiation_angle)
 
         # Extract number of simulations from the input DataFrame column
         simulations_number = input_df.at['Number of simulations', column_name]
@@ -85,13 +83,8 @@ def batch_simulation(input_file_path, output_folder, sheet_name=None):
     # Print a message indicating the start of input digestion
     print('\nFinal output digest')
 
-    results = dg.output_digest(input_df=input_df, output_dfs=output_dfs)
-
-    results.to_csv(Path(output_folder) / 'output.csv', index=True)
-
-    print(f'\nExecution time: {time() - initial_time} s')
-
-    return results
+    # Return DataFrame with the results
+    return dg.output_digest(input_df=input_df, output_dfs=output_dfs)
 
 
 def read_file_to_dataframe(file_path, sheet_name=None):
