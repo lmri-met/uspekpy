@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from uspeckpy.uspekpy import SpecWrapper
+from uspeckpy.wrapper import SpecWrapper
 
 # Define x-ray beam parameters
 my_filters = [

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import numpy as np
 
-from uspeckpy.uspekpy import USpek
+from uspeckpy.uspek import USpek
 
 # Define x-ray beam parameters
 my_beam = {

@@ -1,7 +1,7 @@
 # Scrip to demonstrate the usage of USpek class with CSV input files
 from pathlib import Path
 
-from uspeckpy.uspekpy import USpek
+from uspeckpy.uspek import USpek
 
 # Define x-ray beam parameters
 my_beam = {

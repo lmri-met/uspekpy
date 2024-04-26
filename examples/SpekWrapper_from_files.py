@@ -1,6 +1,5 @@
 # Scripto to demonstrate the usage of SpekWrapper class with CSV input files
-
-from uspeckpy.uspekpy import SpecWrapper
+from uspeckpy.wrapper import SpecWrapper
 
 # Define x-ray beam parameters
 my_filters = [

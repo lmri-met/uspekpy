@@ -2,7 +2,7 @@ from functools import reduce
 
 import pandas as pd
 
-from uspeckpy.uspekpy import USpek
+from uspeckpy.uspek import USpek
 from uspeckpy.wrapper import parse_mass_transmission_coefficients, parse_conversion_coefficients
 
 
