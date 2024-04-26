@@ -1,4 +1,5 @@
 # Scrip to demonstrate the usage of USpek class with CSV input files
+from pathlib import Path
 
 from uspeckpy.uspekpy import USpek
 
@@ -29,3 +30,12 @@ s = USpek(beam_parameters=my_beam, mass_transmission_coefficients=my_mu_csv,
 
 # Run simulation with a given number of iterations
 df = s.simulate(simulations_number=3)
+
+# Define the output folder path where the simulation results will be saved
+my_folder = 'output'
+
+# Define the name of the output file where the simulation results will be saved
+my_output_csv = 'output.csv'
+
+# Save results to a CSV file
+df.to_csv(Path(my_folder) / my_output_csv, index=True)
