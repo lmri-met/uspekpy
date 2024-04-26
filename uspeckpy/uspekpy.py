@@ -119,15 +119,47 @@ class SpecWrapper(Spek):
 
 
 class USpek:
+    """
+    Class for computing mean quantities of an x-ray spectrum with uncertainties using Monte Carlo techniques.
+
+    Parameters:
+    - beam_parameters (dict): Dictionary containing beam parameters and their uncertainties.
+    - mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass transmission
+    coefficients.
+    - mass_transmission_coefficients_uncertainty (float): The uncertainty associated with the mass transmission
+    coefficients.
+    - conversion_coefficients (tuple): Tuple containing the energies and values of the conversion coefficients.
+    - angle (float, optional): The irradiation angle at which conversion coefficients are calculated.
+
+    Methods:
+    - simulate(simulations_number): Perform simulations and return a DataFrame containing mean quantities.
+    """
     def __init__(self, beam_parameters, mass_transmission_coefficients, mass_transmission_coefficients_uncertainty,
                  conversion_coefficients, angle=None):
-        # Initialize USpekPy instance with beam parameters
+        """
+        Initialize USpek instance with beam parameters and coefficients.
+
+        Args:
+        - beam_parameters (dict): Dictionary containing beam parameters and their uncertainties.
+        - mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass transmission
+        coefficients.
+        - mass_transmission_coefficients_uncertainty (float): The uncertainty associated with the mass transmission
+        coefficients.
+        - conversion_coefficients (tuple): Tuple containing the energies and values of the conversion coefficients.
+        - angle (float, optional): The irradiation angle at which conversion coefficients are calculated.
+        """
         self.beam = beam_parameters
         self.mass_transmission_coefficients = dg.parse_mass_transmission_coefficients(mass_transmission_coefficients)
         self.conversion_coefficients = dg.parse_conversion_coefficients(conversion_coefficients, angle)
         self.mass_transmission_coefficients_uncertainty = mass_transmission_coefficients_uncertainty
 
-    def _get_random_values(self):
+    def _get_random_values(self):  # TODO
+        """
+        Generate random beam parameters based on the values and uncertainties of the beam parameters.
+
+        Returns:
+        tuple: Tuple containing random beam parameters.
+        """
         # Method to generate random beam parameters based on the values and uncertainties of the beam parameters
         kvp = random_normal(loc=self.beam['kVp'][0], scale=self.beam['kVp'][1])
         th = random_normal(loc=self.beam['th'][0], scale=self.beam['th'][1])
@@ -145,7 +177,13 @@ class USpek:
         random_mu = np.random.normal(loc=nominal_mu, scale=nominal_mu * mu_std)
         return kvp, th, filters, (energy_mu, random_mu)
 
-    def _iteration(self):
+    def _iteration(self):  # TODO
+        """
+        Perform a single iteration of the Monte Carlo simulation.
+
+        Returns:
+        tuple: Tuple containing results of a single iteration.
+        """
         # Generate random beam parameters
         kvp, th, filters, mu_tr_rho = self._get_random_values()
 
@@ -174,6 +212,15 @@ class USpek:
 
     @staticmethod
     def _get_mean_quantities(rows):
+        """
+        Calculate means, standard deviations, and relative uncertainties for the simulation results.
+
+        Args:
+        rows (list): List of simulation results.
+
+        Returns:
+        pandas.DataFrame: DataFrame containing mean quantities, standard deviations, and relative uncertainties.
+        """
         columns = ['#', 'kVp', 'th', 'Air', 'Al', 'Cu', 'Sn', 'Pb', 'Be', 'HVL1 Al', 'HVL2 Al', 'HVL1 Cu', 'HVL2 Cu',
                    'Mean energy', 'Mean kerma', 'Mean conv. coefficient.']
         df = pd.DataFrame(data=rows, columns=columns)
@@ -191,6 +238,15 @@ class USpek:
         return pd.concat(objs=[df, pd.DataFrame(data=data, columns=columns)], ignore_index=True)
 
     def simulate(self, simulations_number):
+        """
+        Perform Monte Carlo simulations and return mean quantities.
+
+        Args:
+        simulations_number (int): Number of simulations to perform.
+
+        Returns:
+        pandas.DataFrame: DataFrame containing mean quantities, standard deviations, and relative uncertainties.
+        """
         # Print a message indicating the start of simulation
         print('Simulation')
         rows = []
