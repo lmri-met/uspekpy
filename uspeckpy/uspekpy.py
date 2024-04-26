@@ -185,6 +185,22 @@ class USpek:
 
 
 def interpolate(x, y, new_x):
+    """
+    Interpolate y values for given new_x using Akima interpolation.
+
+    Parameters:
+    - x (array-like): The original x values.
+    - y (array-like): The original y values.
+    - new_x (array-like): The new x values for interpolation.
+
+    Returns:
+    array-like: The interpolated y values for the new_x.
+
+    Notes:
+    This function performs Akima interpolation on the given x and y values
+    (assumed to be on a logarithmic scale) to interpolate new y values for
+    the given new_x. Any resulting NaN values are replaced with zeros.
+    """
     # Create an Akima1DInterpolator object with logarithmic x and y values
     interpolator = Akima1DInterpolator(x=np.log(x), y=np.log(y))
 
