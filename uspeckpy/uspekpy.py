@@ -34,6 +34,11 @@ class SpecWrapper(Spek):
         """
         Compute the mean energy of the spectrum.
 
+        This method calculates the mean energy of the spectrum by multiplying
+        the energy values of each bin by their corresponding fluence values
+        and then dividing the sum of these products by the total fluence
+        of the spectrum.
+
         Returns:
         float: The mean energy of the spectrum.
         """
@@ -46,6 +51,13 @@ class SpecWrapper(Spek):
     def get_mean_kerma(self, mass_transmission_coefficients):
         """
         Compute the mean kerma using mass transmission coefficients.
+
+        This method calculates the mean kerma of the spectrum by first obtaining the spectrum's energy
+        and fluence using the `get_spectrum` method. Then, it unpacks the energies and values of the mass transmission
+        coefficients. Next, it interpolates the mass attenuation coefficients for the spectrum energies in logarithmic
+        scale using the `interpolate` function. Finally, it computes the mean kerma by multiplying the fluence, energy,
+        and interpolated mass attenuation coefficients, and then dividing the sum of these products by the total fluence
+        of the spectrum.
 
         Parameters:
         mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass transmission
@@ -69,6 +81,14 @@ class SpecWrapper(Spek):
     def get_mean_conversion_coefficient(self, mass_transmission_coefficients, conversion_coefficients, angle=None):
         """
         Compute the mean conversion coefficient using mass transmission coefficients and conversion coefficients.
+
+        This method calculates the mean conversion coefficient of the spectrum by first obtaining the spectrum's energy
+        and fluence using the `get_spectrum` method. Then, it unpacks the energies and values of the mass transmission
+        coefficients and the conversion coefficients. Next, it interpolates the mass attenuation coefficients and the
+        conversion coefficients for the spectrum energies in logarithmic scale using the `interpolate` function.
+        Finally, it computes the mean conversion coefficient by multiplying the fluence, energy, interpolated mass
+        attenuation coefficients, and interpolated conversion coefficients, and then dividing the sum of these products
+        by the total fluence of the spectrum.
 
         Parameters:
         mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass transmission
@@ -188,6 +208,10 @@ def interpolate(x, y, new_x):
     """
     Interpolate y values for given new_x using Akima interpolation.
 
+    This function performs Akima interpolation on the given x and y values
+    (assumed to be on a logarithmic scale) to interpolate new y values for
+    the given new_x. Any resulting NaN values are replaced with zeros.
+
     Parameters:
     - x (array-like): The original x values.
     - y (array-like): The original y values.
@@ -195,11 +219,6 @@ def interpolate(x, y, new_x):
 
     Returns:
     array-like: The interpolated y values for the new_x.
-
-    Notes:
-    This function performs Akima interpolation on the given x and y values
-    (assumed to be on a logarithmic scale) to interpolate new y values for
-    the given new_x. Any resulting NaN values are replaced with zeros.
     """
     # Create an Akima1DInterpolator object with logarithmic x and y values
     interpolator = Akima1DInterpolator(x=np.log(x), y=np.log(y))
@@ -215,17 +234,16 @@ def random_uniform(loc, scale):
     """
     Generate a random number from a uniform distribution.
 
+    This function generates a random number from a uniform distribution with mean `loc` and standard deviation `scale`.
+    The range of the uniform distribution is calculated as `low = loc * (1 - scale * sqrt(3))`
+    and `high = loc * (1 + scale * sqrt(3))`.
+
     Parameters:
     - loc (float): Mean of the distribution.
     - scale (float): Standard deviation of the distribution.
 
     Returns:
     float: A random number sampled from the uniform distribution.
-
-    Notes:
-    This function generates a random number from a uniform distribution with mean `loc` and standard deviation `scale`.
-    The range of the uniform distribution is calculated as `low = loc * (1 - scale * sqrt(3))`
-    and `high = loc * (1 + scale * sqrt(3))`.
     """
     # Calculate the lower bound of the uniform distribution
     low = loc * (1 - scale * np.sqrt(3))
