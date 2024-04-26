@@ -117,11 +117,13 @@ class USpek:
         return pd.concat(objs=[df, pd.DataFrame(data=data, columns=columns)], ignore_index=True)
 
     def simulate(self, simulations_number):
+        # Print a message indicating the start of simulation
+        print('Simulation')
         rows = []
         # For each iteration
         for iteration in range(simulations_number):
             # Print a message indicating the number of the current iteration
-            print(f'Iteration number: {iteration}')
+            print(f'Iteration number: {iteration + 1}')
             rows.append([f'Iteration {iteration + 1}'] + list(self._iteration()))
 
         # Build results DataFrame
