@@ -164,4 +164,25 @@ class TestParseConversionCoefficients:
         with pytest.raises(ValueError):
             wrp.parse_conversion_coefficients("invalid_input", "angle")
 
-# TODO: interpolate(), SpekWrapper()
+
+class TestInterpolate:
+    @staticmethod
+    def test_interpolate():
+        # Define original x and y values
+        x = [1, 3, 5]
+        y = [10, 30, 50]
+
+        # Define new x values for interpolation
+        new_x = [2, 4]
+
+        # Call the function with the original and new x values
+        new_y = wrp.interpolate(x, y, new_x)
+
+        # Define expected interpolated y values
+        expected_new_y = np.array([20.0, 40.0])
+
+        # Assert that the result is an array-like object and contains the expected interpolated y values
+        assert isinstance(new_y, np.ndarray)
+        np.testing.assert_allclose(new_y, expected_new_y, rtol=1e-6)
+
+# TODO: SpekWrapper()
