@@ -38,3 +38,5 @@ class TestRandomNormal:
         assert isinstance(result, float)
         assert result >= low
         assert result <= high
+
+# TODO: USpek

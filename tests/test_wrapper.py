@@ -163,3 +163,5 @@ class TestParseConversionCoefficients:
     def test_invalid_input(self):
         with pytest.raises(ValueError):
             wrp.parse_conversion_coefficients("invalid_input", "angle")
+
+# TODO: interpolate(), SpekWrapper()
