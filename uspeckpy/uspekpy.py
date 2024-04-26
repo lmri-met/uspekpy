@@ -212,10 +212,45 @@ def interpolate(x, y, new_x):
 
 
 def random_uniform(loc, scale):
+    """
+    Generate a random number from a uniform distribution.
+
+    Parameters:
+    - loc (float): Mean of the distribution.
+    - scale (float): Standard deviation of the distribution.
+
+    Returns:
+    float: A random number sampled from the uniform distribution.
+
+    Notes:
+    This function generates a random number from a uniform distribution with mean `loc` and standard deviation `scale`.
+    The range of the uniform distribution is calculated as `low = loc * (1 - scale * sqrt(3))`
+    and `high = loc * (1 + scale * sqrt(3))`.
+    """
+    # Calculate the lower bound of the uniform distribution
     low = loc * (1 - scale * np.sqrt(3))
+
+    # Calculate the upper bound of the uniform distribution
     high = loc * (1 - scale * np.sqrt(3))
+
+    # Generate a random number from the uniform distribution
     return float(np.random.uniform(low=low, high=high, size=1)[0])
 
 
 def random_normal(loc, scale):
+    """
+    Generate a random number from a normal (Gaussian) distribution.
+
+    Parameters:
+    - loc (float): Mean of the distribution.
+    - scale (float): Standard deviation of the distribution.
+
+    Returns:
+    float: A random number sampled from the normal distribution.
+
+    Notes:
+    This function generates a random number from a normal distribution
+    with mean `loc` and standard deviation `scale * loc`.
+    """
+    # Generate a random number from the normal distribution
     return float(np.random.normal(loc=loc, scale=loc * scale, size=1)[0])
