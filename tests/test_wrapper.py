@@ -185,4 +185,39 @@ class TestInterpolate:
         assert isinstance(new_y, np.ndarray)
         np.testing.assert_allclose(new_y, expected_new_y, rtol=1e-6)
 
-# TODO: SpekWrapper()
+
+class TestSpekWrapper:
+
+    @pytest.fixture
+    def spectrum_energy_fluence(self):
+        # Define x-ray beam parameters
+        my_filters = [
+            ('Al', 4),
+            ('Cu', 0.6),
+            ('Sn', 0),
+            ('Pb', 0),
+            ('Be', 0),
+            ('Air', 1000)
+        ]
+
+        # Initialize an SpeckWrapper object and add filters
+        spectrum = wrp.SpekWrapper(kvp=60, th=20)
+        spectrum.multi_filter(my_filters)
+
+        # Get spectrum energy and fluence
+        energy, fluence = spectrum.get_spectrum(edges=False)
+        return spectrum, energy, fluence
+
+    def test_get_mean_energy(self, spectrum_energy_fluence):
+        # Get spectrum and spectrum energy and fluence
+        spectrum, energy, fluence = spectrum_energy_fluence
+
+        # Compute expected mean energy
+        expected_mean_energy = sum(fluence * energy) / fluence.sum()
+
+        # Compute mean energy with SpekWrapper.get_mean_energy()
+        mean_energy = spectrum.get_mean_energy()
+
+        assert mean_energy == expected_mean_energy
+
+# TODO: SpekWrapper.get_mean_kerma(), SpekWrapper.get_mean_conversion_coefficient()
