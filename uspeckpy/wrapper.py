@@ -1,8 +1,149 @@
 from csv import reader
-from functools import reduce
 
 import numpy as np
 import pandas as pd
+from scipy.interpolate import Akima1DInterpolator
+from spekpy import Spek
+
+
+class SpecWrapper(Spek):
+    """
+    A subclass of Spek representing a spectrum with additional methods for computation of mean quantities.
+
+    Parameters:
+    - kvp (float): The peak kilovoltage (kVp) of the x-ray tube.
+    - th (float): The anode angle of the x-ray tube.
+
+    Attributes:
+    Inherits kvp and th attributes from Spek class.
+
+    Methods:
+    - get_mean_energy(): Compute the mean energy of the spectrum.
+    - get_mean_kerma(mass_transmission_coefficients): Compute the mean kerma of the spectrum using mass transmission
+      coefficients.
+    - get_mean_conversion_coefficient(mass_transmission_coefficients, conversion_coefficients, angle=None):
+      Compute the mean conversion coefficient of the spectrum using mass transmission coefficients and conversion
+      coefficients.
+    """
+
+    def __init__(self, kvp, th):
+        """
+        Initialize SpecWrapper instance with peak kilovoltage anode angle of the x-ray tube.
+        """
+        Spek.__init__(self, kvp, th)
+
+    def get_mean_energy(self):
+        """
+        Compute the mean energy of the spectrum.
+
+        This method calculates the mean energy of the spectrum by multiplying
+        the energy values of each bin by their corresponding fluence values
+        and then dividing the sum of these products by the total fluence
+        of the spectrum.
+
+        Returns:
+        float: The mean energy of the spectrum.
+        """
+        # Get spectrum energy and fluence
+        energy, fluence = self.get_spectrum(edges=False)
+
+        # Compute mean energy
+        return sum(fluence * energy) / fluence.sum()
+
+    def get_mean_kerma(self, mass_transmission_coefficients):
+        """
+        Compute the mean kerma using mass transmission coefficients.
+
+        This method calculates the mean kerma of the spectrum by first obtaining the spectrum's energy
+        and fluence using the `get_spectrum` method. Then, it unpacks the energies and values of the mass transmission
+        coefficients. Next, it interpolates the mass attenuation coefficients for the spectrum energies in logarithmic
+        scale using the `interpolate` function. Finally, it computes the mean kerma by multiplying the fluence, energy,
+        and interpolated mass attenuation coefficients, and then dividing the sum of these products by the total fluence
+        of the spectrum.
+
+        Parameters:
+        mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass transmission
+        coefficients.
+
+        Returns:
+        float: The mean kerma computed.
+        """
+        # Get spectrum energy and fluence
+        energy, fluence = self.get_spectrum(edges=False)
+
+        # Unpack the energies and values of the mass transmission coefficients
+        energy_mu, mu = parse_mass_transmission_coefficients(mass_transmission_coefficients)
+
+        # Interpolate mass attenuation coefficients for the spectrum energies in logarithmic scale
+        interpolated_mu = interpolate(x=energy_mu, y=mu, new_x=energy)
+
+        # Compute mean kerma
+        return sum(fluence * energy * interpolated_mu) / fluence.sum()
+
+    def get_mean_conversion_coefficient(self, mass_transmission_coefficients, conversion_coefficients, angle=None):
+        """
+        Compute the mean conversion coefficient using mass transmission coefficients and conversion coefficients.
+
+        This method calculates the mean conversion coefficient of the spectrum by first obtaining the spectrum's energy
+        and fluence using the `get_spectrum` method. Then, it unpacks the energies and values of the mass transmission
+        coefficients and the conversion coefficients. Next, it interpolates the mass attenuation coefficients and the
+        conversion coefficients for the spectrum energies in logarithmic scale using the `interpolate` function.
+        Finally, it computes the mean conversion coefficient by multiplying the fluence, energy, interpolated mass
+        attenuation coefficients, and interpolated conversion coefficients, and then dividing the sum of these products
+        by the total fluence of the spectrum.
+
+        Parameters:
+        mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass transmission
+        coefficients.
+        conversion_coefficients (tuple): Tuple containing the energies and values of the conversion coefficients.
+        angle (float, optional): The irradiation angle at which conversion coefficients are calculated.
+
+        Returns:
+        float: The mean conversion coefficient computed.
+        """
+        # Get spectrum energy and fluence
+        energy, fluence = self.get_spectrum(edges=False)
+
+        # Unpack the energies and values of the mass transmission coefficients
+        energy_mu, mu = parse_mass_transmission_coefficients(mass_transmission_coefficients)
+
+        # Unpack the energies and values of the conversion coefficients
+        energy_hk, hk = parse_conversion_coefficients(conversion_coefficients, angle)
+
+        # Interpolate mass attenuation coefficients for the spectrum energies in logarithmic scale
+        interpolated_mu = interpolate(x=energy_mu, y=mu, new_x=energy)
+
+        # Interpolate conversion coefficients for the spectrum energies in logarithmic scale
+        interpolated_hk = interpolate(x=energy_hk, y=hk, new_x=energy)
+
+        # Compute mean conversion coefficient
+        return sum(fluence * energy * interpolated_mu * interpolated_hk) / fluence.sum()
+
+
+def interpolate(x, y, new_x):
+    """
+    Interpolate y values for given new_x using Akima interpolation.
+
+    This function performs Akima interpolation on the given x and y values
+    (assumed to be on a logarithmic scale) to interpolate new y values for
+    the given new_x. Any resulting NaN values are replaced with zeros.
+
+    Parameters:
+    - x (array-like): The original x values.
+    - y (array-like): The original y values.
+    - new_x (array-like): The new x values for interpolation.
+
+    Returns:
+    array-like: The interpolated y values for the new_x.
+    """
+    # Create an Akima1DInterpolator object with logarithmic x and y values
+    interpolator = Akima1DInterpolator(x=np.log(x), y=np.log(y))
+
+    # Interpolate new y values for given new_x using the Akima1DInterpolator
+    new_y = np.exp(interpolator(x=np.log(new_x)))
+
+    # Replace any NaN values with zeros in the interpolated y values
+    return np.nan_to_num(new_y, nan=0)
 
 
 def parse_mass_transmission_coefficients(coefficients):
@@ -88,99 +229,6 @@ def parse_conversion_coefficients(coefficients, irradiation_angle):
         # If the input format is not supported, raise a ValueError
         raise ValueError("Unsupported conversion coefficients format. Only a tuple of two numpy arrays and "
                          "a CSV file with two or more columns are supported.")
-
-
-def parse_beam_parameters(df, column):
-    # Get beam parameters in the format required by SpekWrapper (dictionary of tuples)
-
-    # Extract values and uncertainties of filters width from the input DataFrame column
-    keys = ['Al', 'Cu', 'Sn', 'Pb', 'Be', 'Air']
-    values = [df.at[f'{key} filter width (mm)', column] for key in keys]
-    uncertainties = [df.at[f'{key} filter width uncertainty', column] for key in keys]
-
-    # Extract values and uncertainties of peak kilovoltage and anode angle filters width from the input DataFrame column
-    # and append them to the previous lists
-    keys += ['kVp', 'th']
-    values += [df.at['Peak kilovoltage (kV)', column], df.at['Anode angle (deg)', column]]
-    uncertainties += [df.at['Peak kilovoltage uncertainty', column],
-                      df.at['Anode angle uncertainty', column]]
-
-    # Build dictionary of beam parameters in the format required by SpekWrapper (dictionary of tuples)
-    return dict(zip(keys, zip(values, uncertainties)))
-
-
-def output_digest(input_df, output_dfs):
-    """
-    Generate a DataFrame combining input and simulation results.
-
-    This function generates a DataFrame by combining the input DataFrame with the simulation
-    results. It transforms the simulation results into a format suitable for merging with the input DataFrame
-    and concatenates them accordingly.
-
-    Args:
-    input_df (pandas.DataFrame): Input DataFrame containing simulation parameters.
-    output_dfs (list of pandas.DataFrame): List of DataFrames containing simulation results.
-
-    Returns:
-    pandas.DataFrame: DataFrame combining input and simulation results.
-
-    """
-    # Define columns to extract from the output DataFrames containing simulation results
-    result_columns = ['HVL1 Al', 'HVL2 Al', 'HVL1 Cu', 'HVL2 Cu', 'Mean energy', 'Mean kerma',
-                      'Mean conv. coefficient.']
-
-    # Define rows to extract from the output DataFrames containing simulation results
-    result_rows = ['Mean', 'Standard deviation', 'Relative uncertainty']
-
-    # Initialize an empty list to store transformed simulation results
-    results = []
-
-    # Iterate over each output DataFrame containing simulation results
-    for output_df in output_dfs:
-        # Set the index of the DataFrame to '#' column
-        output_df.set_index(keys='#', inplace=True)
-
-        # Extract a subset of data from the DataFrame based on result_rows and result_columns
-        df = output_df.loc[result_rows, result_columns]
-
-        # Transpose the resulting DataFrame to swap rows and columns
-        df = df.transpose()
-
-        # Stack the DataFrame from wide to long format, creating a MultiIndex Series
-        df = df.stack()
-
-        # Convert the stacked Series back to a DataFrame
-        df = df.to_frame()
-
-        # Create a new index by combining the levels of the MultiIndex
-        combined_index = df.index.map(lambda x: '{} {}'.format(x[0], x[1]))
-
-        # Set the combined index to be the new index of the DataFrame
-        df = df.set_index(combined_index)
-
-        # Append the transformed DataFrame to the results list
-        results.append(df)
-
-    # Merge all transformed DataFrames using reduce and merge function
-    merged_df = reduce(lambda left, right: pd.merge(left, right, left_index=True, right_index=True), results)
-
-    # Set the columns of the merged DataFrame to match the input DataFrame columns
-    merged_df.columns = input_df.columns
-
-    # Create a row to indicate the results section of the merged DataFrame
-    data = [['Results'] + [None] * input_df.shape[1]]
-
-    # Define columns for the DataFrame
-    columns = ['Name'] + list(input_df.columns)
-
-    # Create a DataFrame from data with columns specified
-    df = pd.DataFrame(data, columns=columns)
-
-    # Set the index of the DataFrame to 'Name'
-    df.set_index(keys='Name', inplace=True)
-
-    # Concatenate the input DataFrame, the results section DataFrame and the merged results DataFrame
-    return pd.concat([input_df, df, merged_df])
 
 
 def is_tuple_of_two_arrays(arg):
