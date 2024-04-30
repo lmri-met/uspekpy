@@ -117,7 +117,7 @@ class SpekWrapper(Spek):
         interpolated_hk = interpolate(x=energy_hk, y=hk, new_x=energy)
 
         # Compute mean conversion coefficient
-        return sum(fluence * energy * interpolated_mu * interpolated_hk) / fluence.sum()
+        return sum(fluence * energy * interpolated_mu * interpolated_hk) / sum(fluence * energy * interpolated_mu)
 
 
 def interpolate(x, y, new_x):
