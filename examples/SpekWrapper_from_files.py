@@ -12,10 +12,10 @@ my_filters = [
 ]
 
 # Define mass transmission coefficients
-my_mu_csv = 'data/input/mu_tr_rho.csv'
+my_mu_csv = 'data/mu_tr_rho.csv'
 
 # Define conversion coefficients
-my_hk_csv = 'data/input/h_k_h_amb_10.csv'
+my_hk_csv = 'data//h_k_h_amb_10.csv'
 
 # Initialize an SpeckWrapper object and add filters
 spectrum = SpekWrapper(kvp=60, th=20)

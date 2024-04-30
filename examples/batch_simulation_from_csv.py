@@ -4,7 +4,7 @@ from pathlib import Path
 from uspeckpy.simulation import batch_simulation
 
 # Define the path to the input CSV file
-my_csv = 'data/input/input.csv'
+my_csv = 'data/input.csv'
 
 # Define the output folder path where the simulation results will be saved
 my_folder = 'output'

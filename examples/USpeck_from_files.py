@@ -16,10 +16,10 @@ my_beam = {
 }
 
 # Define mass transmission coefficients
-my_mu_csv = 'data/input/mu_tr_rho.csv'
+my_mu_csv = 'data/mu_tr_rho.csv'
 
 # Define conversion coefficients
-my_hk_csv = 'data/input/h_k_h_amb_10.csv'
+my_hk_csv = 'data/h_k_h_amb_10.csv'
 
 # Define mass transmission coefficients relative uncertainty (k=1)
 my_mu_std = 0.01

@@ -4,7 +4,7 @@ from pathlib import Path
 from uspeckpy.simulation import batch_simulation
 
 # Define the path to the input Excel file
-my_excel = 'data/input/input.xlsx'
+my_excel = 'data/input.xlsx'
 
 # Define the name of the sheet in the input Excel file (it is a must for Excel input files)
 my_sheet = 'input'
