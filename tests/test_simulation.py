@@ -8,36 +8,36 @@ import uspeckpy.simulation as sim
 
 class TestReadFileToDataFrame:
     @staticmethod
-    def test_read_excel_file():
+    def test_read_excel_file(tmp_path):
         # Create a temporary Excel file for testing
         excel_data = {
             'A': [1, 2, 3],
             'B': [4, 5, 6]
         }
         excel_df = pd.DataFrame(excel_data)
-        excel_file_path = 'test_excel_file.xlsx'
+        excel_file_path = tmp_path / 'test_excel_file.xlsx'
         excel_df.to_excel(excel_file_path, index=False)
 
         # Call the function with the Excel file
-        result_df = sim.read_file_to_dataframe(excel_file_path, sheet_name='Sheet1')
+        result_df = sim.read_file_to_dataframe(str(excel_file_path), sheet_name='Sheet1')
 
         # Assert that the result is a DataFrame and contains the same data as the original DataFrame
         assert isinstance(result_df, pd.DataFrame)
         assert result_df.equals(excel_df)
 
     @staticmethod
-    def test_read_csv_file():
+    def test_read_csv_file(tmp_path):
         # Create a temporary CSV file for testing
         csv_data = {
             'A': [1.0, 2.0, 3.0],
             'B': [4.0, 5.0, 6.0]
         }
         csv_df = pd.DataFrame(csv_data)
-        csv_file_path = 'test_csv_file.csv'
+        csv_file_path = tmp_path / 'test_csv_file.csv'
         csv_df.to_csv(csv_file_path, index=False)
 
         # Call the function with the CSV file
-        result_df = sim.read_file_to_dataframe(csv_file_path)
+        result_df = sim.read_file_to_dataframe(str(csv_file_path))
 
         # Assert that the result is a DataFrame and contains the same data as the original DataFrame
         assert isinstance(result_df, pd.DataFrame)
