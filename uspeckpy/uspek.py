@@ -299,7 +299,7 @@ def random_uniform(loc, scale):
 
     Parameters:
     - loc (float): Mean of the distribution.
-    - scale (float): Standard deviation of the distribution.
+    - scale (float): Relative standard deviation of the distribution.
 
     Returns:
     float: A random number sampled from the uniform distribution.
@@ -308,7 +308,7 @@ def random_uniform(loc, scale):
     low = loc * (1 - scale * np.sqrt(3))
 
     # Calculate the upper bound of the uniform distribution
-    high = loc * (1 - scale * np.sqrt(3))
+    high = loc * (1 + scale * np.sqrt(3))
 
     # Generate a random number from the uniform distribution
     return float(np.random.uniform(low=low, high=high, size=1)[0])
@@ -320,7 +320,7 @@ def random_normal(loc, scale):
 
     Parameters:
     - loc (float): Mean of the distribution.
-    - scale (float): Standard deviation of the distribution.
+    - scale (float): Relative standard deviation of the distribution.
 
     Returns:
     float: A random number sampled from the normal distribution.
