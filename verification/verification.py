@@ -2,8 +2,8 @@ import pandas as pd
 
 if __name__ == '__main__':
     angle = 45
-    txt_file = "raw_code/hp_0.07_slab.csv_H-60_resultados_fix_seed_10sim.txt"
-    csv_file = 'uspekpy/output_fix_seed_10sim.csv'
+    txt_file = "raw_code/hp_0.07_slab.csv_H-60_resultados.txt"
+    csv_file = 'uspekpy/output.csv'
 
     with open(txt_file, 'r') as file:
         lines = file.readlines()
@@ -74,10 +74,45 @@ if __name__ == '__main__':
     df = pd.merge(df_u, df_r, on='Name')
     df['(Uspek-Raw)/Raw (%)'] = (df['Uspek'] - df['Raw']) / df['Raw'] * 100
 
-# Difference when taking the random values:
-# Raw code:  first interpolate, the take random values
-# XCB: first take random values, then interpolate
+    # Save results to a CSV file
+    df.to_csv('verification', index=True)
 
+# Verification results
+# --------------------
+#
+# 1. Differences between the codes
+# ---------------------------------
+# Difference when taking the random values:
+# - Raw code:  first interpolate, the take random values.
+# - USpekPy: first take random values, then interpolate.
 # Difference in spectrum bins:
-# Raw code: some values are masked
-# XCB: all values considered
+# - Raw code: some values are masked.
+# - USpekPy: all values considered.
+#
+# 2. Test case
+# -------------
+# Hp(0.07, slab), H-60, 45 deg
+#
+# 3. Evaluated effects
+# --------------------
+# I tried to fix the seed for random numbers generation with numpy for both codes.
+# The random numbers generated are not identical because the number of calls to np.random are different,
+# only the random numbers generated for the first iteration are equal.
+#
+# I evaluated the effect of filtering out spectrum values for energies below 8 keV.
+# For the tested cased differences in results were not significant.
+#
+# 4. Differences in calculated mean quantities
+# --------------------------------------------
+# Differences in calculated mean values are below 1%.
+# Differences in standard deviation (k=1) are below 8%.
+# This differences may be explained by several factors:
+# - Mainly, by the difference in the randomly generated numbers.
+# - Other secondary factors include:
+#   - The different order of the interpolation and the random number generation.
+#   - The filtering out of some spectrum energies in the raw code.
+#
+# 5. Conclusions
+# --------------
+# I consider the new code verified and ready to be used.
+
