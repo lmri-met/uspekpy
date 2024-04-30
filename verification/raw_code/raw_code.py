@@ -163,7 +163,7 @@ def programa_principal():
     for x in range(2, 47):
         # Opens Excel file
         # archivo_excel = openpyxl.load_workbook('c:/descargas/uspekpy_files/ref_input/inputN60_no_us_@1000mm_TEST.xlsx')  # Reemplaza 'tu_archivo.xlsx' con la ruta de tu archivo Excel
-        archivo_excel = openpyxl.load_workbook('c:/descargas/uspekpy_files/ref_input/inputN60_no_us_@2500mm_TEST.xlsx')
+        archivo_excel = openpyxl.load_workbook('input/raw_input_h60_hp_07_slab_45.xlsx')
         # print("x", x)
         # selects working sheet by default
         hoja = archivo_excel.active
