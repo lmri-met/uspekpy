@@ -329,5 +329,3 @@ class TestSpekWrapper:
                                                            conversion_coefficients=(energy_hk, hk))
 
         assert mean_hk == expected_hk
-
-# TODO: SpekWrapper.get_mean_kerma(), SpekWrapper.get_mean_conversion_coefficient()
