@@ -18,43 +18,41 @@ class SpekWrapper(Spek):
     Inherits kvp and th attributes from Spek class.
 
     Methods:
-    - get_mean_energy(): Compute the mean energy of the spectrum.
-    - get_mean_kerma(mass_transmission_coefficients): Compute the mean kerma of the spectrum using mass transmission
-      coefficients.
+    - get_mean_energy(): Computes the mean energy of the spectrum.
+    - get_mean_kerma(mass_transmission_coefficients): Computes the air kerma of the spectrum using mass energy transfer
+      coefficients of air and photon energy fluence.
     - get_mean_conversion_coefficient(mass_transmission_coefficients, conversion_coefficients, angle=None):
-      Compute the mean conversion coefficient of the spectrum using mass transmission coefficients and conversion
+      Computes the mean conversion coefficient of the spectrum using the photon energy fluence, mass energy transfer coefficients of air and monoenergetic conversion
       coefficients.
     """
 
     def __init__(self, kvp, th):
         """
-        Initialize SpecWrapper instance with peak kilovoltage anode angle of the x-ray tube.
+        Initialises SpecWrapper instance with peak kilovoltage and the anode angle of the x-ray tube.
         """
         Spek.__init__(self, kvp, th)
 
     def get_mean_energy(self):
         """
-        Compute the mean energy of the spectrum.
+        Computes the mean energy of the spectrum.
 
-        This method calculates the mean energy of the spectrum by multiplying
-        the energy values of each bin by their corresponding fluence values
-        and then dividing the sum of these products by the total fluence
-        of the spectrum.
+        This method calculates the mean energy of the spectrum using the photon energy fluence and
+        the energy value in each bin.
 
         Returns:
         float: The mean energy of the spectrum.
         """
-        # Get spectrum energy and fluence
+        # Gets spectrum energy and photon energy fluence
         energy, fluence = self.get_spectrum(edges=False)
 
-        # Compute mean energy
+        # Computes mean energy
         return sum(fluence * energy) / fluence.sum()
 
     def get_mean_kerma(self, mass_transmission_coefficients):
         """
-        Compute the mean kerma using mass transmission coefficients.
+        Computes the air kerma using mass energy transfer coefficients of air.
 
-        This method calculates the mean kerma of the spectrum by first obtaining the spectrum's energy
+        This method calculates the kerma in air of the photon spectrum by first obtaining the spectrum's energy
         and fluence using the `get_spectrum` method. Then, it unpacks the energies and values of the mass transmission
         coefficients. Next, it interpolates the mass attenuation coefficients for the spectrum energies in logarithmic
         scale using the `interpolate` function. Finally, it computes the mean kerma by multiplying the fluence, energy,
