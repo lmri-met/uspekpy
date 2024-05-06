@@ -20,10 +20,11 @@ class SpekWrapper(Spek):
     Methods:
     - get_mean_energy(): Computes the mean energy of the spectrum.
     - get_mean_kerma(mass_transmission_coefficients): Computes the air kerma of the spectrum using mass energy transfer
-      coefficients of air and photon energy fluence.
+      coefficients of air and the photon energy fluence.
     - get_mean_conversion_coefficient(mass_transmission_coefficients, conversion_coefficients, angle=None):
-      Computes the mean conversion coefficient of the spectrum using the photon energy fluence, mass energy transfer coefficients of air and monoenergetic conversion
-      coefficients.
+      Computes the mean conversion coefficient of the spectrum using the photon energy fluence, mass energy transfer  
+      coefficients of air and air kerma-to-dose-equivalent monoenergetic conversion coefficients (referred later as 
+      "monoenergetic conversion coefficients" see ISO 4037-1).
     """
 
     def __init__(self, kvp, th):
@@ -36,91 +37,96 @@ class SpekWrapper(Spek):
         """
         Computes the mean energy of the spectrum.
 
-        This method calculates the mean energy of the spectrum using the photon energy fluence and
-        the energy value in each bin.
+        This method calculates the mean energy of the spectrum (see equation of section 3.8 at ISO 4037-1:2019) 
+        using the photon fluence and the energy value in each bin.
 
         Returns:
         float: The mean energy of the spectrum.
         """
-        # Gets spectrum energy and photon energy fluence
+        # Gets the spectrum energy and photon energy fluence
         energy, fluence = self.get_spectrum(edges=False)
 
-        # Computes mean energy
+        # Computes the mean energy
         return sum(fluence * energy) / fluence.sum()
 
     def get_mean_kerma(self, mass_transmission_coefficients):
         """
-        Computes the air kerma using mass energy transfer coefficients of air.
+        Computes the air kerma using the distribution of the photon fluence with respect to energy and the 
+        mass energy transfer coefficients for air.
 
-        This method calculates the kerma in air of the photon spectrum by first obtaining the spectrum's energy
-        and fluence using the `get_spectrum` method. Then, it unpacks the energies and values of the mass transmission
-        coefficients. Next, it interpolates the mass attenuation coefficients for the spectrum energies in logarithmic
-        scale using the `interpolate` function. Finally, it computes the mean kerma by multiplying the fluence, energy,
-        and interpolated mass attenuation coefficients, and then dividing the sum of these products by the total fluence
-        of the spectrum.
+        This method calculates the kerma in air of the photon spectrum by:
+        i)   first obtaining the spectrum's energy and fluence using the `get_spectrum` method,
+        ii)  then unpacking the energies and values of the mass energy transfer coefficients of air,
+        iii) interpolating the mass energy transfer coefficients of air for the spectrum energies 
+             in logarithmic scale using the `interpolate` function and 
+        iv)  finally, computing the air kerma (as defined in equation 2.16 of International Commission 
+             on Radiation Units and Measurements 2016 Key data for ionizing-radiation dosimetry: measurement 
+             standards and applications ICRU Report 90 vol 14 Oxford University Press).
 
         Parameters:
-        mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass transmission
-        coefficients.
+        mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass energy transfer
+        coefficients of air.
 
         Returns:
-        float: The mean kerma computed.
+        float: The air kerma computed.
         """
-        # Get spectrum energy and fluence
+        # Gets spectrum energy and fluence
         energy, fluence = self.get_spectrum(edges=False)
 
-        # Unpack the energies and values of the mass transmission coefficients
+        # Unpacks the energies and values of the mass energy transfer coefficients of air
         energy_mu, mu = parse_mass_transmission_coefficients(mass_transmission_coefficients)
 
-        # Interpolate mass attenuation coefficients for the spectrum energies in logarithmic scale
+        # Interpolates mass energy transfer coefficients of air for the spectrum energies in logarithmic scale
         interpolated_mu = interpolate(x=energy_mu, y=mu, new_x=energy)
 
-        # Compute mean kerma
+        # Computes air kerma
         return sum(fluence * energy * interpolated_mu) / fluence.sum()
 
     def get_mean_conversion_coefficient(self, mass_transmission_coefficients, conversion_coefficients, angle=None):
         """
-        Compute the mean conversion coefficient using mass transmission coefficients and conversion coefficients.
+        Computes the mean conversion coefficient using mass energy transfer coefficients of air and monoenergetic 
+        conversion coefficients.
 
-        This method calculates the mean conversion coefficient of the spectrum by first obtaining the spectrum's energy
-        and fluence using the `get_spectrum` method. Then, it unpacks the energies and values of the mass transmission
-        coefficients and the conversion coefficients. Next, it interpolates the mass attenuation coefficients and the
-        conversion coefficients for the spectrum energies in logarithmic scale using the `interpolate` function.
-        Finally, it computes the mean conversion coefficient by multiplying the fluence, energy, interpolated mass
-        attenuation coefficients, and interpolated conversion coefficients, and then dividing the sum of these products
-        by the total fluence of the spectrum.
+        This method calculates the mean conversion coefficient of the spectrum by:
+        i)   first obtaining the spectrum energy and fluence using the `get_spectrum` method,
+        ii)  then, unpacking the energies and values of the mass energy transfer coefficients 
+             and the monoenergetic conversion coefficients,
+        iii) interpolating the mass enery transfer coefficients of air and the monoenergetic 
+             conversion coefficients for the spectrum energies in logarithmic scale using the `interpolate` function and
+        iv)  finally, computing the mean conversion coefficient.
 
         Parameters:
-        mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass transmission
-        coefficients.
-        conversion_coefficients (tuple): Tuple containing the energies and values of the conversion coefficients.
-        angle (float, optional): The irradiation angle at which conversion coefficients are calculated.
+        mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass energy
+        transfer coefficients of air.
+        conversion_coefficients (tuple): Tuple containing the energies and values of the monoenergetic conversion 
+        coefficients. 
+        angle (float, optional): The angle of radiation incidence at which the mean conversion coefficient is calculated.
 
         Returns:
         float: The mean conversion coefficient computed.
         """
-        # Get spectrum energy and fluence
+        # Gets spectrum energy and fluence
         energy, fluence = self.get_spectrum(edges=False)
 
-        # Unpack the energies and values of the mass transmission coefficients
+        # Unpacks the energies and values of the mass energy transfer coefficients of air
         energy_mu, mu = parse_mass_transmission_coefficients(mass_transmission_coefficients)
 
-        # Unpack the energies and values of the conversion coefficients
+        # Unpacks the energies and values of the monoenergetic conversion coefficients
         energy_hk, hk = parse_conversion_coefficients(conversion_coefficients, angle)
 
-        # Interpolate mass attenuation coefficients for the spectrum energies in logarithmic scale
+        # Interpolates mass energy transfer coefficients of air for the spectrum energies in logarithmic scale
         interpolated_mu = interpolate(x=energy_mu, y=mu, new_x=energy)
 
-        # Interpolate conversion coefficients for the spectrum energies in logarithmic scale
+        # Interpolates monoenergetic conversion coefficients for the spectrum energies in logarithmic scale
         interpolated_hk = interpolate(x=energy_hk, y=hk, new_x=energy)
 
-        # Compute mean conversion coefficient
+        # Computes the mean conversion coefficient
         return sum(fluence * energy * interpolated_mu * interpolated_hk) / sum(fluence * energy * interpolated_mu)
 
 
 def interpolate(x, y, new_x):
     """
-    Interpolate y values for given new_x using Akima interpolation.
+    Interpolates y values for given new_x using Akima interpolation.
 
     This function performs Akima interpolation on the given x and y values
     (assumed to be on a logarithmic scale) to interpolate new y values for
@@ -134,36 +140,36 @@ def interpolate(x, y, new_x):
     Returns:
     array-like: The interpolated y values for the new_x.
     """
-    # Create an Akima1DInterpolator object with logarithmic x and y values
+    # Creates an Akima1DInterpolator object with logarithmic x and y values
     interpolator = Akima1DInterpolator(x=np.log(x), y=np.log(y))
 
-    # Interpolate new y values for given new_x using the Akima1DInterpolator
+    # Interpolates new y values for given new_x using the Akima1DInterpolator
     new_y = np.exp(interpolator(x=np.log(new_x)))
 
-    # Replace any NaN values with zeros in the interpolated y values
+    # Replaces any NaN values with zeros in the interpolated y values
     return np.nan_to_num(new_y, nan=0)
 
 
 def parse_mass_transmission_coefficients(coefficients):
     """
-    Parse mass transmission coefficients into the required format by SpekWrapper.
+    Parse mass energy transfer coefficients of air into the required format by SpekWrapper.
 
-    This function takes mass transmission coefficients in various formats and converts them into the format required
-    by SpekWrapper, which is a tuple containing two numpy arrays representing the energies and mass transmission
-    coefficients, respectively.
+    This function takes mass energy transfer coefficients of air in various formats and converts them into 
+    the format required by SpekWrapper, which is a tuple containing two numpy arrays representing the 
+    energies and mass transmission coefficients, respectively.
 
     Args:
-    coefficients (tuple or str): Mass transmission coefficients. This can be either a tuple of two numpy arrays
-        representing energies and mass transmission coefficients, or a string representing the file path of a CSV
-        file containing two columns: energy and mass transmission coefficients.
+    coefficients (tuple or str): Mass energy transfer coefficients of air. This can be either a tuple of two numpy arrays
+        representing energies and mass energy transfer coefficients of air, or a string representing the file path of a CSV
+        file containing two columns: energy and mass energy transfer coefficients of air.
 
     Returns:
-    tuple: A tuple containing two numpy arrays representing energies and mass transmission coefficients, respectively.
+    tuple: A tuple containing two numpy arrays representing energies and mass energy transfer coefficients of air, respectively.
 
     Raises:
-    ValueError: If the input format of mass transmission coefficients is not supported.
+    ValueError: If the input format of mass energy transfer coefficients of air is not supported.
     """
-    # Check if the input is already in the required format (tuple of two arrays)
+    # Checks if the input is already in the required format (tuple of two arrays)
     if is_tuple_of_two_arrays(coefficients):
         return coefficients
 
@@ -175,7 +181,7 @@ def parse_mass_transmission_coefficients(coefficients):
         return array2d[0], array2d[1]
     else:
         # If the input format is not supported, raise a ValueError
-        raise ValueError(f"Unsupported mass transmission coefficients format. Only a tuple of two numpy arrays and "
+        raise ValueError(f"Unsupported mass energy transfer coefficients of air format. Only a tuple of two numpy arrays and "
                          f"a CSV file with two columns are supported.")
 
 
@@ -201,28 +207,28 @@ def parse_conversion_coefficients(coefficients, irradiation_angle=None):
     ValueError: If the input format of conversion coefficients is not supported.
 
     """
-    # Check if the input is already in the required format (tuple of two arrays)
+    # Checks if the input is already in the required format (tuple of two arrays)
     if is_tuple_of_two_arrays(coefficients):
         return coefficients
     # If the input is a valid CSV file
     elif is_valid_csv(coefficients):
-        # Read CSV file into a DataFrame
+        # Reads CSV file into a DataFrame
         df = pd.read_csv(coefficients)
 
-        # Get the energies from the first column of the DataFrame
+        # Gets the energies from the first column of the DataFrame
         energies = df.iloc[:, 0].values
 
         # If the DataFrame has only 2 columns, the second column contains the conversion coefficients
         if df.shape[1] == 2:
             values = df.iloc[:, 1].values
         else:
-            # Find the column containing the conversion coefficients corresponding to the specified irradiation angle
+            # Finds the column containing the conversion coefficients corresponding to the specified irradiation angle
             column_label = next((label for label in df.columns if str(irradiation_angle) in label), None)
 
-            # Get the conversion coefficients from the identified column
+            # Gets the conversion coefficients from the identified column
             values = df.loc[:, column_label].values
 
-        # Build a tuple of conversion coefficients in the required format (tuple of two numpy arrays)
+        # Builds a tuple of conversion coefficients in the required format (tuple of two numpy arrays)
         return energies, values
     else:
         # If the input format is not supported, raise a ValueError
@@ -232,7 +238,7 @@ def parse_conversion_coefficients(coefficients, irradiation_angle=None):
 
 def is_tuple_of_two_arrays(arg):
     """
-    Check if the input argument is a tuple containing two numpy arrays.
+    Checks if the input argument is a tuple containing two numpy arrays.
 
     This function verifies if the input argument is a tuple containing exactly two numpy arrays.
     If the input argument meets the criteria, the function returns True; otherwise, it returns False.
@@ -243,15 +249,15 @@ def is_tuple_of_two_arrays(arg):
     Returns:
     bool: True if the input argument is a tuple containing two numpy arrays, False otherwise.
     """
-    # Check if the input is a tuple
+    # Checks if the input is a tuple
     if not isinstance(arg, tuple):
         return False
 
-    # Check if the tuple contains exactly two elements
+    # Checks if the tuple contains exactly two elements
     if len(arg) != 2:
         return False
 
-    # Check if both elements of the tuple are numpy arrays
+    # Checks if both elements of the tuple are numpy arrays
     if not isinstance(arg[0], np.ndarray) or not isinstance(arg[1], np.ndarray):
         return False
 
@@ -261,7 +267,7 @@ def is_tuple_of_two_arrays(arg):
 
 def is_csv_with_two_columns(filename):
     """
-    Check if a CSV file has exactly two columns.
+    Checks if a CSV file has exactly two columns.
 
     This function reads the provided CSV file and checks if each row contains exactly two columns.
     If any row has a different number of columns, the function returns False.
@@ -273,15 +279,15 @@ def is_csv_with_two_columns(filename):
     Returns:
     bool: True if the CSV file has exactly two columns in each row, False otherwise.
     """
-    # Check if the file has a CSV extension
+    # Checks if the file has a CSV extension
     if not filename.lower().endswith('.csv'):
         return False
 
-    # Open the CSV file
+    # Opens the CSV file
     with open(filename, 'r') as file:
         rows = reader(file)
 
-        # Iterate over each row in the CSV file
+        # Iterates over each row in the CSV file
         for row in rows:
             # If any row does not contain exactly two columns, return False
             if len(row) != 2:
@@ -292,7 +298,7 @@ def is_csv_with_two_columns(filename):
 
 def is_valid_csv(filename):
     """
-    Check if a CSV file is valid by ensuring that all rows have the same length.
+    Checks if a CSV file is valid by ensuring that all rows have the same length.
 
     This function reads the provided CSV file and checks if all rows have the same length.
     If any row has a different length from the first row, the function returns False.
@@ -304,18 +310,18 @@ def is_valid_csv(filename):
     Returns:
     bool: True if the CSV file is valid (all rows have the same length), False otherwise.
     """
-    # Check if the file has a CSV extension
+    # Checks if the file has a CSV extension
     if not filename.lower().endswith('.csv'):
         return False
 
-    # Open the CSV file
+    # Opens the CSV file
     with open(filename, 'r') as file:
         rows = reader(file)
 
-        # Get the length of the first row
+        # Gets the length of the first row
         first_row_length = len(next(rows))
 
-        # Check the length of each subsequent row
+        # Checks the length of each subsequent row
         for row in rows:
             # If any row has a different length, return False
             if len(row) != first_row_length:
