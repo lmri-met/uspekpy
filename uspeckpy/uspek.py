@@ -6,10 +6,11 @@ from uspeckpy.wrapper import SpekWrapper, parse_mass_transmission_coefficients, 
 
 class USpek:
     """
-    Class for computing mean quantities of an x-ray spectrum with uncertainties using Monte Carlo techniques.
+    Class for computing mean radiation protection quantities of an x-ray spectrum with uncertainties using Monte Carlo techniques.
 
-    This class facilitates Monte Carlo simulations to compute mean quantities, standard deviations, and relative
-    uncertainties of an x-ray spectrum based on provided beam parameters and coefficients.
+    This class facilitates Monte Carlo simulations to compute mean radiation protection quantities, standard deviations, 
+    and relative uncertainties of an x-ray spectrum based on tabulated mass energy transfer and monoenergetic  
+    air kerma to dose equivalent conversion coefficients, beam parameters and associated assumed uncertainties.
 
     Parameters:
     - beam_parameters (dict): Dictionary containing beam parameters and their uncertainties.
@@ -22,28 +23,29 @@ class USpek:
         - 'Pb': Tuple containing the thickness of the Lead filter and its uncertainty.
         - 'Be': Tuple containing the thickness of the Beryllium filter and its uncertainty.
         - 'Air': Tuple containing the thickness of the Air filter and its uncertainty.
-    - mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass transmission
-    coefficients.
-    - mass_transmission_coefficients_uncertainty (float): The uncertainty associated with the mass transmission
-    coefficients.
-    - conversion_coefficients (tuple): Tuple containing the energies and values of the conversion coefficients.
-    - angle (float, optional): The irradiation angle at which conversion coefficients are calculated.
+    - mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass energy
+    tranfer coefficients of air.
+    - mass_transmission_coefficients_uncertainty (float): The overall uncertainty associated with mass energy
+    transfer coefficients of air.
+    - conversion_coefficients (tuple): Tuple containing the energies and values of the monoenergetic  
+    air kerma to dose equivalent conversion coefficients.
+    - angle (float, optional): The incident radiation angle at which the mean conversion coefficient is calculated.
 
     Methods:
-    - simulate(simulations_number): Perform simulations and return a DataFrame containing mean quantities.
+    - simulate(simulations_number): Performs simulations and returns a DataFrame containing mean quantities.
 
     Attributes:
     - beam (dict): Beam parameters and their uncertainties.
-    - mass_transmission_coefficients (tuple): Energies and values of mass transmission coefficients.
-    - mass_transmission_coefficients_uncertainty (float): Uncertainty associated with mass transmission coefficients.
-    - conversion_coefficients (tuple): Energies and values of conversion coefficients.
-    - angle (float): Irradiation angle for calculating conversion coefficients.
+    - mass_transmission_coefficients (tuple): Energies and values of mass energy transfer coefficients of air.
+    - mass_transmission_coefficients_uncertainty (float): Overall uncertainty associated with mass energy transfer coefficients of air.
+    - conversion_coefficients (tuple): Energies and values of monoenergetic air kerma to dose equivalent conversion coefficients.
+    - angle (float): The incident radiation angle at which the mean conversion coefficient is calculated.
     """
 
     def __init__(self, beam_parameters, mass_transmission_coefficients, mass_transmission_coefficients_uncertainty,
                  conversion_coefficients, angle=None):
         """
-        Initialize USpek instance with beam parameters and coefficients.
+        Initialises USpek instance with beam parameters and coefficients.
 
         Args:
         - beam_parameters (dict): Dictionary containing beam parameters and their uncertainties.
@@ -56,12 +58,13 @@ class USpek:
             - 'Pb': Tuple containing the thickness of the Lead filter and its uncertainty.
             - 'Be': Tuple containing the thickness of the Beryllium filter and its uncertainty.
             - 'Air': Tuple containing the thickness of the Air filter and its uncertainty.
-        - mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass transmission
-        coefficients.
-        - mass_transmission_coefficients_uncertainty (float): The uncertainty associated with the mass transmission
-        coefficients.
-        - conversion_coefficients (tuple): Tuple containing the energies and values of the conversion coefficients.
-        - angle (float, optional): The irradiation angle at which conversion coefficients are calculated.
+        - mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass energy
+    tranfer coefficients of air.
+        - mass_transmission_coefficients_uncertainty (float): The overall uncertainty associated with mass energy
+    transfer coefficients of air.
+        - conversion_coefficients (tuple): Tuple containing the energies and values of the monoenergetic  
+    air kerma to dose equivalent conversion coefficients.
+        - angle (float, optional): The incident radiation angle at which the mean conversion coefficient is calculated.
         """
         self.beam = beam_parameters
         self.mass_transmission_coefficients = parse_mass_transmission_coefficients(mass_transmission_coefficients)
@@ -70,30 +73,31 @@ class USpek:
 
     def _get_random_values(self):
         """
-        Generate random beam parameters and mass transmission coefficients based on their values and uncertainties.
-
-        This method generates random beam parameters and mass transmission coefficients necessary for Monte Carlo
-        simulation based on their provided values and uncertainties. It generates random values for peak kilovoltage
-        and anode angle (th) beam parameters, as well as for different beam filters such as Air, Al, Cu, Sn, Pb, and Be.
-        Additionally, it generates a random value for the mass transmission coefficient with the associated uncertainty.
+        Monte Carlo sampling of x-ray beam parameters and tabulated coefficients to estimate uncertainties.
+      
+        This method uses Monte Carlo techniques for (pseudo)random generation of beam parameters and mass energy transfer
+        coefficients based on assumed probability distributions and associated uncertainties for each variable. 
+        It randomly samples values for 8 variables used to define an x-ray beam: peak kilovoltage, anode angle (th), air 
+        distance between the x-ray focus and the reference measurement point and Al, Cu, Sn, Pb, and Be filters.
+        Additionally, it generates a random value for the mass energy transfer coefficient of air with the associated uncertainty.
 
         Returns:
-        tuple: A tuple containing random beam parameters and mass transmission coefficients.
-            - kvp (float): Random peak kilovoltage beam parameter.
-            - th (float): Random anode angle beam parameter.
-            - filters (list): List of tuples containing random values for different beam filters.
-                Each tuple contains the name of the filter and its associated random value.
-            - mu_tr_rho (tuple): Tuple containing the energy and random mass transmission coefficient value.
-                - energy_mu (array_like): Energies for mass transmission coefficients.
-                - random_mu (float): Random mass transmission coefficient value.
+        tuple: A tuple containing random values for:
+            - kvp (float): Random peak kilovoltage value sampled from a gaussian distribution.
+            - th (float): Random anode angle value sampled from a gaussian distribution.
+            - filters (list): List of tuples containing random values for different beam filters sampled 
+                from uniform distributions. Each tuple contains the name of the filter and its associated random value.
+            - mu_tr_rho (tuple): Tuple containing the energy and the sampled mass energy transfer coefficient from a gaussian distribution.
+                - energy_mu (array_like): Energies for mass energy transfer coefficient.
+                - random_mu (float): Random mass energy transfer coefficient value sampled from a gaussian distribution.
         """
-        # Generate random peak kilovoltage beam parameter
+        # Sampling peak kilovoltage
         kvp = random_normal(loc=self.beam['kVp'][0], scale=self.beam['kVp'][1])
 
-        # Generate random anode angle beam parameter
+        # Sampling anode angle
         th = random_normal(loc=self.beam['th'][0], scale=self.beam['th'][1])
 
-        # Generate random values for different beam filters
+        # Sampling beam filtration including air gap
         filters = [
             ('Air', random_normal(loc=self.beam['Air'][0], scale=self.beam['Air'][1])),
             ('Al', random_uniform(loc=self.beam['Al'][0], scale=self.beam['Al'][1])),
@@ -103,66 +107,67 @@ class USpek:
             ('Be', random_uniform(loc=self.beam['Be'][0], scale=self.beam['Be'][1])),
         ]
 
-        # Get energy and nominal value of mass transmission coefficients
+        # Get energy and nominal value of mass energy transfer coefficients
         energy_mu = self.mass_transmission_coefficients[0]
         nominal_mu = self.mass_transmission_coefficients[1]
 
-        # Get uncertainty associated with mass transmission coefficients
+        # Get uncertainty associated with mass energy transfer coefficients
         mu_std = self.mass_transmission_coefficients_uncertainty
 
-        # Generate random mass transmission coefficient
+        # Generate random mass energy transfer coefficient
         random_mu = np.random.normal(loc=nominal_mu, scale=nominal_mu * mu_std)
 
-        # Return tuple containing generated random values for beam parameters and mass transmission coefficients
+        # Return tuple containing generated random values for beam parameters and mass energy transfer coefficients
         return kvp, th, filters, (energy_mu, random_mu)
 
     def _iteration(self):
         """
         Perform a single iteration of the Monte Carlo simulation.
 
-        This method performs a single iteration of the Monte Carlo simulation by generating random beam parameters
-        and simulating a spectrum with those parameters. It then calculates various quantities such as half-value
-        layers for aluminum and copper, mean energy, mean kerma, and mean conversion coefficient of the spectrum.
+        This method performs a single iteration of the Monte Carlo simulation by generating random values of the 
+        sampled variables and simulating a spectrum with those parameters. It then calculates various quantities 
+        such as half-value layers for aluminum and copper, mean energy, mean air kerma, and mean air kerma  
+        to dose equivalent conversion coefficient of the spectrum.
 
         Returns:
         tuple: A tuple containing results of a single iteration.
-            - kvp (float): Random peak kilovoltage beam parameter.
-            - th (float): Random anode angle beam parameter.
-            - Air (float): Random value for the Air filter thickness.
-            - Al (float): Random value for the Aluminum filter thickness.
-            - Cu (float): Random value for the Copper filter thickness.
-            - Sn (float): Random value for the Tin filter thickness.
-            - Pb (float): Random value for the Lead filter thickness.
-            - Be (float): Random value for the Beryllium filter thickness.
+            - kvp (float): Random peak kilovoltage value.
+            - th (float): Random anode angle value.
+            - Air (float): Random value for the air gap.
+            - Al (float): Random value for the aluminum filter thickness.
+            - Cu (float): Random value for the copper filter thickness.
+            - Sn (float): Random value for the tin filter thickness.
+            - Pb (float): Random value for the lead filter thickness.
+            - Be (float): Random value for the beryllium filter thickness.
             - hvl1_al (float): Half-value layer (HVL) for aluminum.
             - hvl2_al (float): Second HVL for aluminum.
             - hvl1_cu (float): HVL for copper.
             - hvl2_cu (float): Second HVL for copper.
             - mean_energy (float): Mean energy of the spectrum.
-            - mean_kerma (float): Mean kerma calculated using mass transmission coefficients.
-            - mean_hk (float): Mean conversion coefficient calculated using mass transmission and conversion
-              coefficients.
+            - mean_kerma (float): Air kerma calculated using mass energy tranfer coefficients of air.
+            - mean_hk (float): Mean conversion coefficient calculated using mass energy tranfer and 
+              monoenergetic conversion coefficients.
         """
-        # Generate random beam parameters
+        # Sampling beam parameters
         kvp, th, filters, mu_tr_rho = self._get_random_values()
 
-        # Initialize an SpeckWrapper object and add filters
+        # Initialises an SpeckWrapper object and add filters
         spectrum = SpekWrapper(kvp=kvp, th=th)
         spectrum.multi_filter(filters)
 
-        # Calculate half-value layers for aluminum and copper
+        # Calculates half-value layers for aluminum and copper
         hvl1_al = spectrum.get_hvl1()
         hvl2_al = spectrum.get_hvl2()
         hvl1_cu = spectrum.get_hvl1(matl='Cu')
         hvl2_cu = spectrum.get_hvl2(matl='Cu')
 
-        # Get mean energy
+        # Gets mean energy
         mean_energy = spectrum.get_mean_energy()
 
-        # Get mean kerma
+        # Gets mean kerma
         mean_kerma = spectrum.get_mean_kerma(mass_transmission_coefficients=mu_tr_rho)
 
-        # Get mean conversion coefficient
+        # Gets mean conversion coefficient
         mean_hk = spectrum.get_mean_conversion_coefficient(mass_transmission_coefficients=mu_tr_rho,
                                                            conversion_coefficients=self.conversion_coefficients)
 
@@ -172,7 +177,7 @@ class USpek:
     @staticmethod
     def _get_mean_quantities(rows):
         """
-        Calculate means, standard deviations, and relative uncertainties for the simulation results.
+        Calculates means, standard deviations, and relative uncertainties for the simulation results.
 
         This method takes a list of simulation results and calculates the mean values, standard deviations,
         and relative uncertainties for each parameter based on the simulations.
@@ -180,7 +185,7 @@ class USpek:
         Args:
         rows (list): List of simulation results, where each element represents a single simulation and contains
             values for parameters such as peak kilovoltage (kVp), anode angle (th), filter thicknesses, half-value
-            layers (HVLs) for aluminum and copper, mean energy, mean kerma, and mean conversion coefficient.
+            layers (HVLs) for aluminum and copper, mean energy, air kerma, and mean conversion coefficient.
 
         Returns:
         pandas.DataFrame: DataFrame containing mean quantities, standard deviations, and relative uncertainties
@@ -188,58 +193,58 @@ class USpek:
             - # (int): Index column representing simulation number.
             - kVp (float): Peak kilovoltage.
             - th (float): Anode angle.
-            - Air (float): Thickness of the Air filter.
-            - Al (float): Thickness of the Aluminum filter.
-            - Cu (float): Thickness of the Copper filter.
-            - Sn (float): Thickness of the Tin filter.
-            - Pb (float): Thickness of the Lead filter.
-            - Be (float): Thickness of the Beryllium filter.
-            - HVL1 Al (float): Half-value layer (HVL) for Aluminum.
-            - HVL2 Al (float): Second HVL for Aluminum.
-            - HVL1 Cu (float): HVL for Copper.
-            - HVL2 Cu (float): Second HVL for Copper.
+            - Air (float): Air gap between x-ray focus and reference point.
+            - Al (float): Thickness of the aluminum filter.
+            - Cu (float): Thickness of the copper filter.
+            - Sn (float): Thickness of the tin filter.
+            - Pb (float): Thickness of the lead filter.
+            - Be (float): Thickness of the beryllium filter.
+            - HVL1 Al (float): Half-value layer (HVL) for aluminum.
+            - HVL2 Al (float): Second HVL for aluminum.
+            - HVL1 Cu (float): HVL for copper.
+            - HVL2 Cu (float): Second HVL for copper.
             - Mean energy (float): Mean energy of the spectrum.
-            - Mean kerma (float): Mean kerma calculated using mass transmission coefficients.
-            - Mean conv. coefficient. (float): Mean conversion coefficient calculated using mass transmission and
-                conversion coefficients.
+            - Mean kerma (float): Mean air kerma calculated using mass energy tranfer coefficients.
+            - Mean conv. coefficient. (float): Mean conversion coefficient calculated using mass energy tranfer and
+                monoenergetic conversion coefficients.
             Additionally, it includes rows for mean values, standard deviations, and relative uncertainties
             of the simulation results.
         """
-        # Define column names for the DataFrame
+        # Defines column names for the DataFrame
         columns = ['#', 'kVp', 'th', 'Air', 'Al', 'Cu', 'Sn', 'Pb', 'Be', 'HVL1 Al', 'HVL2 Al', 'HVL1 Cu', 'HVL2 Cu',
                    'Mean energy', 'Mean kerma', 'Mean conv. coefficient.']
 
         # Create DataFrame with simulation results
         df = pd.DataFrame(data=rows, columns=columns)
 
-        # Calculate means, standard deviations, and relative uncertainties for the simulation results
-        # Calculate mean values for each column except the first
+        # Calculates means, standard deviations, and relative uncertainties for the simulation results
+        # Calculates mean values for each column except the first
         means = df.iloc[:, 1:].mean()
 
-        # Calculate standard deviations for each column except the first
+        # Calculates standard deviations for each column except the first
         standard_deviations = df.iloc[:, 1:].std(ddof=0)
 
-        # Calculate relative uncertainties for each column except the first
+        # Calculates relative uncertainties for each column except the first
         relative_uncertainties = standard_deviations / means
 
-        # Add 'Mean' label to mean values
+        # Adds 'Mean' label to mean values
         means = ['Mean'] + list(means)
 
-        # Add 'Standard deviation' label to standard deviations
+        # Adds 'Standard deviation' label to standard deviations
         standard_deviations = ['Standard deviation'] + list(standard_deviations)
 
-        # Add 'Relative uncertainty' label to relative uncertainties
+        # Adds 'Relative uncertainty' label to relative uncertainties
         relative_uncertainties = ['Relative uncertainty'] + list(relative_uncertainties)
 
-        # Create list of lists containing mean, standard deviation, and relative uncertainty data
+        # Creates list of lists containing mean, standard deviation, and relative uncertainty data
         data = [means, standard_deviations, relative_uncertainties]
 
-        # Concatenate original DataFrame with DataFrame containing mean, standard deviation, and relative uncertainty
+        # Concatenates original DataFrame with DataFrame containing mean, standard deviation, and relative uncertainty
         return pd.concat(objs=[df, pd.DataFrame(data=data, columns=columns)], ignore_index=True)
 
     def simulate(self, simulations_number):
         """
-        Perform Monte Carlo simulations and return mean quantities.
+        Performs Monte Carlo simulations and return mean quantities.
 
         This method executes Monte Carlo simulations based on the specified number of iterations and returns
         a DataFrame containing the mean quantities, standard deviations, and relative uncertainties calculated
@@ -254,18 +259,18 @@ class USpek:
             - # (int): Index column representing simulation number.
             - kVp (float): Peak kilovoltage.
             - th (float): Anode angle.
-            - Air (float): Thickness of the Air filter.
-            - Al (float): Thickness of the Aluminum filter.
-            - Cu (float): Thickness of the Copper filter.
-            - Sn (float): Thickness of the Tin filter.
-            - Pb (float): Thickness of the Lead filter.
-            - Be (float): Thickness of the Beryllium filter.
-            - HVL1 Al (float): Half-value layer (HVL) for Aluminum.
-            - HVL2 Al (float): Second HVL for Aluminum.
-            - HVL1 Cu (float): HVL for Copper.
-            - HVL2 Cu (float): Second HVL for Copper.
+            - Air (float): air gap between focus and reference point.
+            - Al (float): Thickness of the aluminum filter.
+            - Cu (float): Thickness of the copper filter.
+            - Sn (float): Thickness of the tin filter.
+            - Pb (float): Thickness of the lead filter.
+            - Be (float): Thickness of the beryllium filter.
+            - HVL1 Al (float): Half-value layer (HVL) for aluminum.
+            - HVL2 Al (float): Second HVL for aluminum.
+            - HVL1 Cu (float): HVL for copper.
+            - HVL2 Cu (float): Second HVL for copper.
             - Mean energy (float): Mean energy of the spectrum.
-            - Mean kerma (float): Mean kerma calculated using mass transmission coefficients.
+            - Mean kerma (float): Mean air kerma calculated using mass energy tranfer coefficients.
             - Mean conv. coefficient. (float): Mean conversion coefficient calculated using mass transmission and
                 conversion coefficients.
             Additionally, it includes rows for mean values, standard deviations, and relative uncertainties
