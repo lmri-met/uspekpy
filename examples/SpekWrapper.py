@@ -1,10 +1,10 @@
-# Scripto to demonstrate the usage of SpekWrapper class without input files
+# Script to demonstrate the usage of SpekWrapper class without input files
 
 import numpy as np
 
 from uspeckpy.wrapper import SpekWrapper
 
-# Define x-ray beam parameters
+# Defines x-ray beam parameters
 my_filters = [
     ('Al', 4),
     ('Cu', 0.6),
@@ -14,7 +14,7 @@ my_filters = [
     ('Air', 1000)
 ]
 
-# Define mass transmission coefficients
+# Defines mass energy transfer coefficients of air
 my_mu = (
     np.array(
         [1.0, 1.1726, 1.25, 1.4, 1.5, 1.75, 2.0, 2.5, 3.0, 3.2063, 3.206301, 3.22391, 3.25051, 3.5, 3.61881, 4.0,
@@ -40,7 +40,7 @@ my_mu = (
          0.016199645451199, 0.015809252632524])
 )
 
-# Define conversion coefficients
+# Defines monoenergetic conversion coefficients
 my_hk = (
     np.array([7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 80, 100, 150, 200, 300, 400, 500,
               600, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 8000, 10000]),
@@ -49,23 +49,23 @@ my_hk = (
               1.11, 1.19, 1.09, 1.08, 1.06])
 )
 
-# Initialize an SpeckWrapper object and add filters
+# Initialises an SpeckWrapper object and add filters
 spectrum = SpekWrapper(kvp=60, th=20)
 spectrum.multi_filter(my_filters)
 
-# Calculate half-value layers for aluminum and copper using SpekPy method
+# Calculates half-value layers for aluminum and copper using SpekPy method
 hvl1_al = spectrum.get_hvl1()
 hvl2_al = spectrum.get_hvl2()
 hvl1_cu = spectrum.get_hvl1(matl='Cu')
 hvl2_cu = spectrum.get_hvl2(matl='Cu')
 
-# Get mean energy
+# Gets mean energy
 mean_energy = spectrum.get_mean_energy()
 mean_energy_SpekPy = spectrum.get_emean()
 
-# Get mean kerma
+# Gets mean air kerma
 mean_kerma_SpekPy = spectrum.get_kerma()
 mean_kerma = spectrum.get_mean_kerma(mass_transmission_coefficients=my_mu)
 
-# Get mean conversion coefficient
+# Gets mean conversion coefficient
 mean_hk = spectrum.get_mean_conversion_coefficient(mass_transmission_coefficients=my_mu, conversion_coefficients=my_hk)
