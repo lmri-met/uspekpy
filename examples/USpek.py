@@ -1,11 +1,11 @@
-# Scripto to demonstrate the usage of USpek class without input files
+# Script to demonstrate the usage of USpek class without input files
 from pathlib import Path
 
 import numpy as np
 
 from uspeckpy.uspek import USpek
 
-# Define x-ray beam parameters
+# Defines x-ray beam parameters
 my_beam = {
     'kVp': (60, 0.01),
     'th': (20, 0.01),
@@ -17,7 +17,7 @@ my_beam = {
     'Air': (1000, 0.01)
 }
 
-# Define mass transmission coefficients
+# Defines mass energy transfer coefficients of air
 my_mu = (
     np.array(
         [1.0, 1.1726, 1.25, 1.4, 1.5, 1.75, 2.0, 2.5, 3.0, 3.2063, 3.206301, 3.22391, 3.25051, 3.5, 3.61881, 4.0,
@@ -43,7 +43,7 @@ my_mu = (
          0.016199645451199, 0.015809252632524])
 )
 
-# Define conversion coefficients
+# Defines monoenergetic conversion coefficients
 my_hk = (
     np.array([7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 80, 100, 150, 200, 300, 400, 500,
               600, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 8000, 10000]),
@@ -52,20 +52,20 @@ my_hk = (
               1.11, 1.19, 1.09, 1.08, 1.06])
 )
 
-# Define mass transmission coefficients relative uncertainty (k=1)
+# Defines relative uncertainty (k=1) on mass energy transfer coefficients of air
 my_mu_std = 0.01
 
-# Create USpekPy object with given beam parameters, mass transmission coefficients and conversion coefficients
+# Create USpekPy object with given beam parameters, mass energy transfer coefficients of air and mono. conv. coeff.
 s = USpek(beam_parameters=my_beam, mass_transmission_coefficients=my_mu,
           mass_transmission_coefficients_uncertainty=my_mu_std, conversion_coefficients=my_hk)
 
-# Run simulation with a given number of iterations
+# Runs simulation with a given number of iterations
 df = s.simulate(simulations_number=3)
 
-# Define the output folder path where the simulation results will be saved
+# Defines the output folder path where the simulation results will be saved
 my_folder = 'output'
 
-# Define the name of the output file where the simulation results will be saved
+# Defines the name of the output file where the simulation results will be saved
 my_output_csv = 'output.csv'
 
 # Save results to a CSV file
