@@ -201,7 +201,7 @@ class TestSpekWrapper:
             ('Air', 1000)
         ]
 
-        # Initialize an SpeckWrapper object and add filters
+        # Initialises an SpeckWrapper object and add filters
         spectrum = wrp.SpekWrapper(kvp=60, th=20)
         spectrum.multi_filter(my_filters)
 
@@ -211,7 +211,7 @@ class TestSpekWrapper:
 
     @pytest.fixture
     def mass_transmission_coefficients(self):
-        # Define the energies and values of the mass transmission coefficients
+        # Define the energies and values of the mass energy transfer coefficients for air
         energy_mu, mu = (
             np.array(
                 [1.0, 1.1726, 1.25, 1.4, 1.5, 1.75, 2.0, 2.5, 3.0, 3.2063, 3.206301, 3.22391, 3.25051, 3.5, 3.61881,
@@ -245,7 +245,7 @@ class TestSpekWrapper:
 
     @pytest.fixture
     def conversion_coefficients(self):
-        # Define the energies and values of the conversion coefficients
+        # Define the energies and values of the monoenergetic conversion coefficients
         energy_hk, hk = (
             np.array(
                 [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 80, 100, 150, 200, 300, 400, 500,
@@ -273,22 +273,22 @@ class TestSpekWrapper:
         # Get spectrum and spectrum energy and fluence
         spectrum, energy, fluence = spectrum_energy_fluence
 
-        # Define the energies and values of the mass transmission coefficients
+        # Define the energies and values of the mass energy transfer coefficients for air
         energy_mu, mu = mass_transmission_coefficients
 
-        # Create an Akima1DInterpolator with logarithmic energies and values of the mass transmission coefficients
+        # Create an Akima1DInterpolator with logarithmic energies and values of the mass energy transfer coefficients for air
         interpolator = Akima1DInterpolator(x=np.log(energy_mu), y=np.log(mu))
 
-        # Interpolate mass transmission coefficients for the spectrum energies in logarithmic scale
+        # Interpolate mass energy transfer coefficients for air for the spectrum energies in logarithmic scale
         interpolated_mu = np.exp(interpolator(x=np.log(energy)))
 
-        # Replace any NaN values with zeros in the interpolated mass attenuation coefficients
+        # Replace any NaN values with zeros in the interpolated mass energy transfer coefficients for air
         interpolated_mu = np.nan_to_num(interpolated_mu, nan=0)
 
-        # Compute mean kerma
+        # Compute mean air kerma
         expected_mean_kerma = sum(fluence * energy * interpolated_mu) / fluence.sum()
 
-        # Compute mean kerma with SpekWrapper.get_mean_kerma()
+        # Compute mean air kerma with SpekWrapper.get_mean_kerma()
         mean_kerma = spectrum.get_mean_kerma(mass_transmission_coefficients=(energy_mu, mu))
 
         assert mean_kerma == expected_mean_kerma
@@ -297,28 +297,28 @@ class TestSpekWrapper:
         # Get spectrum and spectrum energy and fluence
         spectrum, energy, fluence = spectrum_energy_fluence
 
-        # Define the energies and values of the mass transmission coefficients
+        # Define the energies and values of the mass energy transfer coefficients for air
         energy_mu, mu = mass_transmission_coefficients
 
-        # Define the energies and values of the conversion coefficients
+        # Define the energies and values of the monoenergetic conversion coefficients
         energy_hk, hk = conversion_coefficients
 
-        # Create an Akima1DInterpolator with logarithmic energies and values of the mass transmission coefficients
+        # Create an Akima1DInterpolator with logarithmic energies and values of the mass energy transfer coefficients for air
         interpolator = Akima1DInterpolator(x=np.log(energy_mu), y=np.log(mu))
 
-        # Interpolate mass transmission coefficients for the spectrum energies in logarithmic scale
+        # Interpolate mass energy transfer coefficients for air for the spectrum energies in logarithmic scale
         interpolated_mu = np.exp(interpolator(x=np.log(energy)))
 
-        # Replace any NaN values with zeros in the interpolated mass attenuation coefficients
+        # Replace any NaN values with zeros in the interpolated mass energy transfer coefficients for air
         interpolated_mu = np.nan_to_num(interpolated_mu, nan=0)
 
-        # Create an Akima1DInterpolator with logarithmic energies and values of the conversion coefficients
+        # Create an Akima1DInterpolator with logarithmic energies and values of the monoenergetic conversion coefficients
         interpolator = Akima1DInterpolator(x=np.log(energy_hk), y=np.log(hk))
 
-        # Interpolate conversion coefficients for the spectrum energies in logarithmic scale
+        # Interpolate monoenergetic conversion coefficients for the spectrum energies in logarithmic scale
         interpolated_hk = np.exp(interpolator(x=np.log(energy)))
 
-        # Replace any NaN values with zeros in the interpolated conversion coefficients
+        # Replace any NaN values with zeros in the interpolated monoenergetic conversion coefficients
         interpolated_hk = np.nan_to_num(interpolated_hk, nan=0)
 
         # Compute mean conversion coefficient
