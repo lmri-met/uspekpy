@@ -54,10 +54,10 @@ def batch_simulation(input_file_path, sheet_name=None):
         # Parse beam parameters from the input DataFrame
         beam_parameters = parse_beam_parameters(df=input_df, column=column_name)
 
-        # Extract mass transmission coefficients file path from the input DataFrame
-        file_path = input_df.at['Mass transmission coefficients file', column_name]
+        # Extract mass energy transfer coefficients file path from the input DataFrame
+        file_path = input_df.at['mass energy transfer coefficients file', column_name]
 
-        # Parse mass transmission coefficients from the file
+        # Parse mass energy transfer coefficients from the file
         mass_transmission_coefficients = parse_mass_transmission_coefficients(coefficients=file_path)
 
         # Extract mono-energetic conversion coefficients file path from the input DataFrame
@@ -73,9 +73,9 @@ def batch_simulation(input_file_path, sheet_name=None):
         # Extract number of simulations from the input DataFrame
         simulations_number = input_df.at['Number of simulations', column_name]
 
-        # Extract mass transmission coefficients uncertainty from the input DataFrame
+        # Extract mass energy transfer coefficients uncertainty from the input DataFrame
         mass_transmission_coefficients_uncertainty = input_df.at[
-            'Mass transmission coefficients uncertainty', column_name]
+            'mass energy transfer coefficients uncertainty', column_name]
 
         # Print a message indicating the start of input digestion
         print('Simulation')
@@ -106,7 +106,7 @@ def batch_simulation(input_file_path, sheet_name=None):
 
 def read_file_to_dataframe(file_path, sheet_name=None):
     """
-    Read data from a file into a pandas DataFrame.
+    Reads data from a file into a pandas DataFrame.
 
     This function reads data from a file specified by the file_path parameter into a pandas DataFrame.
     The file can be either in Excel (.xlsx, .xls) or CSV (.csv) format. If the file is in Excel format,
@@ -152,7 +152,7 @@ def read_file_to_dataframe(file_path, sheet_name=None):
 
 def parse_beam_parameters(df, column):
     """
-    Get beam parameters in the format required by SpekWrapper.
+    Gets beam parameters in the format required by SpekWrapper.
 
     The DataFrame should have rows in the specified column named:
     - '<filter name> filter width (mm)' for filter widths.
@@ -179,16 +179,16 @@ def parse_beam_parameters(df, column):
     # Extracting uncertainties for each filter from the specified DataFrame column
     uncertainties = [df.at[f'{key} filter width uncertainty', column] for key in keys]
 
-    # Append additional keys for peak kilovoltage and anode angle
+    # Appends additional keys for peak kilovoltage and anode angle
     keys += ['kVp', 'th']
 
-    # Extract values for peak kilovoltage and anode angle from the specified DataFrame column and append them
+    # Extracts values for peak kilovoltage and anode angle from the specified DataFrame column and appends them
     values += [df.at['Peak kilovoltage (kV)', column], df.at['Anode angle (deg)', column]]
 
-    # Extract uncertainties for peak kilovoltage and anode angle from the specified DataFrame column and append them
+    # Extracts uncertainties for peak kilovoltage and anode angle from the specified DataFrame column and appends them
     uncertainties += [df.at['Peak kilovoltage uncertainty', column], df.at['Anode angle uncertainty', column]]
 
-    # Build dictionary of beam parameters in the format required by SpekWrapper
+    # Builds dictionary of beam parameters in the format required by SpekWrapper
     return dict(zip(keys, zip(values, uncertainties)))
 
 
@@ -215,10 +215,10 @@ def output_digest(input_df, output_dfs):
     # Define rows to extract from the output DataFrames containing simulation results
     result_rows = ['Mean', 'Standard deviation', 'Relative uncertainty']
 
-    # Initialize an empty list to store transformed simulation results
+    # Initialises an empty list to store transformed simulation results
     results = []
 
-    # Iterate over each output DataFrame containing simulation results
+    # Iterates over each output DataFrame containing simulation results
     for output_df in output_dfs:
         # Set the index of the DataFrame to '#' column
         output_df.set_index(keys='#', inplace=True)
@@ -244,23 +244,23 @@ def output_digest(input_df, output_dfs):
         # Append the transformed DataFrame to the results list
         results.append(df)
 
-    # Merge all transformed DataFrames using reduce and merge function
+    # Merges all transformed DataFrames using reduce and merge function
     merged_df = reduce(lambda left, right: pd.merge(left, right, left_index=True, right_index=True), results)
 
-    # Set the columns of the merged DataFrame to match the input DataFrame columns
+    # Sets the columns of the merged DataFrame to match the input DataFrame columns
     merged_df.columns = input_df.columns
 
-    # Create a row to indicate the results section of the merged DataFrame
+    # Creates a row to indicate the results section of the merged DataFrame
     data = [['Results'] + [None] * input_df.shape[1]]
 
-    # Define columns for the DataFrame
+    # Defines columns for the DataFrame
     columns = ['Name'] + list(input_df.columns)
 
-    # Create a DataFrame from data with columns specified
+    # Creates a DataFrame from data with columns specified
     df = pd.DataFrame(data, columns=columns)
 
-    # Set the index of the DataFrame to 'Name'
+    # Sets the index of the DataFrame to 'Name'
     df.set_index(keys='Name', inplace=True)
 
-    # Concatenate the input DataFrame, the results section DataFrame and the merged results DataFrame
+    # Concatenates the input DataFrame, the results section DataFrame and the merged results DataFrame
     return pd.concat([input_df, df, merged_df])
