@@ -141,12 +141,12 @@ class MainWindow:
         self.frame_buttons = ttk.Frame(self.frame)
 
         # Create labels for various inputs
-        self.header = ttk.Label(self.frame_header, text="USpekPy: ISO 4037:2019 Magnitudes & uncertainties",
+        self.header = ttk.Label(self.frame_header, text="USpekPy: ISO 4037:2019 Quantities & uncertainties",
                                 font=self.header_font)
-        self.label1 = ttk.Label(self.frame_input, text="Mono-energetic conversion coefficients files",
+        self.label1 = ttk.Label(self.frame_input, text="Mono-energetic conversion coefficients (Sv/Gy) files",
                                 font=self.normal_font)
-        self.label2 = ttk.Label(self.frame_input, text="Mass transmission coefficients file", font=self.normal_font)
-        self.label3 = ttk.Label(self.frame_input, text="Uncertainty of mass transmission coefficients",
+        self.label2 = ttk.Label(self.frame_input, text="Mass energy transfer coefficients of air (cm2/g) file", font=self.normal_font)
+        self.label3 = ttk.Label(self.frame_input, text="Relative uncertainty on mass energy transfer coefficients of air",
                                 font=self.normal_font)
         self.label4 = ttk.Label(self.frame_input, text="Number of simulations", font=self.normal_font)
         self.label5 = ttk.Label(self.frame_input, text="Output folder", font=self.normal_font)
