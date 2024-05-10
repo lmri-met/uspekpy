@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.uspekpy.wrapper import SpekWrapper, parse_mass_transmission_coefficients, parse_conversion_coefficients
+from src.uspekpy.wrapper import SpekWrapper, parse_mass_transfer_coefficients, parse_conversion_coefficients
 
 
 class USpek:
@@ -22,9 +22,9 @@ class USpek:
             - 'Pb': Tuple containing the thickness of the Lead filter and its uncertainty.
             - 'Be': Tuple containing the thickness of the Beryllium filter and its uncertainty.
             - 'Air': Tuple containing the thickness of the Air filter and its uncertainty.
-        mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass energy
+        mass_transfer_coefficients (tuple): Tuple containing the energies and values of the mass energy
             transfer coefficients of air.
-        mass_transmission_coefficients_uncertainty (float): The overall uncertainty associated with mass energy
+        mass_transfer_coefficients_uncertainty (float): The overall uncertainty associated with mass energy
             transfer coefficients of air.
         conversion_coefficients (tuple): Tuple containing the energies and values of the monoenergetic
             air kerma to dose equivalent conversion coefficients.
@@ -32,19 +32,19 @@ class USpek:
 
     Attributes:
         beam (dict): Beam parameters and their uncertainties.
-        mass_transmission_coefficients (tuple): Energies and values of mass energy transfer coefficients of air.
-        mass_transmission_coefficients_uncertainty (float): Overall uncertainty associated with mass energy transfer
+        mass_transfer_coefficients (tuple): Energies and values of mass energy transfer coefficients of air.
+        mass_transfer_coefficients_uncertainty (float): Overall uncertainty associated with mass energy transfer
             coefficients of air.
         conversion_coefficients (tuple): Energies and values of monoenergetic air kerma to dose equivalent conversion
             coefficients.
     """
 
-    def __init__(self, beam_parameters, mass_transmission_coefficients, mass_transmission_coefficients_uncertainty,
+    def __init__(self, beam_parameters, mass_transfer_coefficients, mass_transfer_coefficients_uncertainty,
                  conversion_coefficients, angle=None):
         self.beam = beam_parameters
-        self.mass_transmission_coefficients = parse_mass_transmission_coefficients(mass_transmission_coefficients)
+        self.mass_transfer_coefficients = parse_mass_transfer_coefficients(mass_transfer_coefficients)
         self.conversion_coefficients = parse_conversion_coefficients(conversion_coefficients, angle)
-        self.mass_transmission_coefficients_uncertainty = mass_transmission_coefficients_uncertainty
+        self.mass_transfer_coefficients_uncertainty = mass_transfer_coefficients_uncertainty
 
     def _get_random_values(self):
         """Sample random values of x-ray beam parameters and mass energy transfer coefficients.
@@ -81,11 +81,11 @@ class USpek:
         ]
 
         # Get energy and nominal value of mass energy transfer coefficients
-        energy_mu = self.mass_transmission_coefficients[0]
-        nominal_mu = self.mass_transmission_coefficients[1]
+        energy_mu = self.mass_transfer_coefficients[0]
+        nominal_mu = self.mass_transfer_coefficients[1]
 
         # Get uncertainty associated with mass energy transfer coefficients
-        mu_std = self.mass_transmission_coefficients_uncertainty
+        mu_std = self.mass_transfer_coefficients_uncertainty
 
         # Generate random mass energy transfer coefficient
         random_mu = np.random.normal(loc=nominal_mu, scale=nominal_mu * mu_std)
@@ -137,10 +137,10 @@ class USpek:
         mean_energy = spectrum.get_mean_energy()
 
         # Get mean kerma
-        mean_kerma = spectrum.get_mean_kerma(mass_transmission_coefficients=mu_tr_rho)
+        mean_kerma = spectrum.get_mean_kerma(mass_transfer_coefficients=mu_tr_rho)
 
         # Get mean conversion coefficient
-        mean_hk = spectrum.get_mean_conversion_coefficient(mass_transmission_coefficients=mu_tr_rho,
+        mean_hk = spectrum.get_mean_conversion_coefficient(mass_transfer_coefficients=mu_tr_rho,
                                                            conversion_coefficients=self.conversion_coefficients)
 
         return (kvp, th, filters[0][1], filters[1][1], filters[2][1], filters[3][1], filters[4][1], filters[5][1],
@@ -240,7 +240,7 @@ class USpek:
                 - HVL2 Cu (float): Second HVL for copper.
                 - Mean energy (float): Mean energy of the spectrum.
                 - Mean kerma (float): Mean air kerma calculated using mass energy transfer coefficients.
-                - Mean conv. coefficient. (float): Mean conversion coefficient calculated using mass transmission and
+                - Mean conv. coefficient. (float): Mean conversion coefficient calculated using mass energy transfer and
                     conversion coefficients.
                 Additionally, it includes rows for mean values, standard deviations, and relative uncertainties
                 of the simulation results.

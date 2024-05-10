@@ -83,7 +83,7 @@ class TestIsValidCsv:
         assert wrp.is_valid_csv(filename) is False
 
 
-class TestParseMassTransmissionCoefficients:
+class TestParseMassTransferCoefficients:
     @pytest.fixture
     def coefficients_tuple(self):
         energies = np.array([1, 2, 3])
@@ -91,7 +91,7 @@ class TestParseMassTransmissionCoefficients:
         return energies, coefficients
 
     def test_parse_tuple_input(self, coefficients_tuple):
-        result = wrp.parse_mass_transmission_coefficients(coefficients_tuple)
+        result = wrp.parse_mass_transfer_coefficients(coefficients_tuple)
         assert isinstance(result, tuple)
         assert len(result) == 2
         assert isinstance(result[0], np.ndarray)
@@ -101,12 +101,12 @@ class TestParseMassTransmissionCoefficients:
         # Create a temporary CSV file with two columns
         filename = tmpdir.join("test.csv")
         with open(filename, "w") as file:
-            file.write("energy,mass_transmission\n")
+            file.write("energy,mass_transfer\n")
             file.write("1,0.1\n")
             file.write("2,0.2\n")
             file.write("3,0.3\n")
 
-        result = wrp.parse_mass_transmission_coefficients(str(filename))
+        result = wrp.parse_mass_transfer_coefficients(str(filename))
         assert isinstance(result, tuple)
         assert len(result) == 2
         assert isinstance(result[0], np.ndarray)
@@ -114,7 +114,7 @@ class TestParseMassTransmissionCoefficients:
 
     def test_invalid_input(self):
         with pytest.raises(ValueError):
-            wrp.parse_mass_transmission_coefficients("invalid_input")
+            wrp.parse_mass_transfer_coefficients("invalid_input")
 
 
 class TestParseConversionCoefficients:
@@ -210,7 +210,7 @@ class TestSpekWrapper:
         return spectrum, energy, fluence
 
     @pytest.fixture
-    def mass_transmission_coefficients(self):
+    def mass_transfer_coefficients(self):
         # Define the energies and values of the mass energy transfer coefficients for air
         energy_mu, mu = (
             np.array(
@@ -269,12 +269,12 @@ class TestSpekWrapper:
 
         assert mean_energy == expected_mean_energy
 
-    def test_get_mean_kerma(self, spectrum_energy_fluence, mass_transmission_coefficients):
+    def test_get_mean_kerma(self, spectrum_energy_fluence, mass_transfer_coefficients):
         # Get spectrum and spectrum energy and fluence
         spectrum, energy, fluence = spectrum_energy_fluence
 
         # Define the energies and values of the mass energy transfer coefficients for air
-        energy_mu, mu = mass_transmission_coefficients
+        energy_mu, mu = mass_transfer_coefficients
 
         # Create an Akima1DInterpolator with logarithmic energies and mass energy transfer coefficients for air
         interpolator = Akima1DInterpolator(x=np.log(energy_mu), y=np.log(mu))
@@ -289,17 +289,17 @@ class TestSpekWrapper:
         expected_mean_kerma = sum(fluence * energy * interpolated_mu) / fluence.sum()
 
         # Compute mean air kerma with SpekWrapper.get_mean_kerma()
-        mean_kerma = spectrum.get_mean_kerma(mass_transmission_coefficients=(energy_mu, mu))
+        mean_kerma = spectrum.get_mean_kerma(mass_transfer_coefficients=(energy_mu, mu))
 
         assert mean_kerma == expected_mean_kerma
 
-    def test_get_mean_conversion_coefficient(self, spectrum_energy_fluence, mass_transmission_coefficients,
+    def test_get_mean_conversion_coefficient(self, spectrum_energy_fluence, mass_transfer_coefficients,
                                              conversion_coefficients):
         # Get spectrum and spectrum energy and fluence
         spectrum, energy, fluence = spectrum_energy_fluence
 
         # Define the energies and values of the mass energy transfer coefficients for air
-        energy_mu, mu = mass_transmission_coefficients
+        energy_mu, mu = mass_transfer_coefficients
 
         # Define the energies and values of the monoenergetic conversion coefficients
         energy_hk, hk = conversion_coefficients
@@ -326,7 +326,7 @@ class TestSpekWrapper:
         expected_hk = sum(fluence * energy * interpolated_mu * interpolated_hk) / sum(fluence * energy * interpolated_mu)
 
         # Compute mean conversion coefficient with SpekWrapper.get_mean_conversion_coefficient()
-        mean_hk = spectrum.get_mean_conversion_coefficient(mass_transmission_coefficients=(energy_mu, mu),
+        mean_hk = spectrum.get_mean_conversion_coefficient(mass_transfer_coefficients=(energy_mu, mu),
                                                            conversion_coefficients=(energy_hk, hk))
 
         assert mean_hk == expected_hk

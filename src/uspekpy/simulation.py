@@ -3,7 +3,7 @@ from functools import reduce
 import pandas as pd
 
 from src.uspekpy.uspek import USpek
-from src.uspekpy.wrapper import parse_mass_transmission_coefficients, parse_conversion_coefficients
+from src.uspekpy.wrapper import parse_mass_transfer_coefficients, parse_conversion_coefficients
 
 
 def batch_simulation(input_file_path, sheet_name=None):
@@ -57,7 +57,7 @@ def batch_simulation(input_file_path, sheet_name=None):
         file_path = input_df.at['Mass energy transfer coefficients file', column_name]
 
         # Parse mass energy transfer coefficients from the file
-        mass_transmission_coefficients = parse_mass_transmission_coefficients(coefficients=file_path)
+        mass_transfer_coefficients = parse_mass_transfer_coefficients(coefficients=file_path)
 
         # Extract mono-energetic conversion coefficients file path from the input DataFrame
         file_path = input_df.at['Mono-energetic conversion coefficients file', column_name]
@@ -73,15 +73,15 @@ def batch_simulation(input_file_path, sheet_name=None):
         simulations_number = input_df.at['Number of simulations', column_name]
 
         # Extract mass energy transfer coefficients uncertainty from the input DataFrame
-        mass_transmission_coefficients_uncertainty = input_df.at[
+        mass_transfer_coefficients_uncertainty = input_df.at[
             'Mass energy transfer coefficients uncertainty', column_name]
 
         # Print a message indicating the start of input digestion
         print('Simulation')
 
         # Create a USpek object with the specified parameters
-        s = USpek(beam_parameters=beam_parameters, mass_transmission_coefficients=mass_transmission_coefficients,
-                  mass_transmission_coefficients_uncertainty=mass_transmission_coefficients_uncertainty,
+        s = USpek(beam_parameters=beam_parameters, mass_transfer_coefficients=mass_transfer_coefficients,
+                  mass_transfer_coefficients_uncertainty=mass_transfer_coefficients_uncertainty,
                   conversion_coefficients=conversion_coefficients)
 
         # Run simulation with the specified number of iterations

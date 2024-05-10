@@ -1,4 +1,3 @@
-# TODO: batch_simulation()
 import numpy as np
 import pandas as pd
 import pytest
@@ -179,3 +178,5 @@ class TestOutputDigest:
         # Assert that the result is a DataFrame and contains the expected data
         assert isinstance(result_df, pd.DataFrame)
         assert result_df.equals(expected_result_df)
+
+# TODO: batch_simulation()

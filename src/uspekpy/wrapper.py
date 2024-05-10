@@ -37,7 +37,7 @@ class SpekWrapper(Spek):
         # Compute the mean energy
         return sum(fluence * energy) / fluence.sum()
 
-    def get_mean_kerma(self, mass_transmission_coefficients):
+    def get_mean_kerma(self, mass_transfer_coefficients):
         """Compute the mean air kerma of an x-ray spectrum.
 
         This method calculates the mean air kerma of the x-ray spectrum using the photon fluence energy distribution and
@@ -53,7 +53,7 @@ class SpekWrapper(Spek):
           spectrum.
 
         Args:
-            mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass energy transfer
+            mass_transfer_coefficients (tuple): Tuple containing the energies and values of the mass energy transfer
                 coefficients of air.
 
         Returns:
@@ -63,7 +63,7 @@ class SpekWrapper(Spek):
         energy, fluence = self.get_spectrum(edges=False)
 
         # Unpack the energies and values of the mass energy transfer coefficients of air
-        energy_mu, mu = parse_mass_transmission_coefficients(mass_transmission_coefficients)
+        energy_mu, mu = parse_mass_transfer_coefficients(mass_transfer_coefficients)
 
         # Interpolate mass energy transfer coefficients of air for the spectrum energies in logarithmic scale
         interpolated_mu = interpolate(x=energy_mu, y=mu, new_x=energy)
@@ -71,7 +71,7 @@ class SpekWrapper(Spek):
         # Compute air kerma
         return sum(fluence * energy * interpolated_mu) / fluence.sum()
 
-    def get_mean_conversion_coefficient(self, mass_transmission_coefficients, conversion_coefficients, angle=None):
+    def get_mean_conversion_coefficient(self, mass_transfer_coefficients, conversion_coefficients, angle=None):
         """Compute the mean conversion coefficient of an x-ray spectrum.
 
         This method calculates the mean conversion coefficient of an x-ray spectrum using the photon fluence energy
@@ -88,7 +88,7 @@ class SpekWrapper(Spek):
           coefficients in each energy bin. Finally, it divides the first sum of products by the second sum of products.
 
         Args:
-            mass_transmission_coefficients (tuple): Tuple containing the energies and values of the mass energy transfer
+            mass_transfer_coefficients (tuple): Tuple containing the energies and values of the mass energy transfer
                 coefficients of air.
             conversion_coefficients (tuple): Tuple containing the energies and values of the monoenergetic conversion
                 coefficients.
@@ -102,7 +102,7 @@ class SpekWrapper(Spek):
         energy, fluence = self.get_spectrum(edges=False)
 
         # Unpack the energies and values of the mass energy transfer coefficients of air
-        energy_mu, mu = parse_mass_transmission_coefficients(mass_transmission_coefficients)
+        energy_mu, mu = parse_mass_transfer_coefficients(mass_transfer_coefficients)
 
         # Unpack the energies and values of the monoenergetic conversion coefficients
         energy_hk, hk = parse_conversion_coefficients(conversion_coefficients, angle)
@@ -143,12 +143,12 @@ def interpolate(x, y, new_x):
     return np.nan_to_num(new_y, nan=0)
 
 
-def parse_mass_transmission_coefficients(coefficients):
+def parse_mass_transfer_coefficients(coefficients):
     """Parse mass energy transfer coefficients of air into the required format by SpekWrapper.
 
     This function takes mass energy transfer coefficients of air in various formats and converts them into 
     the format required by SpekWrapper, which is a tuple containing two numpy arrays representing the 
-    energies and mass transmission coefficients, respectively.
+    energies and mass energy transfer coefficients, respectively.
 
     Args:
         coefficients (tuple or str): Mass energy transfer coefficients of air. This can be either a tuple of two numpy
@@ -169,7 +169,7 @@ def parse_mass_transmission_coefficients(coefficients):
     elif is_csv_with_two_columns(coefficients):
         # Load CSV file into a numpy array, skipping the header
         array2d = np.genfromtxt(coefficients, delimiter=',', skip_header=1, unpack=True)
-        # Build tuple of mass transmission coefficients
+        # Build tuple of mass energy transfer coefficients
         return array2d[0], array2d[1]
     else:
         # If the input format is not supported, raise a ValueError
