@@ -201,7 +201,7 @@ class TestSpekWrapper:
             ('Air', 1000)
         ]
 
-        # Initialises an SpeckWrapper object and add filters
+        # Initialises an SpekWrapper object and add filters
         spectrum = wrp.SpekWrapper(kvp=60, th=20)
         spectrum.multi_filter(my_filters)
 

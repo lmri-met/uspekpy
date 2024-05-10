@@ -123,7 +123,7 @@ class USpek:
         # Sample random beam parameters
         kvp, th, filters, mu_tr_rho = self._get_random_values()
 
-        # Initialize an SpeckWrapper object and add filters
+        # Initialize an SpekWrapper object and add filters
         spectrum = SpekWrapper(kvp=kvp, th=th)
         spectrum.multi_filter(filters)
 
