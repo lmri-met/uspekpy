@@ -1,7 +1,6 @@
-import pytest
 import numpy as np
 
-import uspeckpy.uspek as usp
+import src.uspekpy.uspek as usp
 
 
 class TestRandomUniform:

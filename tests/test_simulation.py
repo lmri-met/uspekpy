@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-import uspeckpy.simulation as sim
+import src.uspekpy.simulation as sim
 
 
 class TestReadFileToDataFrame:

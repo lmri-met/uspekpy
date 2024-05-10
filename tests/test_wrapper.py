@@ -4,7 +4,7 @@ import pytest
 import numpy as np
 from scipy.interpolate import Akima1DInterpolator
 
-import uspeckpy.wrapper as wrp
+import src.uspekpy.wrapper as wrp
 
 
 class TestIsTupleOfTwoArrays:
