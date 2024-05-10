@@ -276,7 +276,7 @@ class TestSpekWrapper:
         # Define the energies and values of the mass energy transfer coefficients for air
         energy_mu, mu = mass_transmission_coefficients
 
-        # Create an Akima1DInterpolator with logarithmic energies and values of the mass energy transfer coefficients for air
+        # Create an Akima1DInterpolator with logarithmic energies and mass energy transfer coefficients for air
         interpolator = Akima1DInterpolator(x=np.log(energy_mu), y=np.log(mu))
 
         # Interpolate mass energy transfer coefficients for air for the spectrum energies in logarithmic scale
@@ -293,7 +293,8 @@ class TestSpekWrapper:
 
         assert mean_kerma == expected_mean_kerma
 
-    def test_get_mean_conversion_coefficient(self, spectrum_energy_fluence, mass_transmission_coefficients, conversion_coefficients):
+    def test_get_mean_conversion_coefficient(self, spectrum_energy_fluence, mass_transmission_coefficients,
+                                             conversion_coefficients):
         # Get spectrum and spectrum energy and fluence
         spectrum, energy, fluence = spectrum_energy_fluence
 
@@ -303,7 +304,7 @@ class TestSpekWrapper:
         # Define the energies and values of the monoenergetic conversion coefficients
         energy_hk, hk = conversion_coefficients
 
-        # Create an Akima1DInterpolator with logarithmic energies and values of the mass energy transfer coefficients for air
+        # Create an Akima1DInterpolator with logarithmic energies and mass energy transfer coefficients for air
         interpolator = Akima1DInterpolator(x=np.log(energy_mu), y=np.log(mu))
 
         # Interpolate mass energy transfer coefficients for air for the spectrum energies in logarithmic scale
@@ -312,7 +313,7 @@ class TestSpekWrapper:
         # Replace any NaN values with zeros in the interpolated mass energy transfer coefficients for air
         interpolated_mu = np.nan_to_num(interpolated_mu, nan=0)
 
-        # Create an Akima1DInterpolator with logarithmic energies and values of the monoenergetic conversion coefficients
+        # Create an Akima1DInterpolator with logarithmic energies and monoenergetic conversion coefficients
         interpolator = Akima1DInterpolator(x=np.log(energy_hk), y=np.log(hk))
 
         # Interpolate monoenergetic conversion coefficients for the spectrum energies in logarithmic scale
