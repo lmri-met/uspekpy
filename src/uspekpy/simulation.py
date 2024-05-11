@@ -54,7 +54,7 @@ def batch_simulation(input_file_path, sheet_name=None):
         beam_parameters = parse_beam_parameters(df=input_df, column=column_name)
 
         # Extract mass energy transfer coefficients file path from the input DataFrame
-        file_path = input_df.at['Mass energy transfer coefficients file', column_name]
+        file_path = input_df.at['Mass transmission coefficients file', column_name]
 
         # Parse mass energy transfer coefficients from the file
         mass_transfer_coefficients = parse_mass_transfer_coefficients(coefficients=file_path)
@@ -74,7 +74,7 @@ def batch_simulation(input_file_path, sheet_name=None):
 
         # Extract mass energy transfer coefficients uncertainty from the input DataFrame
         mass_transfer_coefficients_uncertainty = input_df.at[
-            'Mass energy transfer coefficients uncertainty', column_name]
+            'Mass transmission coefficients uncertainty', column_name]
 
         # Print a message indicating the start of input digestion
         print('Simulation')
