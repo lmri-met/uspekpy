@@ -1,4 +1,6 @@
-<h1><img style="float:left;" width="50" height="40" src="assets/letter-u.png" alt="USpekPy icon">USpekPy</h1>
+<img style="float:left;" width="50" height="40" src="assets/letter-u.png" alt="USpekPy icon">
+
+# USpekPy
 
 ## Radiation protection quantities for x-rays with uncertainties
 
