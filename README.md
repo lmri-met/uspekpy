@@ -2,8 +2,6 @@
 
 ## Radiation protection quantities for x-rays with uncertainties
 
----
-
 ![Static Badge](https://img.shields.io/badge/Date-May_24-teal)
 ![Static Badge](https://img.shields.io/badge/Version-1.0.0-teal)
 ![Static Badge](https://img.shields.io/badge/Maintenance-Active-teal)
