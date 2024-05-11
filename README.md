@@ -2,23 +2,21 @@
 
 ## Radiation protection quantities for x-rays with uncertainties
 
-![GitHub package.json version](https://img.shields.io/github/package-json/v/lmri-met/uspekpy)
-![GitHub contributors](https://img.shields.io/github/contributors/lmri-met/uspekpy)
-![maintenance-status](https://img.shields.io/badge/maintenance-active-blue.svg)
-![GitHub License](https://img.shields.io/github/license/lmri-met/uspekpy)
+---
 
-![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/lmri-met/uspekpy)
-![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/lmri-met/uspekpy)
-![GitHub language count](https://img.shields.io/github/languages/count/lmri-met/uspekpy)
-![GitHub top language](https://img.shields.io/github/languages/top/lmri-met/uspekpy)
+![Static Badge](https://img.shields.io/badge/Date-May_24-teal)
+![Static Badge](https://img.shields.io/badge/Version-1.0.0-teal)
+![Static Badge](https://img.shields.io/badge/Maintenance-Active-teal)
 
-![GitHub Repo stars](https://img.shields.io/github/stars/lmri-met/uspekpy)
-![GitHub watchers](https://img.shields.io/github/watchers/lmri-met/uspekpy)
-![GitHub forks](https://img.shields.io/github/forks/lmri-met/uspekpy)
+[![Static Badge](https://img.shields.io/badge/Surce_code-GitHub-blue)](https://github.com/lmri-met/uspekpy)
+[![Static Badge](https://img.shields.io/badge/Documentation-GitHub_Wiki-blue)](https://github.com/lmri-met/uspekpy/wiki)
+[![Static Badge](https://img.shields.io/badge/Contribute-Issues-blue)](https://github.com/lmri-met/uspekpy/issues)
+[![Static Badge](https://img.shields.io/badge/Organization-LMRI--Met-blue)](https://github.com/lmri-met/)
 
-[![Static Badge](https://img.shields.io/badge/Documentation-blue)](https://github.com/lmri-met/uspekpy/blob/main/README.md)
-[![Static Badge](https://img.shields.io/badge/Surce_code-blue)](https://github.com/lmri-met/uspekpy)
-[![Static Badge](https://img.shields.io/badge/Contribute-blue)](https://github.com/lmri-met/uspekpy/issues)
+[![Static Badge](https://img.shields.io/badge/Distribution-PyPi-orange)](https://pypi.org/project/uspekpy/)
+[![Static Badge](https://img.shields.io/badge/License-GPLv3.0-orange)](https://choosealicense.com/licenses/gpl-3.0/)
+![Static Badge](https://img.shields.io/badge/Tests-Passing-green)
+![Static Badge](https://img.shields.io/badge/CodeCov-65%25-green)
 
 ## Table of Contents
 
@@ -60,7 +58,7 @@ which is a Python software toolkit for modelling the x-ray spectra from x-ray tu
 
 ## How to install USpekPy?
 
-**USpekPy** can be installed from the [Python Package Index (PyPI)](https://pypi.org/) 
+**USpekPy** can be installed from the [Python Package Index (PyPI)](https://pypi.org/project/uspekpy/) 
 by running the following command from a terminal:
 
 ```bash
