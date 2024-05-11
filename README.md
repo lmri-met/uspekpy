@@ -23,24 +23,30 @@
 
 ## Table of Contents
 
-- [Description](#description)
-- [Main features](#main-features)
-- [Installation](#installation)
-- [Usage](#usage)
+- [What is USpekPy?](#what-is-uspekpy)
+- [Main features of USpekPy](#main-features)
+- [How to install USpekPy?](#installation)
+- [Quick user guide](#quick-user-guide)
+  - [Compute mean radiation protection quantities](#compute-mean-radiation-protection-quantities)
+  - [Compute mean radiation protection quantities with uncertainties](#compute-mean-radiation-protection-quantities-with-uncertainties)
+  - [Compute batch simulation for several x-ray spectra](#compute-batch-simulation-for-several-x-ray-spectra)
+  - [Data files](#data-files)
+- [How to get support?](#how-to-get-support)
 - [Documentation](#documentation)
-- [Support](#support)
 - [Contributors](#contributors)
 - [License](#license)
-- [Contribute](#contribute)
+- [Contributing to USpekPy](#contributing-to-uspekpy)
 
-## Description
+## What is USpekPy?
 
 **USpekPy** is a Python package that allows to compute mean radiation protection quantities 
 for a simulated x-ray spectrum with uncertainties using Monte Carlo techniques.
-It is based on the [SpekPy](https://bitbucket.org/spekpy/spekpy_release/src/master/) package, 
+It is an open source, GPLv3-licensed library for the Python programming language.
+It is compatible with Python 3, and it has been tested in Ubuntu 24.04 and Widows 10 OS.
+**USpekPy** is based on the [SpekPy](https://bitbucket.org/spekpy/spekpy_release/src/master/) package, 
 which is a Python software toolkit for modelling the x-ray spectra from x-ray tubes.
 
-## Main features
+## Main features of USpekPy 
 
 **USpekPy** provides three features:
 - Compute **mean values of radiation protection quantities** of an x-ray spectrum simulated using SpekPy. 
@@ -53,7 +59,7 @@ which is a Python software toolkit for modelling the x-ray spectra from x-ray tu
 - Perform **batch simulation** to compute the mean values and uncertainties of radiation protection quantities
   for **several x-ray spectra** simulated with SpekPy.
 
-## Installation
+## How to install USpekPy?
 
 **USpekPy** can be installed from the [Python Package Index (PyPI)](https://pypi.org/) 
 by running the following command from a terminal:
@@ -62,7 +68,7 @@ by running the following command from a terminal:
 pip install uspekpy
 ```
 
-## Usage
+## Quick user guide
 
 ### Compute mean radiation protection quantities
 
@@ -515,18 +521,20 @@ E (keV),h_k(0 deg) (Sv/Gy)
 8000,1.08
 10000,1.06
 ```
-
-## Documentation
+## How to get support?
 
 If you need support, please check the **USpekPy** documentation 
 ([README](https://github.com/lmri-met/uspekpy/blob/main/README.md) and 
 [Wiki](https://github.com/lmri-met/uspekpy/wiki)) at GitHub.
 
-## Support
-
 If you need further support, please send an e-mail to 
 [Paz Avilés](mailto:Paz.Aviles@ciemat.es) or to 
 [Xandra Campo](mailto:xandra.campo@ciemat.es).
+
+## Documentation
+
+The official documentation of **USpekPy** is hosted on GitHub.
+Check its [README file](https://github.com/lmri-met/uspekpy/blob/main/README.md) for a quick start guide and its [Wiki](https://github.com/lmri-met/uspekpy/wiki) for more detailed information.
 
 ## Contributors
 
@@ -538,7 +546,7 @@ which is the Spanish National Metrology Institute for ionizing radiation.
 
 **USpekPy** is distributed under the [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/) License.
 
-## Contribute
+## Contributing to USpekPy
 
 All contributions, bug reports, bug fixes, documentation improvements, enhancements, and ideas are welcome.
 Please check the **USpekPy** [issues page](https://github.com/lmri-met/uspekpy/issues) if you want to contribute.
