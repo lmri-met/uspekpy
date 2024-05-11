@@ -1,7 +1,6 @@
-# USpekPy
-## Radiation protection quantities for x-rays with uncertainties
+<h1><img style="float:left;" width="50" height="40" src="assets/letter-u.png" alt="USpekPy icon">USpekPy</h1>
 
----
+## Radiation protection quantities for x-rays with uncertainties
 
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/lmri-met/uspekpy)
 ![GitHub contributors](https://img.shields.io/github/contributors/lmri-met/uspekpy)
