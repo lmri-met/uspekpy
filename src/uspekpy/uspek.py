@@ -184,7 +184,7 @@ class USpek:
         # Define column names for the DataFrame
         columns = ['#', 'kVp (kV)', 'th (deg)', 'Air (mm)', 'Al (mm)', 'Cu (mm)', 'Sn (mm)', 'Pb (mm)', 'Be (mm)',
                    'HVL1 Al (mm)', 'HVL2 Al (mm)', 'HVL1 Cu (mm)', 'HVL2 Cu (mm)', 'Mean energy (keV)',
-                   'Mean kerma (keV/g)', 'Mean conv. coefficient. (Sv/Gy)']
+                   'Mean kerma (keV/g)', 'Mean conv. coeff. (Sv/Gy)']
 
         # Create DataFrame with simulation results
         df = pd.DataFrame(data=rows, columns=columns)
@@ -241,7 +241,7 @@ class USpek:
                 - HVL2 Cu (float): Second HVL for copper.
                 - Mean energy (float): Mean energy of the spectrum.
                 - Mean kerma (float): Mean air kerma calculated using mass energy transfer coefficients.
-                - Mean conv. coefficient. (float): Mean conversion coefficient calculated using mass energy transfer and
+                - Mean conv. coeff. (float): Mean conversion coefficient calculated using mass energy transfer and
                     conversion coefficients.
                 Additionally, it includes rows for mean values, standard deviations, and relative uncertainties
                 of the simulation results.

@@ -56,21 +56,21 @@ class TestParseBeamParameters:
         # Create a valid DataFrame for testing
         data = {
             'Al filter width (mm)': [1.0],
-            'Al filter width uncertainty': [0.1],
+            'Al filter width (fraction of one)': [0.1],
             'Cu filter width (mm)': [2.0],
-            'Cu filter width uncertainty': [0.2],
+            'Cu filter width (fraction of one)': [0.2],
             'Sn filter width (mm)': [1.0],
-            'Sn filter width uncertainty': [0.1],
+            'Sn filter width (fraction of one)': [0.1],
             'Pb filter width (mm)': [2.0],
-            'Pb filter width uncertainty': [0.2],
+            'Pb filter width (fraction of one)': [0.2],
             'Be filter width (mm)': [1.0],
-            'Be filter width uncertainty': [0.1],
-            'Air filter width (mm)': [2.0],
-            'Air filter width uncertainty': [0.2],
+            'Be filter width (fraction of one)': [0.1],
+            'Air gap width (mm)': [2.0],
+            'Air gap width (fraction of one)': [0.2],
             'Peak kilovoltage (kV)': [100],
-            'Peak kilovoltage uncertainty': [10],
+            'Peak kilovoltage (fraction of one)': [10],
             'Anode angle (deg)': [45],
-            'Anode angle uncertainty': [5]
+            'Anode angle (fraction of one)': [5]
         }
         df = pd.DataFrame(data).T
         df.columns = ['label']
@@ -119,25 +119,25 @@ class TestOutputDigest:
         # Creates output DataFrames containing simulation results
         output_data1 = {
             '#': ['Mean', 'Standard deviation', 'Relative uncertainty'],
-            'HVL1 Al': [10.0, 1.0, 0.1],
-            'HVL2 Al': [20.0, 2.0, 0.2],
-            'HVL1 Cu': [30.7, 3.0, 0.3],
-            'HVL2 Cu': [40.0, 4.0, 0.4],
-            'Mean energy': [50.0, 5.0, 0.5],
-            'Mean kerma': [60.0, 6.0, 0.6],
-            'Mean conv. coefficient.': [70.0, 7.0, 0.7]
+            'HVL1 Al (mm)': [10.0, 1.0, 0.1],
+            'HVL2 Al (mm)': [20.0, 2.0, 0.2],
+            'HVL1 Cu (mm)': [30.7, 3.0, 0.3],
+            'HVL2 Cu (mm)': [40.0, 4.0, 0.4],
+            'Mean energy (keV)': [50.0, 5.0, 0.5],
+            'Mean kerma (keV/g)': [60.0, 6.0, 0.6],
+            'Mean conv. coeff. (Sv/Gy)': [70.0, 7.0, 0.7]
         }
         output_df1 = pd.DataFrame(output_data1)
 
         output_data2 = {
             '#': ['Mean', 'Standard deviation', 'Relative uncertainty'],
-            'HVL1 Al': [70.0, 7.0, 0.7],
-            'HVL2 Al': [70.0, 7.0, 0.7],
-            'HVL1 Cu': [10.0, 1.0, 0.1],
-            'HVL2 Cu': [20.0, 2.0, 0.2],
-            'Mean energy': [30.7, 3.0, 0.3],
-            'Mean kerma': [40.0, 4.0, 0.4],
-            'Mean conv. coefficient.': [50.0, 5.0, 0.5]
+            'HVL1 Al (mm)': [70.0, 7.0, 0.7],
+            'HVL2 Al (mm)': [70.0, 7.0, 0.7],
+            'HVL1 Cu (mm)': [10.0, 1.0, 0.1],
+            'HVL2 Cu (mm)': [20.0, 2.0, 0.2],
+            'Mean energy (keV)': [30.7, 3.0, 0.3],
+            'Mean kerma (keV/g)': [40.0, 4.0, 0.4],
+            'Mean conv. coeff. (Sv/Gy)': [50.0, 5.0, 0.5]
         }
         output_df2 = pd.DataFrame(output_data2)
 
@@ -150,27 +150,27 @@ class TestOutputDigest:
             'Label2': [2.0, 5.0],
             'Label3': [3.0, 6.0],
             'Results': [np.NaN, np.NaN],
-            'HVL1 Al Mean': [10.0, 70.0],
-            'HVL1 Al Standard deviation': [1.0, 7.0],
-            'HVL1 Al Relative uncertainty': [0.1, 0.7],
-            'HVL2 Al Mean': [20.0, 70.0],
-            'HVL2 Al Standard deviation': [2.0, 7.0],
-            'HVL2 Al Relative uncertainty': [0.2, 0.7],
-            'HVL1 Cu Mean': [30.7, 10.0],
-            'HVL1 Cu Standard deviation': [3.0, 1.0],
-            'HVL1 Cu Relative uncertainty': [0.3, 0.1],
-            'HVL2 Cu Mean': [40.0, 20.0],
-            'HVL2 Cu Standard deviation': [4.0, 2.0],
-            'HVL2 Cu Relative uncertainty': [0.4, 0.2],
-            'Mean energy Mean': [50.0, 30.7],
-            'Mean energy Standard deviation': [5.0, 3.0],
-            'Mean energy Relative uncertainty': [0.5, 0.3],
-            'Mean kerma Mean': [60.0, 40.0],
-            'Mean kerma Standard deviation': [6.0, 4.0],
-            'Mean kerma Relative uncertainty': [0.6, 0.4],
-            'Mean conv. coefficient. Mean': [70.0, 50.0],
-            'Mean conv. coefficient. Standard deviation': [7.0, 5.0],
-            'Mean conv. coefficient. Relative uncertainty': [0.7, 0.5],
+            'HVL1 Al  Mean (mm)': [10.0, 70.0],
+            'HVL1 Al  Standard deviation (mm)': [1.0, 7.0],
+            'HVL1 Al  Relative uncertainty (fraction of one)': [0.1, 0.7],
+            'HVL2 Al  Mean (mm)': [20.0, 70.0],
+            'HVL2 Al  Standard deviation (mm)': [2.0, 7.0],
+            'HVL2 Al  Relative uncertainty (fraction of one)': [0.2, 0.7],
+            'HVL1 Cu  Mean (mm)': [30.7, 10.0],
+            'HVL1 Cu  Standard deviation (mm)': [3.0, 1.0],
+            'HVL1 Cu  Relative uncertainty (fraction of one)': [0.3, 0.1],
+            'HVL2 Cu  Mean (mm)': [40.0, 20.0],
+            'HVL2 Cu  Standard deviation (mm)': [4.0, 2.0],
+            'HVL2 Cu  Relative uncertainty (fraction of one)': [0.4, 0.2],
+            'Mean energy  Mean (keV)': [50.0, 30.7],
+            'Mean energy  Standard deviation (keV)': [5.0, 3.0],
+            'Mean energy  Relative uncertainty (fraction of one)': [0.5, 0.3],
+            'Mean kerma  Mean (keV/g)': [60.0, 40.0],
+            'Mean kerma  Standard deviation (keV/g)': [6.0, 4.0],
+            'Mean kerma  Relative uncertainty (fraction of one)': [0.6, 0.4],
+            'Mean conv. coeff.  Mean (Sv/Gy)': [70.0, 50.0],
+            'Mean conv. coeff.  Standard deviation (Sv/Gy)': [7.0, 5.0],
+            'Mean conv. coeff.  Relative uncertainty (fraction of one)': [0.7, 0.5],
         }
         expected_result_df = pd.DataFrame(expected_result_data).T
         expected_result_df.columns = ['Case1', 'Case2']
