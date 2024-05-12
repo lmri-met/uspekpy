@@ -1,7 +1,7 @@
 from functools import reduce
 
 import pandas as pd
-
+from re import findall, sub
 from uspekpy.uspek import USpek
 from uspekpy.wrapper import parse_mass_transfer_coefficients, parse_conversion_coefficients
 
@@ -54,13 +54,13 @@ def batch_simulation(input_file_path, sheet_name=None):
         beam_parameters = parse_beam_parameters(df=input_df, column=column_name)
 
         # Extract mass energy transfer coefficients file path from the input DataFrame
-        file_path = input_df.at['Mass transmission coefficients file', column_name]
+        file_path = input_df.at['Mass energy transfer coefficients of air file (keV and cm²/g)', column_name]
 
         # Parse mass energy transfer coefficients from the file
         mass_transfer_coefficients = parse_mass_transfer_coefficients(coefficients=file_path)
 
         # Extract mono-energetic conversion coefficients file path from the input DataFrame
-        file_path = input_df.at['Mono-energetic conversion coefficients file', column_name]
+        file_path = input_df.at['Mono-energetic K to H conversion coefficients file (keV and Sv/Gy)', column_name]
 
         # Extract irradiation angle from the input DataFrame
         irradiation_angle = input_df.at['Irradiation angle (deg)', column_name]
@@ -74,7 +74,7 @@ def batch_simulation(input_file_path, sheet_name=None):
 
         # Extract mass energy transfer coefficients uncertainty from the input DataFrame
         mass_transfer_coefficients_uncertainty = input_df.at[
-            'Mass transmission coefficients uncertainty', column_name]
+            'Mass energy transfer coefficients of air (fraction of one)', column_name]
 
         # Print a message indicating the start of input digestion
         print('Simulation')
@@ -168,22 +168,25 @@ def parse_beam_parameters(df, column):
             are parameter names and values are tuples of parameter values and uncertainties.
     """
     # Keys for the filters
-    keys = ['Al', 'Cu', 'Sn', 'Pb', 'Be', 'Air']
+    keys = ['Al', 'Cu', 'Sn', 'Pb', 'Be']
 
     # Extract values for each filter from the specified DataFrame column
     values = [df.at[f'{key} filter width (mm)', column] for key in keys]
 
     # Extract uncertainties for each filter from the specified DataFrame column
-    uncertainties = [df.at[f'{key} filter width uncertainty', column] for key in keys]
+    uncertainties = [df.at[f'{key} filter width (fraction of one)', column] for key in keys]
 
-    # Append additional keys for peak kilovoltage and anode angle
-    keys += ['kVp', 'th']
+    # Append additional keys for air gap width, peak kilovoltage and anode angle
+    keys += ['Air', 'kVp', 'th']
 
-    # Extract values for peak kilovoltage and anode angle from the specified DataFrame column and appends them
-    values += [df.at['Peak kilovoltage (kV)', column], df.at['Anode angle (deg)', column]]
+    # Extract values for air gap width, peak kilovoltage and anode angle from the specified DataFrame column and appends them
+    values += [df.at['Air gap width (mm)', column],  df.at['Peak kilovoltage (kV)', column],
+               df.at['Anode angle (deg)', column]]
 
-    # Extract uncertainties for peak kilovoltage and anode angle from the specified DataFrame column and appends them
-    uncertainties += [df.at['Peak kilovoltage uncertainty', column], df.at['Anode angle uncertainty', column]]
+    # Extract uncertainties for air gap width, peak kilovoltage and anode angle from the specified DataFrame column and appends them
+    uncertainties += [df.at['Air gap width (fraction of one)', column],
+                      df.at['Peak kilovoltage (fraction of one)', column],
+                      df.at['Anode angle (fraction of one)', column]]
 
     # Build dictionary of beam parameters in the format required by SpekWrapper
     return dict(zip(keys, zip(values, uncertainties)))
@@ -204,8 +207,8 @@ def output_digest(input_df, output_dfs):
         pandas.DataFrame: DataFrame combining input and simulation results.
     """
     # Define columns to extract from the output DataFrames containing simulation results
-    result_columns = ['HVL1 Al', 'HVL2 Al', 'HVL1 Cu', 'HVL2 Cu', 'Mean energy', 'Mean kerma',
-                      'Mean conv. coefficient.']
+    result_columns = ['HVL1 Al (mm)', 'HVL2 Al (mm)', 'HVL1 Cu (mm)', 'HVL2 Cu (mm)', 'Mean energy (keV)',
+                      'Mean kerma (keV/g)', 'Mean conv. coefficient. (Sv/Gy)']
 
     # Define rows to extract from the output DataFrames containing simulation results
     result_rows = ['Mean', 'Standard deviation', 'Relative uncertainty']
@@ -245,6 +248,12 @@ def output_digest(input_df, output_dfs):
     # Set the columns of the merged DataFrame to match the input DataFrame columns
     merged_df.columns = input_df.columns
 
+    # Move the units in the merged DataFrame index to de end of the index
+    merged_df.index = merged_df.index.map(move_text_in_parentheses_to_end)
+
+    # Replace unit with "fraction of one" in the merged DataFrame index for relative uncertainty results
+    merged_df.index = merged_df.index.map(replace_unit_with_fraction)
+
     # Create a row to indicate the results section of the merged DataFrame
     data = [['Results'] + [None] * input_df.shape[1]]
 
@@ -259,3 +268,31 @@ def output_digest(input_df, output_dfs):
 
     # Concatenate the input DataFrame, the results section DataFrame and the merged results DataFrame
     return pd.concat([input_df, df, merged_df])
+
+
+def move_text_in_parentheses_to_end(text):
+    # Define a regular expression pattern to match text within parentheses
+    pattern = r'\((.*?)\)'
+
+    # Find all matches of the pattern in the text
+    matches = findall(pattern, text)
+
+    # If there are matches, move the text within parentheses to the end of the string
+    if matches:
+        for match in matches:
+            text = text.replace('(' + match + ')', '')
+            text += ' (' + match + ')'
+
+    return text.strip()
+
+
+def replace_unit_with_fraction(text):
+    if 'Relative' in text:
+        # Define a regular expression pattern to match text within parentheses
+        pattern = r'\((.*?)\)'
+
+        # Replace the text within parentheses with "fraction of one"
+        text = sub(pattern, '(fraction of one)', text)
+
+    return text
+
