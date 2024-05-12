@@ -2,8 +2,8 @@ from functools import reduce
 
 import pandas as pd
 
-from src.uspekpy.uspek import USpek
-from src.uspekpy.wrapper import parse_mass_transfer_coefficients, parse_conversion_coefficients
+from uspekpy.uspek import USpek
+from uspekpy.wrapper import parse_mass_transfer_coefficients, parse_conversion_coefficients
 
 
 def batch_simulation(input_file_path, sheet_name=None):

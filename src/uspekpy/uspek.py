@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.uspekpy.wrapper import SpekWrapper, parse_mass_transfer_coefficients, parse_conversion_coefficients
+from uspekpy.wrapper import SpekWrapper, parse_mass_transfer_coefficients, parse_conversion_coefficients
 
 
 class USpek:
