@@ -49,8 +49,7 @@ class SpekWrapper(Spek):
         - Computing the air kerma as defined in equation 2.16 of International Commission on Radiation Units and
           Measurements 2016 Key data for ionizing-radiation dosimetry: measurement  standards and applications ICRU
           Report 90 vol 14 Oxford University Press. This means by multiplying the fluence, energy, and interpolated mass
-          energy transfer coefficients, and then dividing the sum of these products by the total fluence of the
-          spectrum.
+          energy transfer coefficients.
 
         Args:
             mass_transfer_coefficients (tuple): Tuple containing the energies and values of the mass energy transfer
@@ -69,7 +68,7 @@ class SpekWrapper(Spek):
         interpolated_mu = interpolate(x=energy_mu, y=mu, new_x=energy)
 
         # Compute air kerma
-        return sum(fluence * energy * interpolated_mu) / fluence.sum()
+        return sum(fluence * energy * interpolated_mu)
 
     def get_mean_conversion_coefficient(self, mass_transfer_coefficients, conversion_coefficients, angle=None):
         """Compute the mean conversion coefficient of an x-ray spectrum.
