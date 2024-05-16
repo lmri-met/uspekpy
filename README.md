@@ -101,12 +101,12 @@ from uspekpy.wrapper import SpekWrapper
 
 # Define x-ray beam parameters for radiation quality N-60 (filter thickness, peak kilovoltage and anode angle)
 my_filters = [
-    ('Al', 4),  # mm
-    ('Cu', 0.6),  # mm
-    ('Sn', 0),  # mm
-    ('Pb', 0),  # mm
-    ('Be', 0),  # mm
-    ('Air', 1000)  # mm
+  ('Al', 4),  # mm
+  ('Cu', 0.6),  # mm
+  ('Sn', 0),  # mm
+  ('Pb', 0),  # mm
+  ('Be', 0),  # mm
+  ('Air', 1000)  # mm
 ]
 my_kvp = 60  # kV
 my_th = 10  # deg
@@ -131,11 +131,11 @@ hvl2_cu = spectrum.get_hvl2(matl='Cu')
 mean_energy = spectrum.get_mean_energy()
 
 # Calculate mean air kerma
-mean_kerma = spectrum.get_mean_kerma(mass_transfer_coefficients=my_mu_csv)
+mean_kerma = spectrum.get_air_kerma(mass_transfer_coefficients=my_mu_csv)
 
 # Calculate mean air kerma-to-dose-equivalent conversion coefficient for H*(10)
 mean_hk = spectrum.get_mean_conversion_coefficient(
-    mass_transfer_coefficients=my_mu_csv, conversion_coefficients=my_hk_csv)
+  mass_transfer_coefficients=my_mu_csv, conversion_coefficients=my_hk_csv)
 
 # Print results
 print(f'First HVL for Al: {hvl1_al} mm')
