@@ -97,7 +97,7 @@ The next python script shows how to compute the first and second half-value laye
 the mean energy, the air kerma and the mean air kerma-to-dose-equivalent conversion coefficient.
 
 ```python
-from uspekpy.wrapper import SpekWrapper
+from uspekpy import SpekWrapper
 
 # Define x-ray beam parameters for radiation quality N-60 (filter thickness, peak kilovoltage and anode angle)
 my_filters = [
@@ -173,7 +173,7 @@ The next python script shows how to compute the first and second half-value laye
 the mean energy, the air kerma and the mean air kerma-to-dose-equivalent conversion coefficient.
 
 ```python
-from uspekpy.uspek import USpek
+from uspekpy import USpek
 
 # Define values and relative uncertainty (k=1) of x-ray beam parameters for radiation quality N-60
 # (filter thickness, peak kilovoltage and anode angle)
@@ -297,7 +297,7 @@ the mean energy, the air kerma and the mean air kerma-to-dose-equivalent convers
 for the previous **input file in CSV format**.
 
 ```python
-from uspekpy.simulation import batch_simulation
+from uspekpy import batch_simulation
 
 # Define the path to the input CSV file
 my_csv = 'data/input.csv'
@@ -320,7 +320,7 @@ the mean energy, the air kerma and the mean air kerma-to-dose-equivalent convers
 for the previous **input file in Excel format**.
 
 ```python
-from uspekpy.simulation import batch_simulation
+from uspekpy import batch_simulation
 
 # Define the path to the input Excel file
 my_excel = 'data/input.xlsx'
