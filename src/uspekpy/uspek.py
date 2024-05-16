@@ -98,7 +98,7 @@ class USpek:
 
         This method performs a single iteration of the Monte Carlo simulation by generating random values of the 
         sampled variables and simulating a spectrum with those parameters. It then calculates various quantities 
-        such as half-value layers for aluminum and copper, mean energy, mean air kerma, and mean air kerma  
+        such as half-value layers for aluminum and copper, mean energy, air kerma, and mean air kerma  
         to dose equivalent conversion coefficient of the spectrum.
 
         Returns:
@@ -175,7 +175,7 @@ class USpek:
                 - HVL1 Cu (float): HVL for copper.
                 - HVL2 Cu (float): Second HVL for copper.
                 - Mean energy (float): Mean energy of the spectrum.
-                - Mean kerma (float): Mean air kerma calculated using mass energy transfer coefficients.
+                - Mean kerma (float): Air kerma calculated using mass energy transfer coefficients.
                 - Mean conv. coefficient. (float): Mean conversion coefficient calculated using mass energy transfer and
                     monoenergetic conversion coefficients.
                 Additionally, it includes rows for mean values, standard deviations, and relative uncertainties
@@ -240,7 +240,7 @@ class USpek:
                 - HVL1 Cu (float): HVL for copper.
                 - HVL2 Cu (float): Second HVL for copper.
                 - Mean energy (float): Mean energy of the spectrum.
-                - Mean kerma (float): Mean air kerma calculated using mass energy transfer coefficients.
+                - Mean kerma (float): Air kerma calculated using mass energy transfer coefficients.
                 - Mean conv. coeff. (float): Mean conversion coefficient calculated using mass energy transfer and
                     conversion coefficients.
                 Additionally, it includes rows for mean values, standard deviations, and relative uncertainties
