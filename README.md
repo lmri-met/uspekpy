@@ -155,7 +155,7 @@ Second HVL for Al: 6.239790098050192 mm
 First HVL for Cu: 0.23502729534875702 mm
 Second HVL for Cu: 0.2624330033450075 mm
 Mean energy: 47.797974735384756 keV
-Air kerma: 2.219951531747007 keV/g
+Air kerma: 19851414.17752463 keV/g
 Mean conversion coefficient for H*(10): 1.5909359863722154 Sv/Gy
 ```
 
@@ -228,13 +228,13 @@ Gy for the air kerma and
 Sv/Gy for the mean air kerma-to-dose-equivalent conversion coefficient.
 
 ```
-                      #   kVp (kV)   th (deg)     Air (mm)   Al (mm)   Cu (mm)  Sn (mm)  Pb (mm)  Be (mm)  HVL1 Al (mm)  HVL2 Al (mm)  HVL1 Cu (mm)  HVL2 Cu (mm)  Mean energy (keV)  Mean kerma (keV/g)  Mean conv. coeff. (Sv/Gy)
-0           Iteration 1  60.317770  20.149869   992.639319  4.067473  0.592542      0.0      0.0      0.0      5.878648      6.224005      0.233656      0.261778          47.759136            2.244386                   1.588420
-1           Iteration 2  59.184812  20.098689  1004.162931  4.007494  0.606237      0.0      0.0      0.0      5.783420      6.108583      0.227824      0.253638          47.238664            2.242512                   1.581493
-2           Iteration 3  59.059352  20.082866   993.599248  4.035085  0.597141      0.0      0.0      0.0      5.749495      6.076332      0.225905      0.251651          47.110401            2.235574                   1.579555
-3                  Mean  59.520645  20.110475   996.800500  4.036684  0.598640      0.0      0.0      0.0      5.803855      6.136306      0.229128      0.255689          47.369400            2.240824                   1.583156
-4    Standard deviation   0.565975   0.028595     5.220754  0.024512  0.005691      0.0      0.0      0.0      0.054670      0.063394      0.003296      0.004381           0.280515            0.003790                   0.003805
-5  Relative uncertainty   0.009509   0.001422     0.005238  0.006072  0.009506      NaN      NaN      NaN      0.009420      0.010331      0.014385      0.017134           0.005922            0.001692                   0.002404
+                      #   kVp (kV)   th (deg)     Air (mm)   Al (mm)   Cu (mm)  Sn (mm)  Pb (mm)  Be (mm)  HVL1 Al (mm)  HVL2 Al (mm)  HVL1 Cu (mm)  HVL2 Cu (mm)  Mean energy (keV)  Air kerma (keV/g)  Mean conv. coeff. (Sv/Gy)
+0           Iteration 1  60.595560  19.965644   995.902054  3.972178  0.600850      0.0      0.0      0.0      5.923614      6.270253      0.236323      0.264857          47.952776       2.077009e+07                   1.591490
+1           Iteration 2  59.011009  20.121585   995.700957  4.029655  0.605186      0.0      0.0      0.0      5.762747      6.085775      0.226610      0.252122          47.140595       1.733135e+07                   1.580731
+2           Iteration 3  59.890664  20.136796  1001.193487  3.969202  0.599620      0.0      0.0      0.0      5.842922      6.180675      0.231458      0.258700          47.563728       1.940732e+07                   1.586546
+3                  Mean  59.832411  20.074675   997.598832  3.990345  0.601885      0.0      0.0      0.0      5.843094      6.178901      0.231464      0.258560          47.552366       1.916959e+07                   1.586256
+4    Standard deviation   0.648200   0.077346     2.543130  0.027823  0.002387      0.0      0.0      0.0      0.065673      0.075323      0.003966      0.005200           0.331669       1.413890e+06                   0.004397
+5  Relative uncertainty   0.010834   0.003853     0.002549  0.006973  0.003966      NaN      NaN      NaN      0.011239      0.012190      0.017133      0.020111           0.006975       7.375694e-02                   0.002772
 ```
 
 ### Compute batch simulation for several x-ray spectra
@@ -289,7 +289,7 @@ Be filter width (fraction of one)                                               
 Air gap width (fraction of one)                                                      0.01                   0.01
 Peak kilovoltage (fraction of one)                                                   0.01                   0.01
 Anode angle (fraction of one)                                                        0.01                   0.01
-Mass energy transfer coefficients of air (fraction of one)                           0.01                   0.01                
+Mass energy transfer coefficients of air (fraction of one)                           0.01                   0.01               
 ```
 
 The next python script shows how to compute the first and second half-value layers for aluminium and copper, 
@@ -380,27 +380,27 @@ Peak kilovoltage (fraction of one)                                              
 Anode angle (fraction of one)                                                        0.01                   0.01
 Mass energy transfer coefficients of air (fraction of one)                           0.01                   0.01
 Results                                                                              None                   None
-HVL1 Al  Mean (mm)                                                               5.892349                5.83309
-HVL1 Al  Standard deviation (mm)                                                 0.001278               0.033235
-HVL1 Al  Relative uncertainty (fraction of one)                                  0.000217               0.005698
-HVL2 Al  Mean (mm)                                                               6.234632                6.16739
-HVL2 Al  Standard deviation (mm)                                                  0.00261               0.040267
-HVL2 Al  Relative uncertainty (fraction of one)                                  0.000419               0.006529
-HVL1 Cu  Mean (mm)                                                               0.234412               0.230839
-HVL1 Cu  Standard deviation (mm)                                                 0.000095               0.002037
-HVL1 Cu  Relative uncertainty (fraction of one)                                  0.000405               0.008823
-HVL2 Cu  Mean (mm)                                                               0.262362               0.257733
-HVL2 Cu  Standard deviation (mm)                                                 0.000225               0.002844
-HVL2 Cu  Relative uncertainty (fraction of one)                                  0.000859               0.011034
-Mean energy  Mean (keV)                                                         47.795817              47.501225
-Mean energy  Standard deviation (keV)                                            0.014288               0.181485
-Mean energy  Relative uncertainty (fraction of one)                              0.000299               0.003821
-Mean kerma  Mean (keV/g)                                                         2.215349               2.227129
-Mean kerma  Standard deviation (keV/g)                                           0.008233               0.006655
-Mean kerma  Relative uncertainty (fraction of one)                               0.003716               0.002988
-Mean conv. coeff.  Mean (Sv/Gy)                                                  1.589788               1.585724
-Mean conv. coeff.  Standard deviation (Sv/Gy)                                    0.000201               0.002433
-Mean conv. coeff.  Relative uncertainty (fraction of one)                        0.000126               0.001534
+HVL1 Al  Mean (mm)                                                               5.836287               5.865005
+HVL1 Al  Standard deviation (mm)                                                 0.059148               0.036708
+HVL1 Al  Relative uncertainty (fraction of one)                                  0.010135               0.006259
+HVL2 Al  Mean (mm)                                                               6.174219               6.206319
+HVL2 Al  Standard deviation (mm)                                                 0.071613               0.042396
+HVL2 Al  Relative uncertainty (fraction of one)                                  0.011599               0.006831
+HVL1 Cu  Mean (mm)                                                               0.231096               0.232805
+HVL1 Cu  Standard deviation (mm)                                                 0.003614               0.002232
+HVL1 Cu  Relative uncertainty (fraction of one)                                  0.015641               0.009587
+HVL2 Cu  Mean (mm)                                                               0.258329               0.260498
+HVL2 Cu  Standard deviation (mm)                                                 0.005039               0.002966
+HVL2 Cu  Relative uncertainty (fraction of one)                                  0.019506               0.011386
+Mean energy  Mean (keV)                                                          47.53787              47.677216
+Mean energy  Standard deviation (keV)                                            0.322749               0.187942
+Mean energy  Relative uncertainty (fraction of one)                              0.006789               0.003942
+Air kerma  Mean (keV/g)                                                   19586332.470061          19813257.1878
+Air kerma  Standard deviation (keV/g)                                      1815300.642971          806780.967484
+Air kerma  Relative uncertainty (fraction of one)                                0.092682               0.040719
+Mean conv. coeff.  Mean (Sv/Gy)                                                  1.585633               1.587578
+Mean conv. coeff.  Standard deviation (Sv/Gy)                                    0.003824               0.001764
+Mean conv. coeff.  Relative uncertainty (fraction of one)                        0.002412               0.001111
 ```
 
 ### Data files
