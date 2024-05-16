@@ -37,7 +37,7 @@
 **USpekPy** is a Python package that allows to compute mean radiation protection quantities 
 for a simulated x-ray spectrum with uncertainties using Monte Carlo techniques.
 It is an open source, GPLv3-licensed library for the Python programming language.
-It is compatible with Python 3, and it has been tested in Ubuntu 24.04 and Widows 10 OS.
+It is compatible with Python 3.
 **USpekPy** is based on the [SpekPy](https://bitbucket.org/spekpy/spekpy_release/src/master/) package, 
 which is a Python software toolkit for modelling the x-ray spectra from x-ray tubes.
 
@@ -65,6 +65,23 @@ pip install uspekpy
 
 ## Quick user guide
 
+### Units and uncertainties
+
+All the uncertainties are standard uncertainties, i.e., with a coverage factor of k = 1.
+The units of relative uncertainties are fraction of one.
+The next table shows the units of the quantities used in the package.
+
+| Quantity                                      | Unit  |
+|-----------------------------------------------|-------|
+| Distance                                      | mm    |
+| Voltage                                       | kV    |
+| Angle                                         | deg   |
+| Energy                                        | keV   |
+| Fluence                                       | 1/cm² |
+| Mass energy transfer coefficients of air      | cm²/g |
+| Mono-energetic K to H conversion coefficients | Sv/Gy |
+| Air kerma                                     | keV/g | 
+
 ### Compute mean radiation protection quantities
 
 This first example shows how to compute the mean values of some radiation protection quantities 
@@ -79,7 +96,7 @@ The next python script shows how to compute the first and second half-value laye
 the mean energy, the air kerma and the mean air kerma-to-dose-equivalent conversion coefficient.
 
 ```python
-from src.uspekpy.wrapper import SpekWrapper
+from uspekpy.wrapper import SpekWrapper
 
 # Define x-ray beam parameters for radiation quality N-60 (filter thickness, peak kilovoltage and anode angle)
 my_filters = [
@@ -115,7 +132,7 @@ mean_energy = spectrum.get_mean_energy()
 # Calculate mean air kerma
 mean_kerma = spectrum.get_mean_kerma(mass_transfer_coefficients=my_mu_csv)
 
-# Calculate mean conversion coefficient
+# Calculate mean air kerma-to-dose-equivalent conversion coefficient for H*(10)
 mean_hk = spectrum.get_mean_conversion_coefficient(
     mass_transfer_coefficients=my_mu_csv, conversion_coefficients=my_hk_csv)
 
@@ -125,7 +142,7 @@ print(f'Second HVL for Al: {hvl2_al} mm')
 print(f'First HVL for Cu: {hvl1_cu} mm')
 print(f'Second HVL for Cu: {hvl2_cu} mm')
 print(f'Mean energy: {mean_energy} keV')
-print(f'Air kerma: {mean_kerma} Gy')
+print(f'Air kerma: {mean_kerma} keV/g')
 print(f'Mean conversion coefficient for H*(10): {mean_hk} Sv/Gy')
 ```
 
@@ -137,7 +154,7 @@ Second HVL for Al: 6.239790098050192 mm
 First HVL for Cu: 0.23502729534875702 mm
 Second HVL for Cu: 0.2624330033450075 mm
 Mean energy: 47.797974735384756 keV
-Air kerma: 2.219951531747007 Gy
+Air kerma: 2.219951531747007 keV/g
 Mean conversion coefficient for H*(10): 1.5909359863722154 Sv/Gy
 ```
 
@@ -155,7 +172,7 @@ The next python script shows how to compute the first and second half-value laye
 the mean energy, the air kerma and the mean air kerma-to-dose-equivalent conversion coefficient.
 
 ```python
-from src.uspekpy.uspek import USpek
+from uspekpy.uspek import USpek
 
 # Define values and relative uncertainty (k=1) of x-ray beam parameters for radiation quality N-60
 # (filter thickness, peak kilovoltage and anode angle)
@@ -176,7 +193,7 @@ my_mu_csv = 'data/mu_tr_rho.csv'
 # Define path to CSV file containing the monoenergetic air kerma-to-dose-equivalent conversion coefficients for H*(10)
 my_hk_csv = 'data/h_k_h_amb_10.csv'
 
-# Define values and relative uncertainty (k=1) of mass energy transfer coefficients of air
+# Define relative uncertainty (k=1) of mass energy transfer coefficients of air
 my_mu_std = 0.01  # fraction of one
 
 # Initialize a USpekPy object with the defined beam parameters, mass energy transfer coefficients of air
@@ -195,7 +212,6 @@ df.to_csv(my_output_csv, index=True)
 
 # Print results
 print(df.to_string())
-
 ```
 
 The script **output** is a table containing the randomly sampled values of the beam parameters and 
@@ -211,13 +227,13 @@ Gy for the air kerma and
 Sv/Gy for the mean air kerma-to-dose-equivalent conversion coefficient.
 
 ```
-                      #        kVp         th          Air        Al        Cu   Sn   Pb   Be   HVL1 Al   HVL2 Al   HVL1 Cu   HVL2 Cu  Mean energy  Mean kerma  Mean conv. coefficient.
-0           Iteration 1  61.057015  19.854960   992.570803  4.058692  0.594696  0.0  0.0  0.0  5.964298  6.318734  0.238856  0.268346    48.170512    2.202170                 1.594303
-1           Iteration 2  60.430408  19.805252  1000.898220  3.935419  0.596431  0.0  0.0  0.0  5.892828  6.239530  0.234512  0.262843    47.826279    2.230914                 1.589785
-2           Iteration 3  60.015759  19.740077  1021.081998  4.056949  0.593754  0.0  0.0  0.0  5.849440  6.190243  0.231885  0.259427    47.610055    2.231168                 1.585960
-3                  Mean  60.501061  19.800096  1004.850341  4.017020  0.594960  0.0  0.0  0.0  5.902189  6.249503  0.235085  0.263539    47.868949    2.221417                 1.590016
-4    Standard deviation   0.428017   0.047042    11.970422  0.057705  0.001109  0.0  0.0  0.0  0.047356  0.052928  0.002874  0.003675     0.230787    0.013611                 0.003410
-5  Relative uncertainty   0.007075   0.002376     0.011913  0.014365  0.001863  NaN  NaN  NaN  0.008023  0.008469  0.012226  0.013943     0.004821    0.006127                 0.002144
+                      #   kVp (kV)   th (deg)     Air (mm)   Al (mm)   Cu (mm)  Sn (mm)  Pb (mm)  Be (mm)  HVL1 Al (mm)  HVL2 Al (mm)  HVL1 Cu (mm)  HVL2 Cu (mm)  Mean energy (keV)  Mean kerma (keV/g)  Mean conv. coeff. (Sv/Gy)
+0           Iteration 1  60.317770  20.149869   992.639319  4.067473  0.592542      0.0      0.0      0.0      5.878648      6.224005      0.233656      0.261778          47.759136            2.244386                   1.588420
+1           Iteration 2  59.184812  20.098689  1004.162931  4.007494  0.606237      0.0      0.0      0.0      5.783420      6.108583      0.227824      0.253638          47.238664            2.242512                   1.581493
+2           Iteration 3  59.059352  20.082866   993.599248  4.035085  0.597141      0.0      0.0      0.0      5.749495      6.076332      0.225905      0.251651          47.110401            2.235574                   1.579555
+3                  Mean  59.520645  20.110475   996.800500  4.036684  0.598640      0.0      0.0      0.0      5.803855      6.136306      0.229128      0.255689          47.369400            2.240824                   1.583156
+4    Standard deviation   0.565975   0.028595     5.220754  0.024512  0.005691      0.0      0.0      0.0      0.054670      0.063394      0.003296      0.004381           0.280515            0.003790                   0.003805
+5  Relative uncertainty   0.009509   0.001422     0.005238  0.006072  0.009506      NaN      NaN      NaN      0.009420      0.010331      0.014385      0.017134           0.005922            0.001692                   0.002404
 ```
 
 ### Compute batch simulation for several x-ray spectra
@@ -245,35 +261,34 @@ The next columns contain the values of the simulation parameters, one column for
 
 The next table shows the content of the input file for this example.
 
-
 ```
-Name                                          Case1                   Case2                
-General                                                                                    
-Quality                                       N-60                    N-60                 
-Operational quantity                          H*(10)                  H*(10)               
-Irradiation angle (deg)                       0                       0                    
-Number of simulations                         3                       3                    
-Values                                                                                     
-Al filter width (mm)                          4                       4                    
-Cu filter width (mm)                          0.6                     0.6                  
-Sn filter width (mm)                          0                       0                    
-Pb filter width (mm)                          0                       0                    
-Be filter width (mm)                          0                       0                    
-Air filter width (mm)                         1000                    1000                 
-Peak kilovoltage (kV)                         60                      60                   
-Anode angle (deg)                             20                      20                   
-Mass transmission coefficients file           data\mu_tr_rho.csv      data\mu_tr_rho.csv   
-Mono-energetic conversion coefficients file   data\h_k_h_amb_10.csv   data\h_k_h_amb_10.csv
-Relative uncertainties (k=1)                                                               
-Al filter width uncertainty                   0.01                    0.01                 
-Cu filter width uncertainty                   0.01                    0.01                 
-Sn filter width uncertainty                   0                       0                    
-Pb filter width uncertainty                   0                       0                    
-Be filter width uncertainty                   0                       0                    
-Air filter width uncertainty                  0.01                    0.01                 
-Peak kilovoltage uncertainty                  0.01                    0.01                 
-Anode angle uncertainty                       0.01                    0.01                 
-Mass transmission coefficients uncertainty    0.01                    0.01                 
+                                                                                    Case1                  Case2
+General                                                                               NaN                    NaN
+Quality                                                                              N-60                   N-60
+Operational quantity                                                               H*(10)                 H*(10)
+Irradiation angle (deg)                                                                 0                      0
+Number of simulations                                                                   3                      3
+Values                                                                                NaN                    NaN
+Al filter width (mm)                                                                    4                      4
+Cu filter width (mm)                                                                  0.6                    0.6
+Sn filter width (mm)                                                                    0                      0
+Pb filter width (mm)                                                                    0                      0
+Be filter width (mm)                                                                    0                      0
+Air gap width (mm)                                                                   1000                   1000
+Peak kilovoltage (kV)                                                                  60                     60
+Anode angle (deg)                                                                      20                     20
+Mass energy transfer coefficients of air file (keV and cm²/g)          data/mu_tr_rho.csv     data/mu_tr_rho.csv
+Mono-energetic K to H conversion coefficients file (keV and Sv/Gy)  data/h_k_h_amb_10.csv  data/h_k_h_amb_10.csv
+Relative uncertainties (k=1)                                                          NaN                    NaN
+Al filter width (fraction of one)                                                    0.01                   0.01
+Cu filter width (fraction of one)                                                    0.01                   0.01
+Sn filter width (fraction of one)                                                       0                      0
+Pb filter width (fraction of one)                                                       0                      0
+Be filter width (fraction of one)                                                       0                      0
+Air gap width (fraction of one)                                                      0.01                   0.01
+Peak kilovoltage (fraction of one)                                                   0.01                   0.01
+Anode angle (fraction of one)                                                        0.01                   0.01
+Mass energy transfer coefficients of air (fraction of one)                           0.01                   0.01                
 ```
 
 The next python script shows how to compute the first and second half-value layers for aluminium and copper, 
@@ -281,7 +296,7 @@ the mean energy, the air kerma and the mean air kerma-to-dose-equivalent convers
 for the previous **input file in CSV format**.
 
 ```python
-from src.uspekpy.simulation import batch_simulation
+from uspekpy.simulation import batch_simulation
 
 # Define the path to the input CSV file
 my_csv = 'data/input.csv'
@@ -297,7 +312,6 @@ df.to_csv(my_output_csv, index=True)
 
 # Print results
 print(df.to_string())
-
 ```
 
 The next python script shows how to compute the first and second half-value layers for aluminium and copper, 
@@ -305,7 +319,7 @@ the mean energy, the air kerma and the mean air kerma-to-dose-equivalent convers
 for the previous **input file in Excel format**.
 
 ```python
-from src.uspekpy.simulation import batch_simulation
+from uspekpy.simulation import batch_simulation
 
 # Define the path to the input Excel file
 my_excel = 'data/input.xlsx'
@@ -322,6 +336,8 @@ my_output_csv = 'output/output.csv'
 # Save results to a CSV file
 df.to_csv(my_output_csv, index=True)
 
+# Print results
+print(df.to_string())
 ```
 
 In both cases, the script **output** is a table in which the simulation results for each case 
@@ -335,55 +351,55 @@ Gy for the air kerma and
 Sv/Gy for the mean air kerma-to-dose-equivalent conversion coefficient.
 
 ```
-                                                              Case1                  Case2
-General                                                         NaN                    NaN
-Quality                                                        N-60                   N-60
-Operational quantity                                         H*(10)                 H*(10)
-Irradiation angle (deg)                                           0                      0
-Number of simulations                                             3                      3
-Values                                                          NaN                    NaN
-Al filter width (mm)                                              4                      4
-Cu filter width (mm)                                            0.6                    0.6
-Sn filter width (mm)                                              0                      0
-Pb filter width (mm)                                              0                      0
-Be filter width (mm)                                              0                      0
-Air filter width (mm)                                          1000                   1000
-Peak kilovoltage (kV)                                            60                     60
-Anode angle (deg)                                                20                     20
-Mass transmission coefficients file              data/mu_tr_rho.csv     data/mu_tr_rho.csv
-Mono-energetic conversion coefficients file   data/h_k_h_amb_10.csv  data/h_k_h_amb_10.csv
-Relative uncertainties (k=1)                                    NaN                    NaN
-Al filter width uncertainty                                    0.01                   0.01
-Cu filter width uncertainty                                    0.01                   0.01
-Sn filter width uncertainty                                       0                      0
-Pb filter width uncertainty                                       0                      0
-Be filter width uncertainty                                       0                      0
-Air filter width uncertainty                                   0.01                   0.01
-Peak kilovoltage uncertainty                                   0.01                   0.01
-Anode angle uncertainty                                        0.01                   0.01
-Mass transmission coefficients uncertainty                     0.01                   0.01
-Results                                                        None                   None
-HVL1 Al Mean                                                5.84158               5.801853
-HVL1 Al Standard deviation                                 0.073899               0.017572
-HVL1 Al Relative uncertainty                               0.012651               0.003029
-HVL2 Al Mean                                               6.176812               6.132746
-HVL2 Al Standard deviation                                 0.079697               0.023743
-HVL2 Al Relative uncertainty                               0.012903               0.003872
-HVL1 Cu Mean                                                0.23137               0.228975
-HVL1 Cu Standard deviation                                 0.004399               0.001101
-HVL1 Cu Relative uncertainty                               0.019015               0.004808
-HVL2 Cu Mean                                               0.258404               0.255383
-HVL2 Cu Standard deviation                                 0.005376               0.001734
-HVL2 Cu Relative uncertainty                               0.020806               0.006791
-Mean energy Mean                                           47.54239              47.351059
-Mean energy Standard deviation                             0.341431               0.111922
-Mean energy Relative uncertainty                           0.007182               0.002364
-Mean kerma Mean                                            2.245664               2.230967
-Mean kerma Standard deviation                              0.010308               0.027259
-Mean kerma Relative uncertainty                             0.00459               0.012219
-Mean conv. coefficient. Mean                               1.586067               1.583877
-Mean conv. coefficient. Standard deviation                 0.005232               0.000861
-Mean conv. coefficient. Relative uncertainty               0.003299               0.000544
+                                                                                    Case1                  Case2
+General                                                                               NaN                    NaN
+Quality                                                                              N-60                   N-60
+Operational quantity                                                               H*(10)                 H*(10)
+Irradiation angle (deg)                                                                 0                      0
+Number of simulations                                                                   3                      3
+Values                                                                                NaN                    NaN
+Al filter width (mm)                                                                    4                      4
+Cu filter width (mm)                                                                  0.6                    0.6
+Sn filter width (mm)                                                                    0                      0
+Pb filter width (mm)                                                                    0                      0
+Be filter width (mm)                                                                    0                      0
+Air gap width (mm)                                                                   1000                   1000
+Peak kilovoltage (kV)                                                                  60                     60
+Anode angle (deg)                                                                      20                     20
+Mass energy transfer coefficients of air file (keV and cm²/g)          data/mu_tr_rho.csv     data/mu_tr_rho.csv
+Mono-energetic K to H conversion coefficients file (keV and Sv/Gy)  data/h_k_h_amb_10.csv  data/h_k_h_amb_10.csv
+Relative uncertainties (k=1)                                                          NaN                    NaN
+Al filter width (fraction of one)                                                    0.01                   0.01
+Cu filter width (fraction of one)                                                    0.01                   0.01
+Sn filter width (fraction of one)                                                       0                      0
+Pb filter width (fraction of one)                                                       0                      0
+Be filter width (fraction of one)                                                       0                      0
+Air gap width (fraction of one)                                                      0.01                   0.01
+Peak kilovoltage (fraction of one)                                                   0.01                   0.01
+Anode angle (fraction of one)                                                        0.01                   0.01
+Mass energy transfer coefficients of air (fraction of one)                           0.01                   0.01
+Results                                                                              None                   None
+HVL1 Al  Mean (mm)                                                               5.892349                5.83309
+HVL1 Al  Standard deviation (mm)                                                 0.001278               0.033235
+HVL1 Al  Relative uncertainty (fraction of one)                                  0.000217               0.005698
+HVL2 Al  Mean (mm)                                                               6.234632                6.16739
+HVL2 Al  Standard deviation (mm)                                                  0.00261               0.040267
+HVL2 Al  Relative uncertainty (fraction of one)                                  0.000419               0.006529
+HVL1 Cu  Mean (mm)                                                               0.234412               0.230839
+HVL1 Cu  Standard deviation (mm)                                                 0.000095               0.002037
+HVL1 Cu  Relative uncertainty (fraction of one)                                  0.000405               0.008823
+HVL2 Cu  Mean (mm)                                                               0.262362               0.257733
+HVL2 Cu  Standard deviation (mm)                                                 0.000225               0.002844
+HVL2 Cu  Relative uncertainty (fraction of one)                                  0.000859               0.011034
+Mean energy  Mean (keV)                                                         47.795817              47.501225
+Mean energy  Standard deviation (keV)                                            0.014288               0.181485
+Mean energy  Relative uncertainty (fraction of one)                              0.000299               0.003821
+Mean kerma  Mean (keV/g)                                                         2.215349               2.227129
+Mean kerma  Standard deviation (keV/g)                                           0.008233               0.006655
+Mean kerma  Relative uncertainty (fraction of one)                               0.003716               0.002988
+Mean conv. coeff.  Mean (Sv/Gy)                                                  1.589788               1.585724
+Mean conv. coeff.  Standard deviation (Sv/Gy)                                    0.000201               0.002433
+Mean conv. coeff.  Relative uncertainty (fraction of one)                        0.000126               0.001534
 ```
 
 ### Data files
@@ -529,7 +545,7 @@ If you need further support, please send an e-mail to
 ## Documentation
 
 The official documentation of **USpekPy** is hosted on GitHub.
-Check its [README file](https://github.com/lmri-met/uspekpy/blob/main/README.md) for a quick start guide and its [Wiki](https://github.com/lmri-met/uspekpy/wiki) for more detailed information.
+Check its [README](https://github.com/lmri-met/uspekpy/blob/main/README.md) file for a quick start guide and its [Wiki](https://github.com/lmri-met/uspekpy/wiki) for more detailed information.
 
 ## Contributors
 
