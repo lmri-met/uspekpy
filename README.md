@@ -22,6 +22,7 @@
 - [Main features of USpekPy](#main-features)
 - [How to install USpekPy?](#installation)
 - [Quick user guide](#quick-user-guide)
+  - [Units and uncertainties](#units-and-uncertainties)
   - [Compute mean radiation protection quantities](#compute-mean-radiation-protection-quantities)
   - [Compute mean radiation protection quantities with uncertainties](#compute-mean-radiation-protection-quantities-with-uncertainties)
   - [Compute batch simulation for several x-ray spectra](#compute-batch-simulation-for-several-x-ray-spectra)
@@ -68,7 +69,7 @@ pip install uspekpy
 ### Units and uncertainties
 
 All the uncertainties are standard uncertainties, i.e., with a coverage factor of k = 1.
-The units of relative uncertainties are fraction of one.
+The units of relative uncertainties are expressed as fraction of one.
 The next table shows the units of the quantities used in the package.
 
 | Quantity                                      | Unit  |
@@ -79,8 +80,8 @@ The next table shows the units of the quantities used in the package.
 | Energy                                        | keV   |
 | Fluence                                       | 1/cm² |
 | Mass energy transfer coefficients of air      | cm²/g |
+| Air kerma                                     | keV/g |
 | Mono-energetic K to H conversion coefficients | Sv/Gy |
-| Air kerma                                     | keV/g | 
 
 ### Compute mean radiation protection quantities
 
