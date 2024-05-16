@@ -289,7 +289,7 @@ class TestSpekWrapper:
         expected_mean_kerma = sum(fluence * energy * interpolated_mu)
 
         # Compute mean air kerma with SpekWrapper.get_mean_kerma()
-        mean_kerma = spectrum.get_mean_kerma(mass_transfer_coefficients=(energy_mu, mu))
+        mean_kerma = spectrum.get_air_kerma(mass_transfer_coefficients=(energy_mu, mu))
 
         assert mean_kerma == expected_mean_kerma
 

@@ -179,11 +179,11 @@ def parse_beam_parameters(df, column):
     # Append additional keys for air gap width, peak kilovoltage and anode angle
     keys += ['Air', 'kVp', 'th']
 
-    # Extract values for air gap width, peak kilovoltage and anode angle from the specified DataFrame column and appends them
+    # Extract values for air gap width, peak kilovoltage and anode angle from the specified DataFrame column
     values += [df.at['Air gap width (mm)', column],  df.at['Peak kilovoltage (kV)', column],
                df.at['Anode angle (deg)', column]]
 
-    # Extract uncertainties for air gap width, peak kilovoltage and anode angle from the specified DataFrame column and appends them
+    # Extract uncertainties for air gap width, peak kilovoltage and anode angle from the specified DataFrame column
     uncertainties += [df.at['Air gap width (fraction of one)', column],
                       df.at['Peak kilovoltage (fraction of one)', column],
                       df.at['Anode angle (fraction of one)', column]]
@@ -208,7 +208,7 @@ def output_digest(input_df, output_dfs):
     """
     # Define columns to extract from the output DataFrames containing simulation results
     result_columns = ['HVL1 Al (mm)', 'HVL2 Al (mm)', 'HVL1 Cu (mm)', 'HVL2 Cu (mm)', 'Mean energy (keV)',
-                      'Mean kerma (keV/g)', 'Mean conv. coeff. (Sv/Gy)']
+                      'Air kerma (keV/g)', 'Mean conv. coeff. (Sv/Gy)']
 
     # Define rows to extract from the output DataFrames containing simulation results
     result_rows = ['Mean', 'Standard deviation', 'Relative uncertainty']

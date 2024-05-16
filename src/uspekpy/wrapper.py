@@ -37,7 +37,7 @@ class SpekWrapper(Spek):
         # Compute the mean energy
         return sum(fluence * energy) / fluence.sum()
 
-    def get_mean_kerma(self, mass_transfer_coefficients):
+    def get_air_kerma(self, mass_transfer_coefficients):
         """Compute the air kerma of an x-ray spectrum.
 
         This method calculates the air kerma of the x-ray spectrum using the photon fluence energy distribution and

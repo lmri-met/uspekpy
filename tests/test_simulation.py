@@ -124,7 +124,7 @@ class TestOutputDigest:
             'HVL1 Cu (mm)': [30.7, 3.0, 0.3],
             'HVL2 Cu (mm)': [40.0, 4.0, 0.4],
             'Mean energy (keV)': [50.0, 5.0, 0.5],
-            'Mean kerma (keV/g)': [60.0, 6.0, 0.6],
+            'Air kerma (keV/g)': [60.0, 6.0, 0.6],
             'Mean conv. coeff. (Sv/Gy)': [70.0, 7.0, 0.7]
         }
         output_df1 = pd.DataFrame(output_data1)
@@ -136,7 +136,7 @@ class TestOutputDigest:
             'HVL1 Cu (mm)': [10.0, 1.0, 0.1],
             'HVL2 Cu (mm)': [20.0, 2.0, 0.2],
             'Mean energy (keV)': [30.7, 3.0, 0.3],
-            'Mean kerma (keV/g)': [40.0, 4.0, 0.4],
+            'Air kerma (keV/g)': [40.0, 4.0, 0.4],
             'Mean conv. coeff. (Sv/Gy)': [50.0, 5.0, 0.5]
         }
         output_df2 = pd.DataFrame(output_data2)
@@ -165,9 +165,9 @@ class TestOutputDigest:
             'Mean energy  Mean (keV)': [50.0, 30.7],
             'Mean energy  Standard deviation (keV)': [5.0, 3.0],
             'Mean energy  Relative uncertainty (fraction of one)': [0.5, 0.3],
-            'Mean kerma  Mean (keV/g)': [60.0, 40.0],
-            'Mean kerma  Standard deviation (keV/g)': [6.0, 4.0],
-            'Mean kerma  Relative uncertainty (fraction of one)': [0.6, 0.4],
+            'Air kerma  Mean (keV/g)': [60.0, 40.0],
+            'Air kerma  Standard deviation (keV/g)': [6.0, 4.0],
+            'Air kerma  Relative uncertainty (fraction of one)': [0.6, 0.4],
             'Mean conv. coeff.  Mean (Sv/Gy)': [70.0, 50.0],
             'Mean conv. coeff.  Standard deviation (Sv/Gy)': [7.0, 5.0],
             'Mean conv. coeff.  Relative uncertainty (fraction of one)': [0.7, 0.5],

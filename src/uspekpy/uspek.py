@@ -116,7 +116,7 @@ class USpek:
                 - hvl1_cu (float): HVL for copper.
                 - hvl2_cu (float): Second HVL for copper.
                 - mean_energy (float): Mean energy of the spectrum.
-                - mean_kerma (float): Air kerma calculated using mass energy transfer coefficients of air.
+                - air_kerma (float): Air kerma calculated using mass energy transfer coefficients of air.
                 - mean_hk (float): Mean conversion coefficient calculated using mass energy transfer and
                   monoenergetic conversion coefficients.
         """
@@ -136,15 +136,15 @@ class USpek:
         # Get mean energy
         mean_energy = spectrum.get_mean_energy()
 
-        # Get mean kerma
-        mean_kerma = spectrum.get_mean_kerma(mass_transfer_coefficients=mu_tr_rho)
+        # Get air kerma
+        air_kerma = spectrum.get_air_kerma(mass_transfer_coefficients=mu_tr_rho)
 
         # Get mean conversion coefficient
         mean_hk = spectrum.get_mean_conversion_coefficient(mass_transfer_coefficients=mu_tr_rho,
                                                            conversion_coefficients=self.conversion_coefficients)
 
         return (kvp, th, filters[0][1], filters[1][1], filters[2][1], filters[3][1], filters[4][1], filters[5][1],
-                hvl1_al, hvl2_al, hvl1_cu, hvl2_cu, mean_energy, mean_kerma, mean_hk)
+                hvl1_al, hvl2_al, hvl1_cu, hvl2_cu, mean_energy, air_kerma, mean_hk)
 
     @staticmethod
     def _get_mean_quantities(rows):
@@ -175,7 +175,7 @@ class USpek:
                 - HVL1 Cu (float): HVL for copper.
                 - HVL2 Cu (float): Second HVL for copper.
                 - Mean energy (float): Mean energy of the spectrum.
-                - Mean kerma (float): Air kerma calculated using mass energy transfer coefficients.
+                - Air kerma (float): Air kerma calculated using mass energy transfer coefficients.
                 - Mean conv. coefficient. (float): Mean conversion coefficient calculated using mass energy transfer and
                     monoenergetic conversion coefficients.
                 Additionally, it includes rows for mean values, standard deviations, and relative uncertainties
@@ -184,7 +184,7 @@ class USpek:
         # Define column names for the DataFrame
         columns = ['#', 'kVp (kV)', 'th (deg)', 'Air (mm)', 'Al (mm)', 'Cu (mm)', 'Sn (mm)', 'Pb (mm)', 'Be (mm)',
                    'HVL1 Al (mm)', 'HVL2 Al (mm)', 'HVL1 Cu (mm)', 'HVL2 Cu (mm)', 'Mean energy (keV)',
-                   'Mean kerma (keV/g)', 'Mean conv. coeff. (Sv/Gy)']
+                   'Air kerma (keV/g)', 'Mean conv. coeff. (Sv/Gy)']
 
         # Create DataFrame with simulation results
         df = pd.DataFrame(data=rows, columns=columns)
@@ -240,7 +240,7 @@ class USpek:
                 - HVL1 Cu (float): HVL for copper.
                 - HVL2 Cu (float): Second HVL for copper.
                 - Mean energy (float): Mean energy of the spectrum.
-                - Mean kerma (float): Air kerma calculated using mass energy transfer coefficients.
+                - Air kerma (float): Air kerma calculated using mass energy transfer coefficients.
                 - Mean conv. coeff. (float): Mean conversion coefficient calculated using mass energy transfer and
                     conversion coefficients.
                 Additionally, it includes rows for mean values, standard deviations, and relative uncertainties
