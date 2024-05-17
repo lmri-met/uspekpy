@@ -1,0 +1,54 @@
+{
+    "file_information": {
+        "file_name": "Heart, Blood Filled (ICRU).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.0599999,
+        "number_of_elements": 10,
+        "elements": [
+            [
+                1,
+                0.103
+            ],
+            [
+                6,
+                0.121
+            ],
+            [
+                7,
+                0.032
+            ],
+            [
+                8,
+                0.734
+            ],
+            [
+                11,
+                0.001
+            ],
+            [
+                15,
+                0.001
+            ],
+            [
+                16,
+                0.002
+            ],
+            [
+                17,
+                0.003
+            ],
+            [
+                19,
+                0.002
+            ],
+            [
+                26,
+                0.001
+            ]
+        ]
+    }
+}

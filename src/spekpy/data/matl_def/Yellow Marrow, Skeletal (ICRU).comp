@@ -1,0 +1,42 @@
+{
+    "file_information": {
+        "file_name": "Yellow Marrow, Skeletal (ICRU).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 0.98000002,
+        "number_of_elements": 7,
+        "elements": [
+            [
+                1,
+                0.115
+            ],
+            [
+                6,
+                0.644
+            ],
+            [
+                7,
+                0.007
+            ],
+            [
+                8,
+                0.231
+            ],
+            [
+                11,
+                0.001
+            ],
+            [
+                16,
+                0.001
+            ],
+            [
+                17,
+                0.001
+            ]
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Muscle-Equivalent Liquid (Goodman Liquid).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.0700001,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.101969
+            ],
+            [
+                6,
+                0.120058
+            ],
+            [
+                7,
+                0.035451
+            ],
+            [
+                8,
+                0.742522
+            ]
+        ]
+    }
+}

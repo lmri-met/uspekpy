@@ -1,0 +1,50 @@
+{
+    "file_information": {
+        "file_name": "Lung Inflated (ICRU).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 0.25999999,
+        "number_of_elements": 9,
+        "elements": [
+            [
+                1,
+                0.103
+            ],
+            [
+                6,
+                0.105
+            ],
+            [
+                7,
+                0.031
+            ],
+            [
+                8,
+                0.749
+            ],
+            [
+                11,
+                0.002
+            ],
+            [
+                15,
+                0.002
+            ],
+            [
+                16,
+                0.003
+            ],
+            [
+                17,
+                0.003
+            ],
+            [
+                19,
+                0.002
+            ]
+        ]
+    }
+}

@@ -1,0 +1,70 @@
+{
+    "file_information": {
+        "file_name": "Blood (ICRP).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.0599999,
+        "number_of_elements": 14,
+        "elements": [
+            [
+                1,
+                0.101866
+            ],
+            [
+                6,
+                0.10002
+            ],
+            [
+                7,
+                0.02964
+            ],
+            [
+                8,
+                0.759414
+            ],
+            [
+                11,
+                0.00185
+            ],
+            [
+                12,
+                4e-05
+            ],
+            [
+                14,
+                3e-05
+            ],
+            [
+                15,
+                0.00035
+            ],
+            [
+                16,
+                0.00185
+            ],
+            [
+                17,
+                0.00278
+            ],
+            [
+                19,
+                0.00163
+            ],
+            [
+                20,
+                6e-05
+            ],
+            [
+                26,
+                0.00046
+            ],
+            [
+                30,
+                1e-05
+            ]
+        ]
+    }
+}

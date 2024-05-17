@@ -1,0 +1,34 @@
+{
+    "file_information": {
+        "file_name": "Copper Alloy (Manganese bronze).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 8.5299997,
+        "number_of_elements": 5,
+        "elements": [
+            [
+                25,
+                0.005
+            ],
+            [
+                26,
+                0.015
+            ],
+            [
+                29,
+                0.585
+            ],
+            [
+                30,
+                0.385
+            ],
+            [
+                50,
+                0.01
+            ]
+        ]
+    }
+}

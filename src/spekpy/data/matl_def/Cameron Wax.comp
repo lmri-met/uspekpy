@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Cameron Wax.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.28,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.086191
+            ],
+            [
+                6,
+                0.54421
+            ],
+            [
+                8,
+                0.201413
+            ],
+            [
+                20,
+                0.168186
+            ]
+        ]
+    }
+}

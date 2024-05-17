@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Polyurethane.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.09,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.092564
+            ],
+            [
+                6,
+                0.551535
+            ],
+            [
+                7,
+                0.080397
+            ],
+            [
+                8,
+                0.275504
+            ]
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Cellulose Nitrate.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.49,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.029216
+            ],
+            [
+                6,
+                0.271296
+            ],
+            [
+                7,
+                0.121276
+            ],
+            [
+                8,
+                0.578212
+            ]
+        ]
+    }
+}

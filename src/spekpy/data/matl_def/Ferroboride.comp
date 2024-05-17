@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Ferroboride.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 7.1500001,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                5,
+                0.162174
+            ],
+            [
+                26,
+                0.837826
+            ]
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Copper Alloy (Bell Metal).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 8.4799995,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                29,
+                0.75
+            ],
+            [
+                50,
+                0.25
+            ]
+        ]
+    }
+}

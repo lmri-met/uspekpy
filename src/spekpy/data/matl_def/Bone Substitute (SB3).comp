@@ -1,0 +1,38 @@
+{
+    "file_information": {
+        "file_name": "Bone Substitute (SB3).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.84,
+        "number_of_elements": 6,
+        "elements": [
+            [
+                1,
+                0.031
+            ],
+            [
+                6,
+                0.3126
+            ],
+            [
+                7,
+                0.0099
+            ],
+            [
+                8,
+                0.3757
+            ],
+            [
+                17,
+                0.0005
+            ],
+            [
+                20,
+                0.2703
+            ]
+        ]
+    }
+}

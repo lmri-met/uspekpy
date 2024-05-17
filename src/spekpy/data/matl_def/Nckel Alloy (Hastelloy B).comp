@@ -1,0 +1,46 @@
+{
+    "file_information": {
+        "file_name": "Nckel Alloy (Hastelloy B).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 9.2399998,
+        "number_of_elements": 8,
+        "elements": [
+            [
+                6,
+                0.0012
+            ],
+            [
+                14,
+                0.01
+            ],
+            [
+                23,
+                0.004
+            ],
+            [
+                25,
+                0.01
+            ],
+            [
+                26,
+                0.055
+            ],
+            [
+                27,
+                0.025
+            ],
+            [
+                28,
+                0.6148
+            ],
+            [
+                42,
+                0.28
+            ]
+        ]
+    }
+}

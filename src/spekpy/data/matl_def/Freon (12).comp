@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Freon (12).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.12,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                6,
+                0.099335
+            ],
+            [
+                9,
+                0.314247
+            ],
+            [
+                17,
+                0.586418
+            ]
+        ]
+    }
+}

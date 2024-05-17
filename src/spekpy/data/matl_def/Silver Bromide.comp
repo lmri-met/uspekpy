@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Silver Bromide.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 6.473,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                35,
+                0.425537
+            ],
+            [
+                47,
+                0.574463
+            ]
+        ]
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "file_information": {
+        "file_name": "Muscle-Equivalent Gel Frigerio et al.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.12,
+        "number_of_elements": 5,
+        "elements": [
+            [
+                1,
+                0.10067
+            ],
+            [
+                6,
+                0.119924
+            ],
+            [
+                7,
+                0.039984
+            ],
+            [
+                8,
+                0.735084
+            ],
+            [
+                11,
+                0.004338
+            ]
+        ]
+    }
+}

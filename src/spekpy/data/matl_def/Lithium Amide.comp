@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Lithium Amide.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.178,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.087783
+            ],
+            [
+                3,
+                0.302262
+            ],
+            [
+                7,
+                0.609955
+            ]
+        ]
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Polybromostyrene.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.53,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.038544
+            ],
+            [
+                6,
+                0.524935
+            ],
+            [
+                35,
+                0.436521
+            ]
+        ]
+    }
+}

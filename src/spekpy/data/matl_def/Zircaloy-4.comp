@@ -1,0 +1,34 @@
+{
+    "file_information": {
+        "file_name": "Zircaloy-4.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 6.5999999,
+        "number_of_elements": 5,
+        "elements": [
+            [
+                8,
+                0.00125
+            ],
+            [
+                24,
+                0.001
+            ],
+            [
+                26,
+                0.0021
+            ],
+            [
+                40,
+                0.98115
+            ],
+            [
+                50,
+                0.0145
+            ]
+        ]
+    }
+}

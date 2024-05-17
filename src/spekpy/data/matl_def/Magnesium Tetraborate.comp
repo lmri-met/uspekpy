@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Magnesium Tetraborate.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.53,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                5,
+                0.240837
+            ],
+            [
+                8,
+                0.62379
+            ],
+            [
+                12,
+                0.135373
+            ]
+        ]
+    }
+}

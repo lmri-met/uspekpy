@@ -1,0 +1,42 @@
+{
+    "file_information": {
+        "file_name": "Muscle-Equivalent Gel Frigerio et al (ICRU).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.12,
+        "number_of_elements": 7,
+        "elements": [
+            [
+                1,
+                0.1
+            ],
+            [
+                6,
+                0.12
+            ],
+            [
+                7,
+                0.04
+            ],
+            [
+                8,
+                0.733
+            ],
+            [
+                11,
+                0.004
+            ],
+            [
+                16,
+                0.002
+            ],
+            [
+                17,
+                0.001
+            ]
+        ]
+    }
+}

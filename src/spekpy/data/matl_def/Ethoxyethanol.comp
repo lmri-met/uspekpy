@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Ethoxyethanol.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 0.93000001,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.111838
+            ],
+            [
+                6,
+                0.533101
+            ],
+            [
+                8,
+                0.355062
+            ]
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Dosimeter Solution, 0.010 M Ceric+0.010 M Ceroussulfate.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.031,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.107456
+            ],
+            [
+                8,
+                0.874526
+            ],
+            [
+                16,
+                0.013943
+            ],
+            [
+                58,
+                0.004075
+            ]
+        ]
+    }
+}

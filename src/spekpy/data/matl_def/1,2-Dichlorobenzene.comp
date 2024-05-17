@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "1,2-Dichlorobenzene.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.3049999,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.027425
+            ],
+            [
+                6,
+                0.490233
+            ],
+            [
+                17,
+                0.482342
+            ]
+        ]
+    }
+}

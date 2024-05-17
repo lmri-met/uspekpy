@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Radiochromicdye Film (Nylon-based).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.14,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.105
+            ],
+            [
+                6,
+                0.656
+            ],
+            [
+                7,
+                0.111
+            ],
+            [
+                8,
+                0.128
+            ]
+        ]
+    }
+}

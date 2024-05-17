@@ -1,0 +1,38 @@
+{
+    "file_information": {
+        "file_name": "Glass Borosilicate (Corning Pyrex 7740).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.23,
+        "number_of_elements": 6,
+        "elements": [
+            [
+                5,
+                0.040061
+            ],
+            [
+                8,
+                0.539564
+            ],
+            [
+                11,
+                0.028191
+            ],
+            [
+                13,
+                0.011644
+            ],
+            [
+                14,
+                0.37722
+            ],
+            [
+                19,
+                0.003321
+            ]
+        ]
+    }
+}

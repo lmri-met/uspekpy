@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Nylon (Type 6-10).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.14,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.107062
+            ],
+            [
+                6,
+                0.680449
+            ],
+            [
+                7,
+                0.099189
+            ],
+            [
+                8,
+                0.1133
+            ]
+        ]
+    }
+}

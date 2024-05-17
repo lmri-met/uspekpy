@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Perspex.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "2.0.6",
+        "comment": "Copy of the Polymethyl Methacrylate (Lucite Perspex or Plexiglas).comp file"
+    },
+    "composition": {
+        "density": 1.1900001,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.080538
+            ],
+            [
+                6,
+                0.599848
+            ],
+            [
+                8,
+                0.319614
+            ]
+        ]
+    }
+}

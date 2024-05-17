@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Eye Lens (ICRP).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.1,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.099269
+            ],
+            [
+                6,
+                0.19371
+            ],
+            [
+                7,
+                0.05327
+            ],
+            [
+                8,
+                0.653751
+            ]
+        ]
+    }
+}

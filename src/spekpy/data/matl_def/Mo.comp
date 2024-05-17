@@ -1,0 +1,18 @@
+{
+    "file_information": {
+        "file_name": "Mo.comp",
+        "file_type": "material_definition",
+        "spekpy_version": "0.0.3",
+        "comment": null
+    },
+    "composition": {
+        "density": 10.2,
+        "number_of_elements": 1,
+        "elements": [
+            [
+                42,
+                1.0
+            ]
+        ]
+    }
+}

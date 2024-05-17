@@ -1,0 +1,34 @@
+{
+    "file_information": {
+        "file_name": "Muscle Substitute (Alderson, Rubber-based Composition A).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.0,
+        "number_of_elements": 5,
+        "elements": [
+            [
+                1,
+                0.088709
+            ],
+            [
+                6,
+                0.668167
+            ],
+            [
+                7,
+                0.031003
+            ],
+            [
+                8,
+                0.211321
+            ],
+            [
+                51,
+                0.0008
+            ]
+        ]
+    }
+}

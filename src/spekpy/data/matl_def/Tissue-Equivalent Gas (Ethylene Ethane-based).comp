@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Tissue-Equivalent Gas (Ethylene Ethane-based).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 0.00105104002,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.102464
+            ],
+            [
+                6,
+                0.533133
+            ],
+            [
+                7,
+                0.03454
+            ],
+            [
+                10,
+                0.329863
+            ]
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Nitrocellulose.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.66,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.023744
+            ],
+            [
+                6,
+                0.242536
+            ],
+            [
+                7,
+                0.141418
+            ],
+            [
+                8,
+                0.592302
+            ]
+        ]
+    }
+}

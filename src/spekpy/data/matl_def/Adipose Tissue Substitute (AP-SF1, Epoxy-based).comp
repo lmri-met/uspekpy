@@ -1,0 +1,54 @@
+{
+    "file_information": {
+        "file_name": "Adipose Tissue Substitute (AP-SF1, Epoxy-based).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 0.92000002,
+        "number_of_elements": 10,
+        "elements": [
+            [
+                1,
+                0.119928
+            ],
+            [
+                6,
+                0.754547
+            ],
+            [
+                7,
+                0.007995
+            ],
+            [
+                8,
+                0.110933
+            ],
+            [
+                11,
+                0.000999
+            ],
+            [
+                15,
+                0.0001
+            ],
+            [
+                16,
+                0.000999
+            ],
+            [
+                17,
+                0.003998
+            ],
+            [
+                19,
+                0.0003
+            ],
+            [
+                20,
+                0.0002
+            ]
+        ]
+    }
+}

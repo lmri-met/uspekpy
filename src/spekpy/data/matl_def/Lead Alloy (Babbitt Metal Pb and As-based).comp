@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Lead Alloy (Babbitt Metal Pb and As-based).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 10.1,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                33,
+                0.011
+            ],
+            [
+                50,
+                0.01
+            ],
+            [
+                51,
+                0.16
+            ],
+            [
+                82,
+                0.819
+            ]
+        ]
+    }
+}

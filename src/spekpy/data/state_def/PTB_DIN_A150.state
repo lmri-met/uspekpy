@@ -1,0 +1,67 @@
+{
+    "file_information": {
+        "file_name": "PTB_DIN_A150.state",
+        "file_type": "state_def",
+        "spekpy_version": "0.1.0",
+        "comment": "ANKERHOLD, U.: Catalogue of X-ray spectra and their characteristic data -ISO and DIN radiation qualities, therapy and diagnostic radiation qualities, unfiltered X-ray spectra-, PTB-Bericht: PTB Dos-34 (2000), ISBN: 3-89701-513-7"
+    },
+    "external_spectrum": {
+        "external_spectrum": null,
+        "ext_delim": null,
+        "ext_z": null,
+        "ext_mas": null
+    },
+    "model_parameters": {
+        "kvp": 150.0,
+        "th": 20.0,
+        "dk": 0.5,
+        "physics": "default",
+        "mu_data_source": "nist"
+    },
+    "spectrum_parameters": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 100.0,
+        "mas": 1.0,
+        "ref_kerma": null,
+        "ref_flu": null,
+        "brem": true,
+        "char": true,
+        "obli": true
+    },
+    "filters": [
+        [
+            "Be",
+            7.0
+        ],
+        [
+            "Al",
+            4.0
+        ],
+        [
+            "Sn",
+            2.5
+        ],
+        [
+            "Air Dry (Near Sea Level)",
+            1000.0
+        ]
+    ],
+    "flags": {
+        "external_spectrum": false,
+        "kerma_normalized_spectrum": false,
+        "mas_normalized_spectrum": false,
+        "flu_normalized_spectrum": false
+    },
+    "reference_values": {
+        "e_mean": 118.2,
+        "hvl_1_al": 16.49,
+        "hvl_2_al": 16.56,
+        "hc_al": null,
+        "e_eff_al": null,
+        "hvl_1_cu": 2.3,
+        "hvl_2_cu": 2.41,
+        "hc_cu": null,
+        "e_eff_cu": null
+    }
+}

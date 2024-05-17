@@ -1,0 +1,66 @@
+{
+    "file_information": {
+        "file_name": "Testes (ICRP).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.04,
+        "number_of_elements": 13,
+        "elements": [
+            [
+                1,
+                0.104166
+            ],
+            [
+                6,
+                0.09227
+            ],
+            [
+                7,
+                0.01994
+            ],
+            [
+                8,
+                0.773884
+            ],
+            [
+                11,
+                0.00226
+            ],
+            [
+                12,
+                0.00011
+            ],
+            [
+                15,
+                0.00125
+            ],
+            [
+                16,
+                0.00146
+            ],
+            [
+                17,
+                0.00244
+            ],
+            [
+                19,
+                0.00208
+            ],
+            [
+                20,
+                0.0001
+            ],
+            [
+                26,
+                2e-05
+            ],
+            [
+                30,
+                2e-05
+            ]
+        ]
+    }
+}

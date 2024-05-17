@@ -1,0 +1,58 @@
+{
+    "file_information": {
+        "file_name": "Concrete Serpentine (Type S).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.0999999,
+        "number_of_elements": 11,
+        "elements": [
+            [
+                1,
+                0.015909
+            ],
+            [
+                6,
+                0.000909
+            ],
+            [
+                8,
+                0.511818
+            ],
+            [
+                11,
+                0.004091
+            ],
+            [
+                12,
+                0.135
+            ],
+            [
+                13,
+                0.019091
+            ],
+            [
+                14,
+                0.209091
+            ],
+            [
+                19,
+                0.004091
+            ],
+            [
+                20,
+                0.068182
+            ],
+            [
+                24,
+                0.000909
+            ],
+            [
+                26,
+                0.030909
+            ]
+        ]
+    }
+}

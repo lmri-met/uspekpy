@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Polyoxymethylene (Delrin).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.425,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.067135
+            ],
+            [
+                6,
+                0.400017
+            ],
+            [
+                8,
+                0.532848
+            ]
+        ]
+    }
+}

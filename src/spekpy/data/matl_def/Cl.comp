@@ -1,0 +1,18 @@
+{
+    "file_information": {
+        "file_name": "Cl.comp",
+        "file_type": "material_definition",
+        "spekpy_version": "0.0.3",
+        "comment": null
+    },
+    "composition": {
+        "density": 0.003,
+        "number_of_elements": 1,
+        "elements": [
+            [
+                17,
+                1.0
+            ]
+        ]
+    }
+}

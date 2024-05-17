@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Lincolnshire Bolus Muscle Substitute.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.05,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.056358
+            ],
+            [
+                6,
+                0.38485
+            ],
+            [
+                8,
+                0.521317
+            ],
+            [
+                12,
+                0.037475
+            ]
+        ]
+    }
+}

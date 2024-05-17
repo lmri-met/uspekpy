@@ -1,0 +1,50 @@
+{
+    "file_information": {
+        "file_name": "Concrete Barite (Type BA).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 3.3499999,
+        "number_of_elements": 9,
+        "elements": [
+            [
+                1,
+                0.003585
+            ],
+            [
+                8,
+                0.311622
+            ],
+            [
+                12,
+                0.001195
+            ],
+            [
+                13,
+                0.004183
+            ],
+            [
+                14,
+                0.010457
+            ],
+            [
+                16,
+                0.107858
+            ],
+            [
+                20,
+                0.050194
+            ],
+            [
+                26,
+                0.047505
+            ],
+            [
+                56,
+                0.4634
+            ]
+        ]
+    }
+}

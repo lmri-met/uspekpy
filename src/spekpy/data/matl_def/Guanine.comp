@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Guanine.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.58,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.033346
+            ],
+            [
+                6,
+                0.39738
+            ],
+            [
+                7,
+                0.463407
+            ],
+            [
+                8,
+                0.105867
+            ]
+        ]
+    }
+}

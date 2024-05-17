@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Polytrifluorochloroethylene.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.0999999,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                6,
+                0.20625
+            ],
+            [
+                9,
+                0.489354
+            ],
+            [
+                17,
+                0.304395
+            ]
+        ]
+    }
+}

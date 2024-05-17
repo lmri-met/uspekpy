@@ -1,0 +1,66 @@
+{
+    "file_information": {
+        "file_name": "Muscle Skeletal (ICRP).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.04,
+        "number_of_elements": 13,
+        "elements": [
+            [
+                1,
+                0.100637
+            ],
+            [
+                6,
+                0.10783
+            ],
+            [
+                7,
+                0.02768
+            ],
+            [
+                8,
+                0.754773
+            ],
+            [
+                11,
+                0.00075
+            ],
+            [
+                12,
+                0.00019
+            ],
+            [
+                15,
+                0.0018
+            ],
+            [
+                16,
+                0.00241
+            ],
+            [
+                17,
+                0.00079
+            ],
+            [
+                19,
+                0.00302
+            ],
+            [
+                20,
+                3e-05
+            ],
+            [
+                26,
+                4e-05
+            ],
+            [
+                30,
+                5e-05
+            ]
+        ]
+    }
+}

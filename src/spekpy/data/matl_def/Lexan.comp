@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Lexan.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "2.0.6",
+        "comment": "Copy of the Polycarbonate (Makrolon or Lexan).comp file"
+    },
+    "composition": {
+        "density": 1.2,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.055491
+            ],
+            [
+                6,
+                0.755751
+            ],
+            [
+                8,
+                0.188758
+            ]
+        ]
+    }
+}

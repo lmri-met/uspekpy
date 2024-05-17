@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Magnesium Fluoride.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 3.1500001,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                9,
+                0.609883
+            ],
+            [
+                12,
+                0.390117
+            ]
+        ]
+    }
+}

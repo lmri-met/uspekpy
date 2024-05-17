@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Bakelite.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.25,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.057441
+            ],
+            [
+                6,
+                0.774591
+            ],
+            [
+                8,
+                0.167968
+            ]
+        ]
+    }
+}

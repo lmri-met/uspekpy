@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Ethylene Glycol.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.1155,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.097432
+            ],
+            [
+                6,
+                0.387026
+            ],
+            [
+                8,
+                0.515543
+            ]
+        ]
+    }
+}

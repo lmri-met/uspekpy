@@ -1,0 +1,54 @@
+{
+    "file_information": {
+        "file_name": "Concrete (Ordinary, Type 04).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.3499999,
+        "number_of_elements": 10,
+        "elements": [
+            [
+                1,
+                0.005532
+            ],
+            [
+                8,
+                0.498298
+            ],
+            [
+                11,
+                0.017021
+            ],
+            [
+                12,
+                0.002553
+            ],
+            [
+                13,
+                0.045532
+            ],
+            [
+                14,
+                0.315745
+            ],
+            [
+                16,
+                0.001277
+            ],
+            [
+                19,
+                0.019149
+            ],
+            [
+                20,
+                0.082553
+            ],
+            [
+                26,
+                0.01234
+            ]
+        ]
+    }
+}

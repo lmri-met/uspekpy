@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Sodium Dioxide.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 3.6670001,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                11,
+                0.153373
+            ],
+            [
+                53,
+                0.846627
+            ]
+        ]
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "file_information": {
+        "file_name": "Kidney (ICRU).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.05,
+        "number_of_elements": 10,
+        "elements": [
+            [
+                1,
+                0.103
+            ],
+            [
+                6,
+                0.132
+            ],
+            [
+                7,
+                0.03
+            ],
+            [
+                8,
+                0.724
+            ],
+            [
+                11,
+                0.002
+            ],
+            [
+                15,
+                0.002
+            ],
+            [
+                16,
+                0.002
+            ],
+            [
+                17,
+                0.002
+            ],
+            [
+                19,
+                0.002
+            ],
+            [
+                20,
+                0.001
+            ]
+        ]
+    }
+}

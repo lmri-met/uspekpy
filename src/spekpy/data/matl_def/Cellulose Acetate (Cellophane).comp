@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Cellulose Acetate (Cellophane).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.4400001,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.062162
+            ],
+            [
+                6,
+                0.444462
+            ],
+            [
+                8,
+                0.493376
+            ]
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Muscle-Equivalent Liquid with Sucrose (Rossi Liquid).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.11,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.098234
+            ],
+            [
+                6,
+                0.156214
+            ],
+            [
+                7,
+                0.035451
+            ],
+            [
+                8,
+                0.710101
+            ]
+        ]
+    }
+}

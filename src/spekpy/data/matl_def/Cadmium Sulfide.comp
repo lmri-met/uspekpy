@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Cadmium Sulfide.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 4.8200002,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                16,
+                0.221915
+            ],
+            [
+                48,
+                0.778085
+            ]
+        ]
+    }
+}

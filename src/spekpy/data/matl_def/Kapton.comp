@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Kapton.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "2.0.6",
+        "comment": "Copy of the Kapton Polyimide Film.comp file"
+    },
+    "composition": {
+        "density": 1.42,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.026362
+            ],
+            [
+                6,
+                0.691133
+            ],
+            [
+                7,
+                0.07327
+            ],
+            [
+                8,
+                0.209235
+            ]
+        ]
+    }
+}

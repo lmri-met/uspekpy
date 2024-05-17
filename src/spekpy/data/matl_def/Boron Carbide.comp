@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Boron Carbide.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.51,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                5,
+                0.78261
+            ],
+            [
+                6,
+                0.21739
+            ]
+        ]
+    }
+}

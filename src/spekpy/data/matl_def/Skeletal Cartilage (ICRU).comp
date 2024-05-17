@@ -1,0 +1,46 @@
+{
+    "file_information": {
+        "file_name": "Skeletal Cartilage (ICRU).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.1,
+        "number_of_elements": 8,
+        "elements": [
+            [
+                1,
+                0.096
+            ],
+            [
+                6,
+                0.099
+            ],
+            [
+                7,
+                0.022
+            ],
+            [
+                8,
+                0.744
+            ],
+            [
+                11,
+                0.005
+            ],
+            [
+                15,
+                0.022
+            ],
+            [
+                16,
+                0.009
+            ],
+            [
+                17,
+                0.003
+            ]
+        ]
+    }
+}

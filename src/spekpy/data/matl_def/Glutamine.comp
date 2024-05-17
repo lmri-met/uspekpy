@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Glutamine.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.46,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.068965
+            ],
+            [
+                6,
+                0.410926
+            ],
+            [
+                7,
+                0.191681
+            ],
+            [
+                8,
+                0.328427
+            ]
+        ]
+    }
+}

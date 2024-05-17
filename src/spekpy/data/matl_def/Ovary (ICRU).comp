@@ -1,0 +1,50 @@
+{
+    "file_information": {
+        "file_name": "Ovary (ICRU).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.05,
+        "number_of_elements": 9,
+        "elements": [
+            [
+                1,
+                0.105
+            ],
+            [
+                6,
+                0.093
+            ],
+            [
+                7,
+                0.024
+            ],
+            [
+                8,
+                0.768
+            ],
+            [
+                11,
+                0.002
+            ],
+            [
+                15,
+                0.002
+            ],
+            [
+                16,
+                0.002
+            ],
+            [
+                17,
+                0.002
+            ],
+            [
+                19,
+                0.002
+            ]
+        ]
+    }
+}

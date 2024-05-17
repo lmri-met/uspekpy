@@ -1,0 +1,50 @@
+{
+    "file_information": {
+        "file_name": "Red Marrow Substitute (RM-G1, Water-based Gel).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.0700001,
+        "number_of_elements": 9,
+        "elements": [
+            [
+                1,
+                0.101969
+            ],
+            [
+                6,
+                0.093972
+            ],
+            [
+                7,
+                0.023993
+            ],
+            [
+                8,
+                0.773768
+            ],
+            [
+                11,
+                0.001
+            ],
+            [
+                15,
+                0.0003
+            ],
+            [
+                16,
+                0.001
+            ],
+            [
+                17,
+                0.001999
+            ],
+            [
+                19,
+                0.001999
+            ]
+        ]
+    }
+}

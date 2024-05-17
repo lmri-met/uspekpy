@@ -1,0 +1,54 @@
+{
+    "file_information": {
+        "file_name": "Red Marrow Substitute (RM-SR4, Epoxy-based).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.03,
+        "number_of_elements": 10,
+        "elements": [
+            [
+                1,
+                0.100957
+            ],
+            [
+                6,
+                0.735684
+            ],
+            [
+                7,
+                0.021991
+            ],
+            [
+                8,
+                0.136941
+            ],
+            [
+                11,
+                0.0001
+            ],
+            [
+                12,
+                3e-05
+            ],
+            [
+                15,
+                0.0003
+            ],
+            [
+                16,
+                0.001
+            ],
+            [
+                17,
+                0.001
+            ],
+            [
+                19,
+                0.001999
+            ]
+        ]
+    }
+}

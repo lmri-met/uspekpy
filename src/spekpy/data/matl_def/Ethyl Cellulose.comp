@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Ethyl Cellulose.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.13,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.090027
+            ],
+            [
+                6,
+                0.585182
+            ],
+            [
+                8,
+                0.324791
+            ]
+        ]
+    }
+}

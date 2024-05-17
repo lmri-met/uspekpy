@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Gypsum (Plaster of Paris).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.3199999,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.023416
+            ],
+            [
+                8,
+                0.557572
+            ],
+            [
+                16,
+                0.186215
+            ],
+            [
+                20,
+                0.232797
+            ]
+        ]
+    }
+}

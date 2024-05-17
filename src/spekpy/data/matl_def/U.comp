@@ -1,0 +1,18 @@
+{
+    "file_information": {
+        "file_name": "U.comp",
+        "file_type": "material_definition",
+        "spekpy_version": "2.06",
+        "comment": "Density corrected from previous releases"
+    },
+    "composition": {
+        "density": 18.95,
+        "number_of_elements": 1,
+        "elements": [
+            [
+                92,
+                1.0
+            ]
+        ]
+    }
+}

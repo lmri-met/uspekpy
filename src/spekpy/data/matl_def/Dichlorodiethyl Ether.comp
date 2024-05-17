@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Dichlorodiethyl Ether.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.2199,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.056381
+            ],
+            [
+                6,
+                0.335942
+            ],
+            [
+                8,
+                0.111874
+            ],
+            [
+                17,
+                0.495802
+            ]
+        ]
+    }
+}

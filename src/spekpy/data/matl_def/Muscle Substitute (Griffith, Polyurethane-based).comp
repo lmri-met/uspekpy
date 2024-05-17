@@ -1,0 +1,38 @@
+{
+    "file_information": {
+        "file_name": "Muscle Substitute (Griffith, Polyurethane-based).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.12,
+        "number_of_elements": 6,
+        "elements": [
+            [
+                1,
+                0.089991
+            ],
+            [
+                6,
+                0.60194
+            ],
+            [
+                7,
+                0.027997
+            ],
+            [
+                8,
+                0.265973
+            ],
+            [
+                20,
+                0.013999
+            ],
+            [
+                50,
+                0.0001
+            ]
+        ]
+    }
+}

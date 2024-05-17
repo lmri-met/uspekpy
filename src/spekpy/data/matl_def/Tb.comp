@@ -1,0 +1,18 @@
+{
+    "file_information": {
+        "file_name": "Tb.comp",
+        "file_type": "material_definition",
+        "spekpy_version": "0.0.3",
+        "comment": null
+    },
+    "composition": {
+        "density": 8.23,
+        "number_of_elements": 1,
+        "elements": [
+            [
+                65,
+                1.0
+            ]
+        ]
+    }
+}

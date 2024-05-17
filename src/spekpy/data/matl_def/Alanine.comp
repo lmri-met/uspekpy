@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Alanine.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.424,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.07919
+            ],
+            [
+                6,
+                0.404439
+            ],
+            [
+                7,
+                0.157213
+            ],
+            [
+                8,
+                0.359159
+            ]
+        ]
+    }
+}

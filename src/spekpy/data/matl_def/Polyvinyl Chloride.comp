@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Polyvinyl Chloride.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.406,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.04838
+            ],
+            [
+                6,
+                0.38436
+            ],
+            [
+                17,
+                0.56726
+            ]
+        ]
+    }
+}

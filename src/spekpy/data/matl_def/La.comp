@@ -1,0 +1,18 @@
+{
+    "file_information": {
+        "file_name": "La.comp",
+        "file_type": "material_definition",
+        "spekpy_version": "0.0.3",
+        "comment": null
+    },
+    "composition": {
+        "density": 6.15,
+        "number_of_elements": 1,
+        "elements": [
+            [
+                57,
+                1.0
+            ]
+        ]
+    }
+}

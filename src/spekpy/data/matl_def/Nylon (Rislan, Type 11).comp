@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Nylon (Rislan, Type 11).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.425,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.115476
+            ],
+            [
+                6,
+                0.720819
+            ],
+            [
+                7,
+                0.076417
+            ],
+            [
+                8,
+                0.087289
+            ]
+        ]
+    }
+}

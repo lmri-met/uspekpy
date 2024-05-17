@@ -1,0 +1,46 @@
+{
+    "file_information": {
+        "file_name": "Bone, Compact (ICRU).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.85,
+        "number_of_elements": 8,
+        "elements": [
+            [
+                1,
+                0.063984
+            ],
+            [
+                6,
+                0.278
+            ],
+            [
+                7,
+                0.027
+            ],
+            [
+                8,
+                0.410016
+            ],
+            [
+                12,
+                0.002
+            ],
+            [
+                15,
+                0.07
+            ],
+            [
+                16,
+                0.002
+            ],
+            [
+                20,
+                0.147
+            ]
+        ]
+    }
+}

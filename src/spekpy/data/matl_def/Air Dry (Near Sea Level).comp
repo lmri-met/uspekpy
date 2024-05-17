@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Air Dry (Near Sea Level).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 0.00120478997,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                6,
+                0.000124
+            ],
+            [
+                7,
+                0.755267
+            ],
+            [
+                8,
+                0.231781
+            ],
+            [
+                18,
+                0.012827
+            ]
+        ]
+    }
+}

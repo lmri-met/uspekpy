@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Magnesium Oxide.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 3.5799999,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                8,
+                0.396964
+            ],
+            [
+                12,
+                0.603036
+            ]
+        ]
+    }
+}

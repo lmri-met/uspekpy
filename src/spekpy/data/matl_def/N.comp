@@ -1,0 +1,18 @@
+{
+    "file_information": {
+        "file_name": "N.comp",
+        "file_type": "material_definition",
+        "spekpy_version": "0.0.3",
+        "comment": null
+    },
+    "composition": {
+        "density": 0.00117,
+        "number_of_elements": 1,
+        "elements": [
+            [
+                7,
+                1.0
+            ]
+        ]
+    }
+}

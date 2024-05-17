@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Skin Substitute (SK2, Polyethylene-based 1.09g_cm-3).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.09,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.097
+            ],
+            [
+                6,
+                0.623
+            ],
+            [
+                8,
+                0.186
+            ],
+            [
+                12,
+                0.094
+            ]
+        ]
+    }
+}

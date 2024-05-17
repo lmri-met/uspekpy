@@ -1,0 +1,38 @@
+{
+    "file_information": {
+        "file_name": "Dosimter Solution, Potassium Dichromate (Hi-Dose).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.005,
+        "number_of_elements": 6,
+        "elements": [
+            [
+                1,
+                0.110787
+            ],
+            [
+                8,
+                0.885164
+            ],
+            [
+                17,
+                0.003527
+            ],
+            [
+                19,
+                0.000156
+            ],
+            [
+                24,
+                0.000259
+            ],
+            [
+                47,
+                0.000107
+            ]
+        ]
+    }
+}

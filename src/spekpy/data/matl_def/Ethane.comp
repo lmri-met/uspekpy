@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Ethane.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 0.00126441999,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                1,
+                0.201115
+            ],
+            [
+                6,
+                0.798885
+            ]
+        ]
+    }
+}

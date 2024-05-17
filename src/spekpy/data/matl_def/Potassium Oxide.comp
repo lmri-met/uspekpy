@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Potassium Oxide.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.3199999,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                8,
+                0.169852
+            ],
+            [
+                19,
+                0.830148
+            ]
+        ]
+    }
+}

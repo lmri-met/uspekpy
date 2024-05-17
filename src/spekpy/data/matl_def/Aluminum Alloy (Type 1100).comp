@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Aluminum Alloy (Type 1100).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.71,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                13,
+                0.99
+            ],
+            [
+                14,
+                0.0045
+            ],
+            [
+                26,
+                0.0045
+            ],
+            [
+                29,
+                0.001
+            ]
+        ]
+    }
+}

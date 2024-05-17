@@ -1,0 +1,62 @@
+{
+    "file_information": {
+        "file_name": "Concrete Magnetite (Type M).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 3.53,
+        "number_of_elements": 12,
+        "elements": [
+            [
+                1,
+                0.003113
+            ],
+            [
+                8,
+                0.330504
+            ],
+            [
+                12,
+                0.009338
+            ],
+            [
+                13,
+                0.023486
+            ],
+            [
+                14,
+                0.02575
+            ],
+            [
+                16,
+                0.001415
+            ],
+            [
+                20,
+                0.071024
+            ],
+            [
+                22,
+                0.054329
+            ],
+            [
+                23,
+                0.003113
+            ],
+            [
+                24,
+                0.001698
+            ],
+            [
+                25,
+                0.001981
+            ],
+            [
+                26,
+                0.47425
+            ]
+        ]
+    }
+}

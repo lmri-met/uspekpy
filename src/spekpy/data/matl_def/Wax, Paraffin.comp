@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Wax, Paraffin.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 0.93000001,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                1,
+                0.148605
+            ],
+            [
+                6,
+                0.851395
+            ]
+        ]
+    }
+}

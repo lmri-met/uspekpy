@@ -1,0 +1,62 @@
+{
+    "file_information": {
+        "file_name": "Skeletal Spongiosa (ICRU).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.1799999,
+        "number_of_elements": 12,
+        "elements": [
+            [
+                1,
+                0.085
+            ],
+            [
+                6,
+                0.404
+            ],
+            [
+                7,
+                0.028
+            ],
+            [
+                8,
+                0.367
+            ],
+            [
+                11,
+                0.001
+            ],
+            [
+                12,
+                0.001
+            ],
+            [
+                15,
+                0.034
+            ],
+            [
+                16,
+                0.002
+            ],
+            [
+                17,
+                0.002
+            ],
+            [
+                19,
+                0.001
+            ],
+            [
+                20,
+                0.074
+            ],
+            [
+                26,
+                0.001
+            ]
+        ]
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "file_information": {
+        "file_name": "Bone Substitute (SB5, Epoxy-based).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.87,
+        "number_of_elements": 6,
+        "elements": [
+            [
+                1,
+                0.026
+            ],
+            [
+                6,
+                0.306
+            ],
+            [
+                7,
+                0.01
+            ],
+            [
+                8,
+                0.389
+            ],
+            [
+                17,
+                0.001
+            ],
+            [
+                20,
+                0.268
+            ]
+        ]
+    }
+}

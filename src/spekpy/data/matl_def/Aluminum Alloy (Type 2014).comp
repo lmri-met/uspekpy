@@ -1,0 +1,34 @@
+{
+    "file_information": {
+        "file_name": "Aluminum Alloy (Type 2014).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.77,
+        "number_of_elements": 5,
+        "elements": [
+            [
+                12,
+                0.006
+            ],
+            [
+                13,
+                0.933
+            ],
+            [
+                14,
+                0.0085
+            ],
+            [
+                25,
+                0.008
+            ],
+            [
+                29,
+                0.0445
+            ]
+        ]
+    }
+}

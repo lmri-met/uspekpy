@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Hydrogen Peroxide.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.4421999,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                1,
+                0.059263
+            ],
+            [
+                8,
+                0.940737
+            ]
+        ]
+    }
+}

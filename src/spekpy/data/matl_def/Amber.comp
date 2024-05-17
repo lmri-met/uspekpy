@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Amber.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.1,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.10593
+            ],
+            [
+                6,
+                0.788973
+            ],
+            [
+                8,
+                0.105096
+            ]
+        ]
+    }
+}

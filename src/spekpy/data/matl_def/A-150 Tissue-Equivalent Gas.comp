@@ -1,0 +1,38 @@
+{
+    "file_information": {
+        "file_name": "A-150 Tissue-Equivalent Gas.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 0.00134362001,
+        "number_of_elements": 6,
+        "elements": [
+            [
+                1,
+                0.101988
+            ],
+            [
+                6,
+                0.767908
+            ],
+            [
+                7,
+                0.036
+            ],
+            [
+                8,
+                0.058833
+            ],
+            [
+                9,
+                0.01727
+            ],
+            [
+                18,
+                0.018
+            ]
+        ]
+    }
+}

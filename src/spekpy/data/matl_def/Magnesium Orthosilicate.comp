@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Magnesium Orthosilicate.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 3.21,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                8,
+                0.454874
+            ],
+            [
+                12,
+                0.345504
+            ],
+            [
+                14,
+                0.199622
+            ]
+        ]
+    }
+}

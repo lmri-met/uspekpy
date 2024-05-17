@@ -1,0 +1,42 @@
+{
+    "file_information": {
+        "file_name": "Breast Tissue Substitute (Griffith).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.1,
+        "number_of_elements": 7,
+        "elements": [
+            [
+                1,
+                0.093981
+            ],
+            [
+                6,
+                0.618876
+            ],
+            [
+                7,
+                0.035993
+            ],
+            [
+                8,
+                0.244951
+            ],
+            [
+                12,
+                0.0001
+            ],
+            [
+                20,
+                0.005999
+            ],
+            [
+                50,
+                0.0001
+            ]
+        ]
+    }
+}

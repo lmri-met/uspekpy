@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Plutonium Dioxide.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 11.46,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                8,
+                0.118055
+            ],
+            [
+                94,
+                0.881945
+            ]
+        ]
+    }
+}

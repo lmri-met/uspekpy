@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Gadolinium Oxysulfide.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 7.4400001,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                8,
+                0.084528
+            ],
+            [
+                16,
+                0.08469
+            ],
+            [
+                64,
+                0.830782
+            ]
+        ]
+    }
+}

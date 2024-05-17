@@ -1,0 +1,30 @@
+{
+    "file_information": {
+        "file_name": "Witt Liquid.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.72,
+        "number_of_elements": 4,
+        "elements": [
+            [
+                1,
+                0.046596
+            ],
+            [
+                8,
+                0.567682
+            ],
+            [
+                15,
+                0.109437
+            ],
+            [
+                19,
+                0.276285
+            ]
+        ]
+    }
+}

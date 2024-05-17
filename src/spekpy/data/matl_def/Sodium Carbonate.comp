@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Sodium Carbonate.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.5320001,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                6,
+                0.113323
+            ],
+            [
+                8,
+                0.452861
+            ],
+            [
+                11,
+                0.433815
+            ]
+        ]
+    }
+}

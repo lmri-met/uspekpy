@@ -1,0 +1,54 @@
+{
+    "file_information": {
+        "file_name": "Adipose Tissue Substitute (AP-L2, Aqueous).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 0.92000002,
+        "number_of_elements": 10,
+        "elements": [
+            [
+                1,
+                0.120959
+            ],
+            [
+                6,
+                0.2929
+            ],
+            [
+                7,
+                0.007997
+            ],
+            [
+                8,
+                0.573805
+            ],
+            [
+                11,
+                0.001
+            ],
+            [
+                12,
+                2e-05
+            ],
+            [
+                15,
+                0.001999
+            ],
+            [
+                17,
+                0.001
+            ],
+            [
+                19,
+                0.0003
+            ],
+            [
+                20,
+                2e-05
+            ]
+        ]
+    }
+}

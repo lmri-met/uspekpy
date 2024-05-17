@@ -1,0 +1,66 @@
+{
+    "file_information": {
+        "file_name": "Skin (ICRP).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.1,
+        "number_of_elements": 13,
+        "elements": [
+            [
+                1,
+                0.100588
+            ],
+            [
+                6,
+                0.22825
+            ],
+            [
+                7,
+                0.04642
+            ],
+            [
+                8,
+                0.619003
+            ],
+            [
+                11,
+                7e-05
+            ],
+            [
+                12,
+                6e-05
+            ],
+            [
+                15,
+                0.00033
+            ],
+            [
+                16,
+                0.00159
+            ],
+            [
+                17,
+                0.00267
+            ],
+            [
+                19,
+                0.00085
+            ],
+            [
+                20,
+                0.00015
+            ],
+            [
+                26,
+                1e-05
+            ],
+            [
+                30,
+                1e-05
+            ]
+        ]
+    }
+}

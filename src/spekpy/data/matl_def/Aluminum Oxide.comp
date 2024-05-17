@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Aluminum Oxide.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 3.97,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                8,
+                0.470749
+            ],
+            [
+                13,
+                0.529251
+            ]
+        ]
+    }
+}

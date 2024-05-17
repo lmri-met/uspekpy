@@ -1,0 +1,50 @@
+{
+    "file_information": {
+        "file_name": "Brain, Grey and White Matter (ICRU).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.04,
+        "number_of_elements": 9,
+        "elements": [
+            [
+                1,
+                0.107
+            ],
+            [
+                6,
+                0.145
+            ],
+            [
+                7,
+                0.022
+            ],
+            [
+                8,
+                0.712
+            ],
+            [
+                11,
+                0.002
+            ],
+            [
+                15,
+                0.004
+            ],
+            [
+                16,
+                0.002
+            ],
+            [
+                17,
+                0.003
+            ],
+            [
+                19,
+                0.003
+            ]
+        ]
+    }
+}

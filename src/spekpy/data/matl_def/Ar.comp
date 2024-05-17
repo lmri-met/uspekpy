@@ -1,0 +1,18 @@
+{
+    "file_information": {
+        "file_name": "Ar.comp",
+        "file_type": "material_definition",
+        "spekpy_version": "0.0.3",
+        "comment": null
+    },
+    "composition": {
+        "density": 0.00166,
+        "number_of_elements": 1,
+        "elements": [
+            [
+                18,
+                1.0
+            ]
+        ]
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "file_information": {
+        "file_name": "Ra.comp",
+        "file_type": "material_definition",
+        "spekpy_version": "0.0.3",
+        "comment": null
+    },
+    "composition": {
+        "density": 5.0,
+        "number_of_elements": 1,
+        "elements": [
+            [
+                88,
+                1.0
+            ]
+        ]
+    }
+}

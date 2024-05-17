@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Polyvinylidene Chloride (Saran).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.7,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.020793
+            ],
+            [
+                6,
+                0.247793
+            ],
+            [
+                17,
+                0.731413
+            ]
+        ]
+    }
+}

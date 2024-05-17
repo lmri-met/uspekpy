@@ -1,0 +1,18 @@
+{
+    "file_information": {
+        "file_name": "Re.comp",
+        "file_type": "material_definition",
+        "spekpy_version": "0.0.3",
+        "comment": null
+    },
+    "composition": {
+        "density": 21.0,
+        "number_of_elements": 1,
+        "elements": [
+            [
+                75,
+                1.0
+            ]
+        ]
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "file_information": {
+        "file_name": "Nickel Alloy (Iconel).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 8.4300003,
+        "number_of_elements": 7,
+        "elements": [
+            [
+                6,
+                0.0015
+            ],
+            [
+                14,
+                0.005
+            ],
+            [
+                24,
+                0.155
+            ],
+            [
+                25,
+                0.01
+            ],
+            [
+                26,
+                0.08
+            ],
+            [
+                28,
+                0.7435
+            ],
+            [
+                29,
+                0.005
+            ]
+        ]
+    }
+}

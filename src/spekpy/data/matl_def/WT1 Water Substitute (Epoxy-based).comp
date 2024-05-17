@@ -1,0 +1,38 @@
+{
+    "file_information": {
+        "file_name": "WT1 Water Substitute (Epoxy-based).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 1.02,
+        "number_of_elements": 6,
+        "elements": [
+            [
+                1,
+                0.081
+            ],
+            [
+                6,
+                0.672
+            ],
+            [
+                7,
+                0.024
+            ],
+            [
+                8,
+                0.199
+            ],
+            [
+                17,
+                0.001
+            ],
+            [
+                20,
+                0.023
+            ]
+        ]
+    }
+}

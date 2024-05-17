@@ -1,0 +1,22 @@
+{
+    "file_information": {
+        "file_name": "Polytetrafluoroethylene (Teflon).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 2.25,
+        "number_of_elements": 2,
+        "elements": [
+            [
+                6,
+                0.240183
+            ],
+            [
+                9,
+                0.759818
+            ]
+        ]
+    }
+}

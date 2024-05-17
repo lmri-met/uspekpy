@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Tungsten Alloy (Type C2).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 14.4,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                28,
+                0.12
+            ],
+            [
+                29,
+                0.12
+            ],
+            [
+                74,
+                0.76
+            ]
+        ]
+    }
+}

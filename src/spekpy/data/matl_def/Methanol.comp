@@ -1,0 +1,26 @@
+{
+    "file_information": {
+        "file_name": "Methanol.comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 0.79140002,
+        "number_of_elements": 3,
+        "elements": [
+            [
+                1,
+                0.125822
+            ],
+            [
+                6,
+                0.374852
+            ],
+            [
+                8,
+                0.499326
+            ]
+        ]
+    }
+}

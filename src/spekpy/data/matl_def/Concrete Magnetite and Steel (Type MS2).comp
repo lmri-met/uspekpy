@@ -1,0 +1,50 @@
+{
+    "file_information": {
+        "file_name": "Concrete Magnetite and Steel (Type MS2).comp",
+        "file_type": "matl_def",
+        "spekpy_version": "0.0.3",
+        "comment": "Material definition from PEGS4 (EGS-NRC)"
+    },
+    "composition": {
+        "density": 4.6399999,
+        "number_of_elements": 9,
+        "elements": [
+            [
+                1,
+                0.002374
+            ],
+            [
+                8,
+                0.137678
+            ],
+            [
+                12,
+                0.003669
+            ],
+            [
+                13,
+                0.010358
+            ],
+            [
+                14,
+                0.015753
+            ],
+            [
+                20,
+                0.055675
+            ],
+            [
+                22,
+                0.015969
+            ],
+            [
+                23,
+                0.000647
+            ],
+            [
+                26,
+                0.757877
+            ]
+        ]
+    }
+}
