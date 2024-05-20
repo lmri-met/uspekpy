@@ -7,7 +7,7 @@
 ![Static Badge](https://img.shields.io/badge/Maintenance-Active-teal)
 
 [![Static Badge](https://img.shields.io/badge/Surce_code-GitHub-blue)](https://github.com/lmri-met/uspekpy)
-[![Static Badge](https://img.shields.io/badge/Documentation-GitHub_Wiki-blue)](https://github.com/lmri-met/uspekpy#README)
+[![Static Badge](https://img.shields.io/badge/Documentation-README-blue)](https://github.com/lmri-met/uspekpy#README)
 [![Static Badge](https://img.shields.io/badge/Contribute-Issues-blue)](https://github.com/lmri-met/uspekpy/issues)
 [![Static Badge](https://img.shields.io/badge/Organization-LMRI--Met-blue)](https://github.com/lmri-met/)
 
