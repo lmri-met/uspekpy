@@ -6,17 +6,22 @@ build-backend = "hatchling.build"
 name = "uspekpy"
 version = "1.0.0"
 description = 'Radiation protection quantities for x-rays with uncertainties using SpekPy and Monte Carlo techniques'
-readme = "README.md"
-requires-python = ">=3.8"
-license = {file = "LICENSE"}
 keywords = ["uncertainty", "x-rays", "spectrum", "monte carlo"]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.8"
+dependencies = [
+  "pandas>=2.2.2",
+  "openpyxl>=3.1.2",
+  "spekpy>=2.0.11.1",
+]
 authors = [
   { name = "Paz Aviles", email = "Paz.Aviles@ciemat.es" },
   { name = "Xandra Campo", email = "xandra.campo@ciemat.es" }
 ]
 maintainers = [
+  { name = "Xandra Campo", email = "xandra.campo@ciemat.es" },
   { name = "Paz Aviles", email = "Paz.Aviles@ciemat.es" },
-  { name = "Xandra Campo", email = "xandra.campo@ciemat.es" }
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -33,16 +38,8 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: Implementation :: CPython",
 ]
-dependencies = [
-  "pandas>=2.2.2",
-  "openpyxl>=3.1.2",
-  "spekpy @ https://bitbucket.org/spekpy/spekpy_release/get/f84dfb9754d3.zip",
-]
 
 [project.urls]
 Repository = "https://github.com/lmri-met/uspekpy"
 Documentation = "https://github.com/lmri-met/uspekpy#readme"
 Issues = "https://github.com/lmri-met/uspekpy/issues"
-
-[tool.hatch.metadata]
-allow-direct-references = true
