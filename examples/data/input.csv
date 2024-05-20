@@ -1,0 +1,27 @@
+Name,Case1,Case2
+General,,
+Quality,N-60,N-60
+Operational quantity,H*(10),H*(10)
+Irradiation angle (deg),0,0
+Number of simulations,3,3
+Values,,
+Al filter width (mm),4,4
+Cu filter width (mm),0.6,0.6
+Sn filter width (mm),0,0
+Pb filter width (mm),0,0
+Be filter width (mm),0,0
+Air gap width (mm),1000,1000
+Peak kilovoltage (kV),60,60
+Anode angle (deg),20,20
+Mass energy transfer coefficients of air file (keV and cm²/g),data/mu_tr_rho.csv,data/mu_tr_rho.csv
+Mono-energetic K to H conversion coefficients file (keV and Sv/Gy),data/h_k_h_amb_10.csv,data/h_k_h_amb_10.csv
+Relative uncertainties (k=1),,
+Al filter width (fraction of one),0.01,0.01
+Cu filter width (fraction of one),0.01,0.01
+Sn filter width (fraction of one),0,0
+Pb filter width (fraction of one),0,0
+Be filter width (fraction of one),0,0
+Air gap width (fraction of one),0.01,0.01
+Peak kilovoltage (fraction of one),0.01,0.01
+Anode angle (fraction of one),0.01,0.01
+Mass energy transfer coefficients of air (fraction of one),0.01,0.01
