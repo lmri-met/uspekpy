@@ -7,7 +7,7 @@
 ![Static Badge](https://img.shields.io/badge/Maintenance-Active-teal)
 
 [![Static Badge](https://img.shields.io/badge/Surce_code-GitHub-blue)](https://github.com/lmri-met/uspekpy)
-[![Static Badge](https://img.shields.io/badge/Documentation-GitHub_Wiki-blue)](https://github.com/lmri-met/uspekpy/wiki)
+[![Static Badge](https://img.shields.io/badge/Documentation-GitHub_Wiki-blue)](https://github.com/lmri-met/uspekpy#README)
 [![Static Badge](https://img.shields.io/badge/Contribute-Issues-blue)](https://github.com/lmri-met/uspekpy/issues)
 [![Static Badge](https://img.shields.io/badge/Organization-LMRI--Met-blue)](https://github.com/lmri-met/)
 
@@ -546,7 +546,7 @@ If you need further support, please send an e-mail to
 ## Documentation
 
 The official documentation of **USpekPy** is hosted on GitHub.
-Check its [README](https://github.com/lmri-met/uspekpy/blob/main/README.md) file for a quick start guide and its [Wiki](https://github.com/lmri-met/uspekpy/wiki) for more detailed information.
+Check its [README](https://github.com/lmri-met/uspekpy#README) file for a quick start guide and its [Wiki](https://github.com/lmri-met/uspekpy/wiki) for more detailed information.
 
 ## Contributors
 
