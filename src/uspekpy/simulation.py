@@ -216,6 +216,9 @@ def output_digest(input_df, output_dfs):
     # Initialize an empty list to store transformed simulation results
     results = []
 
+    # Initialize counter for result DataFrame
+    i = 1
+
     # Iterate over each output DataFrame containing simulation results
     for output_df in output_dfs:
         # Set the index of the DataFrame to '#' column
@@ -238,6 +241,12 @@ def output_digest(input_df, output_dfs):
 
         # Set the combined index to be the new index of the DataFrame
         df = df.set_index(combined_index)
+
+        # Rename DataFrame column to avoid error in later DataFrame merge
+        df.columns = [f'Case{i}']
+
+        # Increment counter for result DataFrame
+        i += 1
 
         # Append the transformed DataFrame to the results list
         results.append(df)
