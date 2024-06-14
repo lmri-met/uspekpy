@@ -3,7 +3,7 @@
 ## Radiation protection quantities for x-rays with uncertainties
 
 ![Static Badge](https://img.shields.io/badge/Date-May_24-teal)
-![Static Badge](https://img.shields.io/badge/Version-1.0.0-teal)
+![Static Badge](https://img.shields.io/badge/Version-1.0.1-teal)
 ![Static Badge](https://img.shields.io/badge/Maintenance-Active-teal)
 
 [![Static Badge](https://img.shields.io/badge/Surce_code-GitHub-blue)](https://github.com/lmri-met/uspekpy)
