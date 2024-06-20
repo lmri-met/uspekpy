@@ -58,8 +58,8 @@ class SpekWrapper(Spek):
         Returns:
             float: The air kerma computed.
         """
-        # Get spectrum energy and fluence
-        energy, fluence = self.get_spectrum(edges=False)
+        # Get spectrum energy and fluence (keV, 1/cm²)
+        energy, fluence = self.get_spectrum(diff=False)
 
         # Unpack the energies and values of the mass energy transfer coefficients of air (keV, cm²/g)
         energy_mu, mu = parse_mass_transfer_coefficients(mass_transfer_coefficients)
@@ -67,8 +67,11 @@ class SpekWrapper(Spek):
         # Interpolate mass energy transfer coefficients of air for the spectrum energies in logarithmic scale
         interpolated_mu = interpolate(x=energy_mu, y=mu, new_x=energy)
 
-        # Compute air kerma
-        return sum(fluence * energy * interpolated_mu)
+        # Conversion factor from keV/g to uGy
+        unit_conversion = 1e3 * 1e3 * 1.602176634e-19 * 1e6
+
+        # Compute air kerma (uGy)
+        return sum(fluence * energy * interpolated_mu) * unit_conversion
 
     def get_mean_conversion_coefficient(self, mass_transfer_coefficients, conversion_coefficients, angle=None):
         """Compute the mean conversion coefficient of an x-ray spectrum in Sv/Gy.
@@ -97,8 +100,8 @@ class SpekWrapper(Spek):
         Returns:
             float: The mean conversion coefficient computed.
         """
-        # Get spectrum energy and fluence
-        energy, fluence = self.get_spectrum(edges=False)
+        # Get spectrum energy and fluence (keV, 1/cm²)
+        energy, fluence = self.get_spectrum(diff=False)
 
         # Unpack the energies and values of the mass energy transfer coefficients of air (keV, cm²/g)
         energy_mu, mu = parse_mass_transfer_coefficients(mass_transfer_coefficients)
