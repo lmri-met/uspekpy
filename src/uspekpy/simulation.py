@@ -208,7 +208,7 @@ def output_digest(input_df, output_dfs):
     """
     # Define columns to extract from the output DataFrames containing simulation results
     result_columns = ['HVL1 Al (mm)', 'HVL2 Al (mm)', 'HVL1 Cu (mm)', 'HVL2 Cu (mm)', 'Mean energy (keV)',
-                      'Air kerma (keV/g)', 'Mean conv. coeff. (Sv/Gy)']
+                      'Air kerma (uGy)', 'Mean conv. coeff. (Sv/Gy)']
 
     # Define rows to extract from the output DataFrames containing simulation results
     result_rows = ['Mean', 'Standard deviation', 'Relative uncertainty']

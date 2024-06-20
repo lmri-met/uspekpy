@@ -184,7 +184,7 @@ class USpek:
         # Define column names for the DataFrame
         columns = ['#', 'kVp (kV)', 'th (deg)', 'Air (mm)', 'Al (mm)', 'Cu (mm)', 'Sn (mm)', 'Pb (mm)', 'Be (mm)',
                    'HVL1 Al (mm)', 'HVL2 Al (mm)', 'HVL1 Cu (mm)', 'HVL2 Cu (mm)', 'Mean energy (keV)',
-                   'Air kerma (keV/g)', 'Mean conv. coeff. (Sv/Gy)']
+                   'Air kerma (uGy)', 'Mean conv. coeff. (Sv/Gy)']
 
         # Create DataFrame with simulation results
         df = pd.DataFrame(data=rows, columns=columns)
