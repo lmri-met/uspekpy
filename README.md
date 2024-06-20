@@ -2,8 +2,8 @@
 
 ## Radiation protection quantities for x-rays with uncertainties
 
-![Static Badge](https://img.shields.io/badge/Date-May_24-teal)
-![Static Badge](https://img.shields.io/badge/Version-1.0.1-teal)
+![Static Badge](https://img.shields.io/badge/Date-Jun_24-teal)
+![Static Badge](https://img.shields.io/badge/Version-1.0.2-teal)
 ![Static Badge](https://img.shields.io/badge/Maintenance-Active-teal)
 
 [![Static Badge](https://img.shields.io/badge/Surce_code-GitHub-blue)](https://github.com/lmri-met/uspekpy)
@@ -80,7 +80,7 @@ The next table shows the units of the quantities used in the package.
 | Energy                                        | keV   |
 | Fluence                                       | 1/cm² |
 | Mass energy transfer coefficients of air      | cm²/g |
-| Air kerma                                     | keV/g |
+| Air kerma                                     | uGy   |
 | Mono-energetic K to H conversion coefficients | Sv/Gy |
 
 ### Compute mean radiation protection quantities
@@ -143,7 +143,7 @@ print(f'Second HVL for Al: {hvl2_al} mm')
 print(f'First HVL for Cu: {hvl1_cu} mm')
 print(f'Second HVL for Cu: {hvl2_cu} mm')
 print(f'Mean energy: {mean_energy} keV')
-print(f'Air kerma: {mean_kerma} keV/g')
+print(f'Air kerma: {mean_kerma} uGy')
 print(f'Mean conversion coefficient for H*(10): {mean_hk} Sv/Gy')
 ```
 
@@ -155,7 +155,7 @@ Second HVL for Al: 6.239790098050192 mm
 First HVL for Cu: 0.23502729534875702 mm
 Second HVL for Cu: 0.2624330033450075 mm
 Mean energy: 47.797974735384756 keV
-Air kerma: 19851414.17752463 keV/g
+Air kerma: 1.5902735973543143 uGy
 Mean conversion coefficient for H*(10): 1.5909359863722154 Sv/Gy
 ```
 
@@ -228,13 +228,14 @@ Gy for the air kerma and
 Sv/Gy for the mean air kerma-to-dose-equivalent conversion coefficient.
 
 ```
-                      #   kVp (kV)   th (deg)     Air (mm)   Al (mm)   Cu (mm)  Sn (mm)  Pb (mm)  Be (mm)  HVL1 Al (mm)  HVL2 Al (mm)  HVL1 Cu (mm)  HVL2 Cu (mm)  Mean energy (keV)  Air kerma (keV/g)  Mean conv. coeff. (Sv/Gy)
-0           Iteration 1  60.595560  19.965644   995.902054  3.972178  0.600850      0.0      0.0      0.0      5.923614      6.270253      0.236323      0.264857          47.952776       2.077009e+07                   1.591490
-1           Iteration 2  59.011009  20.121585   995.700957  4.029655  0.605186      0.0      0.0      0.0      5.762747      6.085775      0.226610      0.252122          47.140595       1.733135e+07                   1.580731
-2           Iteration 3  59.890664  20.136796  1001.193487  3.969202  0.599620      0.0      0.0      0.0      5.842922      6.180675      0.231458      0.258700          47.563728       1.940732e+07                   1.586546
-3                  Mean  59.832411  20.074675   997.598832  3.990345  0.601885      0.0      0.0      0.0      5.843094      6.178901      0.231464      0.258560          47.552366       1.916959e+07                   1.586256
-4    Standard deviation   0.648200   0.077346     2.543130  0.027823  0.002387      0.0      0.0      0.0      0.065673      0.075323      0.003966      0.005200           0.331669       1.413890e+06                   0.004397
-5  Relative uncertainty   0.010834   0.003853     0.002549  0.006973  0.003966      NaN      NaN      NaN      0.011239      0.012190      0.017133      0.020111           0.006975       7.375694e-02                   0.002772
+                      #   kVp (kV)   th (deg)    Air (mm)   Al (mm)   Cu (mm)  Sn (mm)  Pb (mm)  Be (mm)  HVL1 Al (mm)  HVL2 Al (mm)  HVL1 Cu (mm)  HVL2 Cu (mm)  Mean energy (keV)  Air kerma (uGy)  Mean conv. coeff. (Sv/Gy)
+0           Iteration 1  59.929717  20.070882  996.150291  4.031398  0.591599      0.0      0.0      0.0      5.831812      6.172730      0.230861      0.258297          47.538305         1.599452                   1.585449
+1           Iteration 2  59.534814  20.485473  996.406825  4.003680  0.589934      0.0      0.0      0.0      5.781268      6.117909      0.227873      0.254629          47.303424         1.533225                   1.581466
+2           Iteration 3  59.596255  19.678848  996.920532  3.935728  0.606411      0.0      0.0      0.0      5.826152      6.157480      0.230388      0.256981          47.453653         1.488258                   1.585720
+3                  Mean  59.686929  20.078401  996.492549  3.990269  0.595981      0.0      0.0      0.0      5.813078      6.149373      0.229707      0.256636          47.431794         1.540312                   1.584211
+4    Standard deviation   0.173500   0.329346    0.320239  0.040192  0.007406      0.0      0.0      0.0      0.022611      0.023103      0.001311      0.001517           0.097127         0.045670                   0.001945
+5  Relative uncertainty   0.002907   0.016403    0.000321  0.010073  0.012427      NaN      NaN      NaN      0.003890      0.003757      0.005708      0.005913           0.002048         0.029650                   0.001228
+
 ```
 
 ### Compute batch simulation for several x-ray spectra
@@ -380,27 +381,27 @@ Peak kilovoltage (fraction of one)                                              
 Anode angle (fraction of one)                                                        0.01                   0.01
 Mass energy transfer coefficients of air (fraction of one)                           0.01                   0.01
 Results                                                                              None                   None
-HVL1 Al  Mean (mm)                                                               5.836287               5.865005
-HVL1 Al  Standard deviation (mm)                                                 0.059148               0.036708
-HVL1 Al  Relative uncertainty (fraction of one)                                  0.010135               0.006259
-HVL2 Al  Mean (mm)                                                               6.174219               6.206319
-HVL2 Al  Standard deviation (mm)                                                 0.071613               0.042396
-HVL2 Al  Relative uncertainty (fraction of one)                                  0.011599               0.006831
-HVL1 Cu  Mean (mm)                                                               0.231096               0.232805
-HVL1 Cu  Standard deviation (mm)                                                 0.003614               0.002232
-HVL1 Cu  Relative uncertainty (fraction of one)                                  0.015641               0.009587
-HVL2 Cu  Mean (mm)                                                               0.258329               0.260498
-HVL2 Cu  Standard deviation (mm)                                                 0.005039               0.002966
-HVL2 Cu  Relative uncertainty (fraction of one)                                  0.019506               0.011386
-Mean energy  Mean (keV)                                                          47.53787              47.677216
-Mean energy  Standard deviation (keV)                                            0.322749               0.187942
-Mean energy  Relative uncertainty (fraction of one)                              0.006789               0.003942
-Air kerma  Mean (keV/g)                                                   19586332.470061          19813257.1878
-Air kerma  Standard deviation (keV/g)                                      1815300.642971          806780.967484
-Air kerma  Relative uncertainty (fraction of one)                                0.092682               0.040719
-Mean conv. coeff.  Mean (Sv/Gy)                                                  1.585633               1.587578
-Mean conv. coeff.  Standard deviation (Sv/Gy)                                    0.003824               0.001764
-Mean conv. coeff.  Relative uncertainty (fraction of one)                        0.002412               0.001111
+HVL1 Al  Mean (mm)                                                               5.895819               5.931133
+HVL1 Al  Standard deviation (mm)                                                 0.020477               0.022359
+HVL1 Al  Relative uncertainty (fraction of one)                                  0.003473                0.00377
+HVL2 Al  Mean (mm)                                                               6.238907               6.275384
+HVL2 Al  Standard deviation (mm)                                                 0.017694               0.024303
+HVL2 Al  Relative uncertainty (fraction of one)                                  0.002836               0.003873
+HVL1 Cu  Mean (mm)                                                               0.234631               0.236732
+HVL1 Cu  Standard deviation (mm)                                                  0.00116               0.001351
+HVL1 Cu  Relative uncertainty (fraction of one)                                  0.004946               0.005706
+HVL2 Cu  Mean (mm)                                                               0.262671               0.265111
+HVL2 Cu  Standard deviation (mm)                                                 0.001065               0.001673
+HVL2 Cu  Relative uncertainty (fraction of one)                                  0.004053                0.00631
+Mean energy  Mean (keV)                                                         47.815274              47.968429
+Mean energy  Standard deviation (keV)                                            0.067034               0.104718
+Mean energy  Relative uncertainty (fraction of one)                              0.001402               0.002183
+Air kerma  Mean (uGy)                                                            1.609083               1.622638
+Air kerma  Standard deviation (uGy)                                              0.039089               0.029723
+Air kerma  Relative uncertainty (fraction of one)                                0.024293               0.018318
+Mean conv. coeff.  Mean (Sv/Gy)                                                  1.589867               1.592054
+Mean conv. coeff.  Standard deviation (Sv/Gy)                                    0.001307               0.001274
+Mean conv. coeff.  Relative uncertainty (fraction of one)                        0.000822                 0.0008
 ```
 
 ### Data files
@@ -546,7 +547,7 @@ If you need further support, please send an e-mail to
 ## Documentation
 
 The official documentation of **USpekPy** is hosted on GitHub.
-Check its [README](https://github.com/lmri-met/uspekpy#README) file for a quick start guide and its [Wiki](https://github.com/lmri-met/uspekpy/wiki) for more detailed information.
+Check its [README](https://github.com/lmri-met/uspekpy#README) file for a quick start guide.
 
 ## Contributors
 
