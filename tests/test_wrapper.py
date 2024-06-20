@@ -206,7 +206,7 @@ class TestSpekWrapper:
         spectrum.multi_filter(my_filters)
 
         # Get spectrum energy and fluence
-        energy, fluence = spectrum.get_spectrum(edges=False)
+        energy, fluence = spectrum.get_spectrum(diff=False)
         return spectrum, energy, fluence
 
     @pytest.fixture
@@ -285,8 +285,11 @@ class TestSpekWrapper:
         # Replace any NaN values with zeros in the interpolated mass energy transfer coefficients for air
         interpolated_mu = np.nan_to_num(interpolated_mu, nan=0)
 
+        # Conversion factor from keV/g to uGy
+        unit_conversion = 1e3 * 1e3 * 1.602176634e-19 * 1e6
+
         # Compute mean air kerma
-        expected_mean_kerma = sum(fluence * energy * interpolated_mu)
+        expected_mean_kerma = sum(fluence * energy * interpolated_mu) * unit_conversion
 
         # Compute mean air kerma with SpekWrapper.get_mean_kerma()
         mean_kerma = spectrum.get_air_kerma(mass_transfer_coefficients=(energy_mu, mu))
