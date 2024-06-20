@@ -534,11 +534,26 @@ E (keV),h_k(0 deg) (Sv/Gy)
 8000,1.08
 10000,1.06
 ```
+
+Please note that there **must be no zeros or empy-valued energy gaps** in these files, since it will lead to errors in the 
+interpolation to the energy values of the x-ray spectrum.
+
+## Future developments
+
+In future versions of USpekPy we would like to make the following enhancements:
+
+- Include the **uncertainty contribution** of the monoenergetic air kerma-to-dose-equivalent conversion coefficients.
+- Manage **zeros or empy-valued energy gaps** in data files for mass energy transfer coefficients and monoenergetic 
+air kerma-to-dose-equivalent conversion coefficients.
+- Expand the **documentation** of the package.
+
+If you have any other suggestions please let us know (please check the 
+[Contributing to USpekPy](#contributing-to-uspekpy) section).
+
 ## How to get support?
 
-If you need support, please check the **USpekPy** documentation 
-([README](https://github.com/lmri-met/uspekpy/blob/main/README.md) and 
-[Wiki](https://github.com/lmri-met/uspekpy/wiki)) at GitHub.
+If you need support, please check the **USpekPy** documentation at GitHub
+([README](https://github.com/lmri-met/uspekpy/blob/main/README.md)).
 
 If you need further support, please send an e-mail to 
 [Paz Avilés](mailto:Paz.Aviles@ciemat.es) or to 
