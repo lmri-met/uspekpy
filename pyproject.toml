@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "uspekpy"
-version = "1.0.1"
+version = "1.0.2"
 description = 'Radiation protection quantities for x-rays with uncertainties using SpekPy and Monte Carlo techniques'
 keywords = ["uncertainty", "x-rays", "spectrum", "monte carlo"]
 readme = "README.md"
